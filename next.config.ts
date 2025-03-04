@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
+import dotenv from "dotenv"
+dotenv.config()
+
+const SUPABASE_HOST_NAME = process.env.SUPABASE_URL?.split("/")[2]
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        hostname: SUPABASE_HOST_NAME!
+      }
+    ]
+  }
 };
 
 export default nextConfig;
