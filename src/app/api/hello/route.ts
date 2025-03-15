@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     .from("hello-world")
     .upload(
       `${randomBytes(20).toString('base64url')}.txt`,
-      Buffer.from("Hello, world!", 'utf-8')
+      Buffer.from("Hello, Nathan!", 'utf-8')
     )
   return new Response('Test');
 }
