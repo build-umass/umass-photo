@@ -1,5 +1,5 @@
 CREATE TABLE photoclubuser (
-    id       SERIAL PRIMARY KEY,
+    id       UUID PRIMARY KEY REFERENCES auth.users(id),
     username VARCHAR(64) NOT NULL,
     email    VARCHAR(128) NOT NULL,
     bio      TEXT,
@@ -8,12 +8,13 @@ CREATE TABLE photoclubuser (
 
 CREATE TABLE blog (
     id       SERIAL PRIMARY KEY,
-    authorid INTEGER REFERENCES photoclubuser(id) NOT NULL,
+    authorid UUID REFERENCES photoclubuser(id) NOT NULL,
     file     VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE photo (
     id       SERIAL PRIMARY KEY, 
+    authorid UUID REFERENCES photoclubuser(id) NOT NULL,
     file     VARCHAR(128) NOT NULL
 );
 

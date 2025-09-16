@@ -6,6 +6,7 @@ dotenv.config()
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: Request) {
+  ((await request.formData()).keys())
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
   if(!supabaseApiKey) throw new Error("No API key found!");
@@ -13,7 +14,7 @@ export async function GET(request: Request) {
 
   const client = createClient(supabaseUrl, supabaseApiKey);
 
-  client.storage
+  await client.storage
     .from("hello-world")
     .upload(
       `${randomBytes(20).toString('base64url')}.txt`,
