@@ -1,9 +1,14 @@
+CREATE TABLE photoclubrole (
+    roleid    VARCHAR(16) PRIMARY KEY,
+    is_admin  BOOLEAN NOT NULL
+);
+
 CREATE TABLE photoclubuser (
     id       UUID PRIMARY KEY REFERENCES auth.users(id),
     username VARCHAR(64) NOT NULL,
     email    VARCHAR(128) NOT NULL,
     bio      TEXT,
-    role     VARCHAR(16)
+    role     VARCHAR(16) REFERENCES photoclubrole(roleid) NOT NULL
 );
 
 CREATE TABLE blog (
