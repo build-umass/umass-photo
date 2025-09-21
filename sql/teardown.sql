@@ -4,3 +4,4 @@ DROP TABLE tag;
 DROP TABLE photo;
 DROP TABLE blog;
 DROP TABLE photoclubuser;
+DROP TABLE photoclubrole;
