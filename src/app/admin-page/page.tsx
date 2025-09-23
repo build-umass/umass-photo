@@ -34,7 +34,7 @@ function UserManagementRow(props: {
             <div>{props.userReference.email}</div>
             <div>{props.userReference.bio}</div>
             <input className="bg-amber-200" value={role} onChange={setRoleRich}></input>
-            <button className="bg-red-500" onClick={props.deleteUser}>DELETE</button>
+            <button className="bg-red-500" onClick={() => props.deleteUser()}>DELETE</button>
         </div>
         <div><pre>{JSON.stringify(props.userReference)}</pre></div>
     </div>
@@ -42,19 +42,22 @@ function UserManagementRow(props: {
 
 function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
+    const [modifiedUserIds, setModifiedUserIds] = useState(new Set<string>());
+    const [deletedUserIds, setDeletedUserIds] = useState(new Set<string>());
     useEffect(() => {
         (async () => {
             const response = await fetch("/api/get-user-all");
             const data = await response.json();
             const recordEntries = data.map((user: User) => [user.id, user])
             configurationData.current = Object.fromEntries(recordEntries);
-            console.log(JSON.stringify(configurationData.current));
             setIsLoaded(true)
         })()
     }, [])
     const configurationData = useRef<Record<string, User>>({});
     const deleteRow = (id: string) => {
         delete configurationData.current[id];
+        deletedUserIds.add(id);
+        setDeletedUserIds(new Set(deletedUserIds));
     }
     if (!isLoaded) {
         return <>loading...</>
