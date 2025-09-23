@@ -46,17 +46,22 @@ function UserManagementTab() {
         (async () => {
             const response = await fetch("/api/get-user-all");
             const data = await response.json();
-            configurationData.current = data;
+            const recordEntries = data.map((user: User) => [user.id, user])
+            configurationData.current = Object.fromEntries(recordEntries);
+            console.log(JSON.stringify(configurationData.current));
             setIsLoaded(true)
         })()
     }, [])
-    const configurationData = useRef([]);
+    const configurationData = useRef<Record<string, User>>({});
+    const deleteRow = (id: string) => {
+        delete configurationData.current[id];
+    }
     if (!isLoaded) {
         return <>loading...</>
     } else {
         return <>
-        {configurationData.current.map((row, index) => {
-            return <UserManagementRow key={index} userReference={row} deleteUser={() => {}}></UserManagementRow>;
+        {Object.entries(configurationData.current).map(([id, row]) => {
+            return <UserManagementRow key={id} userReference={row} deleteUser={() => deleteRow(id)}></UserManagementRow>;
         })}
         </>
 
