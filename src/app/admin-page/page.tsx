@@ -68,14 +68,14 @@ function UserManagementRow({
 
 function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [rowFlags, setRowFlags] = useState(new Map<string, RowFlag>());
+    const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
     const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">>>({});
     const refreshData = async () => {
         const response = await fetch("/api/get-user-all");
         const data = await response.json();
         const recordEntries = data.map((user: Tables<"photoclubuser">) => [user.id, user])
         setUserData(Object.fromEntries(recordEntries));
-        setRowFlags(new Map());
+        setRowFlags({});
         setIsLoaded(true)
     }
     useEffect(() => {
@@ -83,14 +83,14 @@ function UserManagementTab() {
     }, [])
     const setRowFlag = (id: string, rowFlag: RowFlag) => {
         setRowFlags((rowFlags) => {
-            const newRowFlags = new Map(rowFlags);
-            if (rowFlag === RowFlag.NONE) newRowFlags.delete(id);
-            else newRowFlags.set(id, rowFlag);
+            const newRowFlags = { ...rowFlags };
+            if (rowFlag === RowFlag.NONE) delete newRowFlags[id];
+            else newRowFlags[id] = rowFlag;
             return newRowFlags;
         });
     }
     const getRowFlag = (id: string) => {
-        return rowFlags.get(id) ?? RowFlag.NONE;
+        return rowFlags[id] ?? RowFlag.NONE;
     }
     const setUser = (id: string, user: Tables<"photoclubuser">) => {
         const newUserData: Record<string, Tables<"photoclubuser">> = { ...userData }
@@ -102,9 +102,9 @@ function UserManagementTab() {
         const toDelete: string[] = []
         const toModify: Tables<"photoclubuser">[] = []
         Object.entries(userData).forEach(([id, row]) => {
-            if (rowFlags.get(id) === RowFlag.DELETED)
+            if (rowFlags[id] === RowFlag.DELETED)
                 toDelete.push(id);
-            if (rowFlags.get(id) === RowFlag.MODIFIED)
+            if (rowFlags[id] === RowFlag.MODIFIED)
                 toModify.push(row);
         });
         setIsLoaded(false);
