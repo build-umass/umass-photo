@@ -1,5 +1,5 @@
 "use client"
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 enum PageState {
     DEFAULT,
@@ -16,18 +16,20 @@ type User = {
     role: string,
 }
 
+enum RowFlag {
+    MODIFIED,
+    DELETED,
+    NONE
+}
+
 function UserManagementRow({
-    isDeleted,
-    setIsDeleted,
-    isModified,
-    setIsModified,
+    rowFlag,
+    setRowFlag,
     user,
     setUser,
 }: {
-    isDeleted: boolean;
-    setIsDeleted: (isDeleted: boolean) => void;
-    isModified: boolean;
-    setIsModified: (isDeleted: boolean) => void;
+    rowFlag: RowFlag;
+    setRowFlag: (rowFlag: RowFlag) => void;
     user: User;
     setUser: (isDeleted: User) => void;
 }) {
@@ -36,21 +38,18 @@ function UserManagementRow({
         const newUser: User = { ...user };
         newUser.role = role
         setUser(user);
-    }
-    const setRoleRich = (e: ChangeEvent<HTMLInputElement>) => {
-        setRole(e.target.value);
-        setIsModified(true)
+        setRowFlag(RowFlag.MODIFIED)
     }
     return <div>Hi, I am a row!!!!
         <div className="flex gap-2">
-            {isModified ? <div>*</div> : <></>}
-            {isDeleted ? <div>X</div> : <></>}
+            {rowFlag === RowFlag.MODIFIED ? <div>*</div> : <></>}
+            {rowFlag === RowFlag.DELETED ? <div>X</div> : <></>}
             <div>{user.id}</div>
             <div>{user.username}</div>
             <div>{user.email}</div>
             <div>{user.bio}</div>
-            <input className="bg-amber-200" value={role} onChange={setRoleRich}></input>
-            <button className="bg-red-500" onClick={() => setIsDeleted(true)}>DELETE</button>
+            <input className="bg-amber-200" value={role} onChange={(e) => setRole(e.target.value)}></input>
+            <button className="bg-red-500" onClick={() => setRowFlag(RowFlag.DELETED)}>DELETE</button>
         </div>
         <div><pre>{JSON.stringify(user)}</pre></div>
     </div>
@@ -58,8 +57,7 @@ function UserManagementRow({
 
 function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [modifiedUserIds, setModifiedUserIds] = useState(new Set<string>());
-    const [deletedUserIds, setDeletedUserIds] = useState(new Set<string>());
+    const [rowFlags, setRowFlags] = useState(new Map<string, RowFlag>());
     const configurationData = useRef<Record<string, User>>({});
     useEffect(() => {
         (async () => {
@@ -70,21 +68,16 @@ function UserManagementTab() {
             setIsLoaded(true)
         })()
     }, [])
-    const setIsDeleted = (id: string, isDeleted: boolean) => {
-        setDeletedUserIds((deletedUserIds) => {
-            const newDeletedUserIds = new Set(deletedUserIds);
-            if (isDeleted) newDeletedUserIds.add(id);
-            else newDeletedUserIds.delete(id);
-            return newDeletedUserIds;
+    const setRowFlag = (id: string, rowFlag: RowFlag) => {
+        setRowFlags((rowFlags) => {
+            const newRowFlags = new Map(rowFlags);
+            if (rowFlag === RowFlag.NONE) newRowFlags.delete(id);
+            else newRowFlags.set(id, rowFlag);
+            return newRowFlags;
         });
     }
-    const setIsModified = (id: string, isModified: boolean) => {
-        setModifiedUserIds((modifiedUserIds) => {
-            const newModifiedUserIds = new Set(modifiedUserIds);
-            if (isModified) newModifiedUserIds.add(id);
-            else newModifiedUserIds.delete(id);
-            return newModifiedUserIds;
-        });
+    const getRowFlag = (id: string) => {
+        return rowFlags.get(id) ?? RowFlag.NONE;
     }
     const setUser = (id: string, user: User) => {
         configurationData.current[id] = user;
@@ -96,10 +89,8 @@ function UserManagementTab() {
             {Object.entries(configurationData.current).map(([id, row]) => {
                 return <UserManagementRow
                     key={id}
-                    isDeleted={deletedUserIds.has(id)}
-                    setIsDeleted={(isDeleted) => setIsDeleted(id, isDeleted)}
-                    isModified={modifiedUserIds.has(id)}
-                    setIsModified={(isModified) => setIsModified(id, isModified)}
+                    rowFlag={getRowFlag(id)}
+                    setRowFlag={(rowFlag: RowFlag) => (setRowFlag(id, rowFlag))}
                     user={row}
                     setUser={(user) => setUser(id, user)}
                 ></UserManagementRow>;
