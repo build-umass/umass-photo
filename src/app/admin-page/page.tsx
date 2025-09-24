@@ -37,7 +37,7 @@ function UserManagementRow({
     const setRole = (role: string) => {
         const newUser: User = { ...user };
         newUser.role = role
-        setUser(user);
+        setUser(newUser);
         setRowFlag(RowFlag.MODIFIED)
     }
     return <div>Hi, I am a row!!!!
