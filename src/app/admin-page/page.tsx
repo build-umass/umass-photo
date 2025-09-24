@@ -86,6 +86,23 @@ function UserManagementTab() {
         newUserData[id] = user;
         setUserData(newUserData);
     }
+
+    const saveChanges = async () => {
+        const toDelete: string[] = []
+        const toModify: User[] = []
+        Object.entries(userData).forEach(([id, row]) => {
+            if (rowFlags.get(id) === RowFlag.DELETED)
+                toDelete.push(id);
+            if (rowFlags.get(id) === RowFlag.MODIFIED)
+                toModify.push(row);
+        });
+        setIsLoaded(false);
+        await fetch("/api/update-user-data", {
+            method: "POST",
+            body: JSON.stringify({ toDelete, toModify })
+        });
+        await refreshData();
+    }
     if (!isLoaded) {
         return <>loading...</>
     } else {
@@ -99,6 +116,7 @@ function UserManagementTab() {
                     setUser={(user) => setUser(id, user)}
                 ></UserManagementRow>;
             })}
+            <button onClick={saveChanges}>SAVE</button>
         </>
     }
 }
