@@ -13,7 +13,7 @@ type User = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const client = getUserClient(request);
 
   const { toDelete, toModify }: { toDelete: User["id"][], toModify: User[] } = await request.json();
