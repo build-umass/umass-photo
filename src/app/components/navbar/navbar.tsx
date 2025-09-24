@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Teachers } from "next/font/google";
 import NavBarLink from "./NavBarLink";
+import UserChip from "./UserChip";
 
 const teachers = Teachers({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function Navbar() {
               {page}
             </NavBarLink>
           ))}
+          <UserChip></UserChip>
         </div>
       </div>
     </nav>
