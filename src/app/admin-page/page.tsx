@@ -33,7 +33,7 @@ function UserManagementRow({
 }) {
     const role = user.role;
     const setRole = (role: string) => {
-        const newUser: User = {...user};
+        const newUser: User = { ...user };
         newUser.role = role
         setUser(user);
     }
@@ -73,7 +73,7 @@ function UserManagementTab() {
     const setIsDeleted = (id: string, isDeleted: boolean) => {
         setDeletedUserIds((deletedUserIds) => {
             const newDeletedUserIds = new Set(deletedUserIds);
-            if(isDeleted) newDeletedUserIds.add(id);
+            if (isDeleted) newDeletedUserIds.add(id);
             else newDeletedUserIds.delete(id);
             return newDeletedUserIds;
         });
@@ -81,7 +81,7 @@ function UserManagementTab() {
     const setIsModified = (id: string, isModified: boolean) => {
         setModifiedUserIds((modifiedUserIds) => {
             const newModifiedUserIds = new Set(modifiedUserIds);
-            if(isModified) newModifiedUserIds.add(id);
+            if (isModified) newModifiedUserIds.add(id);
             else newModifiedUserIds.delete(id);
             return newModifiedUserIds;
         });
@@ -93,17 +93,17 @@ function UserManagementTab() {
         return <>loading...</>
     } else {
         return <>
-        {Object.entries(configurationData.current).map(([id, row]) => {
-            return <UserManagementRow
-            key={id}
-            isDeleted={deletedUserIds.has(id)}
-            setIsDeleted={(isDeleted) => setIsDeleted(id, isDeleted)}
-            isModified={modifiedUserIds.has(id)}
-            setIsModified={(isModified) => setIsModified(id, isModified)}
-            user={row}
-            setUser={(user) => setUser(id, user)}
-            ></UserManagementRow>;
-        })}
+            {Object.entries(configurationData.current).map(([id, row]) => {
+                return <UserManagementRow
+                    key={id}
+                    isDeleted={deletedUserIds.has(id)}
+                    setIsDeleted={(isDeleted) => setIsDeleted(id, isDeleted)}
+                    isModified={modifiedUserIds.has(id)}
+                    setIsModified={(isModified) => setIsModified(id, isModified)}
+                    user={row}
+                    setUser={(user) => setUser(id, user)}
+                ></UserManagementRow>;
+            })}
         </>
 
     }
