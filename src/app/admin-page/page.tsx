@@ -59,14 +59,16 @@ function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [rowFlags, setRowFlags] = useState(new Map<string, RowFlag>());
     const [userData, setUserData] = useState<Record<string, User>>({});
+    const refreshData = async () => {
+        const response = await fetch("/api/get-user-all");
+        const data = await response.json();
+        const recordEntries = data.map((user: User) => [user.id, user])
+        setUserData(Object.fromEntries(recordEntries));
+        setRowFlags(new Map());
+        setIsLoaded(true)
+    }
     useEffect(() => {
-        (async () => {
-            const response = await fetch("/api/get-user-all");
-            const data = await response.json();
-            const recordEntries = data.map((user: User) => [user.id, user])
-            setUserData(Object.fromEntries(recordEntries));
-            setIsLoaded(true)
-        })()
+        refreshData()
     }, [])
     const setRowFlag = (id: string, rowFlag: RowFlag) => {
         setRowFlags((rowFlags) => {
