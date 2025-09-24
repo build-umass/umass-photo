@@ -1,19 +1,12 @@
 "use client"
 import { ReactNode, useEffect, useState } from "react"
+import { Tables } from "../utils/supabase/database.types"
 
 enum PageState {
     DEFAULT,
     UNAUTHENTICATED,
     AUTHORIZED,
     UNAUTHORIZED
-}
-
-type User = {
-    id: string,
-    username: string,
-    email: string,
-    bio: string,
-    role: string,
 }
 
 enum RowFlag {
@@ -46,12 +39,12 @@ function UserManagementRow({
 }: {
     rowFlag: RowFlag;
     setRowFlag: (rowFlag: RowFlag) => void;
-    user: User;
-    setUser: (isDeleted: User) => void;
+    user: Tables<"photoclubuser">;
+    setUser: (isDeleted: Tables<"photoclubuser">) => void;
 }) {
     const role = user.role;
     const setRole = (role: string) => {
-        const newUser: User = { ...user };
+        const newUser: Tables<"photoclubuser"> = { ...user };
         newUser.role = role
         setUser(newUser);
         setRowFlag(RowFlag.MODIFIED)
@@ -76,11 +69,11 @@ function UserManagementRow({
 function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [rowFlags, setRowFlags] = useState(new Map<string, RowFlag>());
-    const [userData, setUserData] = useState<Record<string, User>>({});
+    const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">>>({});
     const refreshData = async () => {
         const response = await fetch("/api/get-user-all");
         const data = await response.json();
-        const recordEntries = data.map((user: User) => [user.id, user])
+        const recordEntries = data.map((user: Tables<"photoclubuser">) => [user.id, user])
         setUserData(Object.fromEntries(recordEntries));
         setRowFlags(new Map());
         setIsLoaded(true)
@@ -99,15 +92,15 @@ function UserManagementTab() {
     const getRowFlag = (id: string) => {
         return rowFlags.get(id) ?? RowFlag.NONE;
     }
-    const setUser = (id: string, user: User) => {
-        const newUserData: Record<string, User> = { ...userData }
+    const setUser = (id: string, user: Tables<"photoclubuser">) => {
+        const newUserData: Record<string, Tables<"photoclubuser">> = { ...userData }
         newUserData[id] = user;
         setUserData(newUserData);
     }
 
     const saveChanges = async () => {
         const toDelete: string[] = []
-        const toModify: User[] = []
+        const toModify: Tables<"photoclubuser">[] = []
         Object.entries(userData).forEach(([id, row]) => {
             if (rowFlags.get(id) === RowFlag.DELETED)
                 toDelete.push(id);
