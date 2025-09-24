@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 enum PageState {
     DEFAULT,
@@ -80,7 +80,7 @@ function UserManagementTab() {
         return rowFlags.get(id) ?? RowFlag.NONE;
     }
     const setUser = (id: string, user: User) => {
-        const newUserData: Record<string, User> = {...userData}
+        const newUserData: Record<string, User> = { ...userData }
         newUserData[id] = user;
         setUserData(newUserData);
     }
@@ -98,7 +98,6 @@ function UserManagementTab() {
                 ></UserManagementRow>;
             })}
         </>
-
     }
 }
 
