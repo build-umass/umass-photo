@@ -58,13 +58,13 @@ function UserManagementRow({
 function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [rowFlags, setRowFlags] = useState(new Map<string, RowFlag>());
-    const configurationData = useRef<Record<string, User>>({});
+    const [userData, setUserData] = useState<Record<string, User>>({});
     useEffect(() => {
         (async () => {
             const response = await fetch("/api/get-user-all");
             const data = await response.json();
             const recordEntries = data.map((user: User) => [user.id, user])
-            configurationData.current = Object.fromEntries(recordEntries);
+            setUserData(Object.fromEntries(recordEntries));
             setIsLoaded(true)
         })()
     }, [])
@@ -80,13 +80,15 @@ function UserManagementTab() {
         return rowFlags.get(id) ?? RowFlag.NONE;
     }
     const setUser = (id: string, user: User) => {
-        configurationData.current[id] = user;
+        const newUserData: Record<string, User> = {...userData}
+        newUserData[id] = user;
+        setUserData(newUserData);
     }
     if (!isLoaded) {
         return <>loading...</>
     } else {
         return <>
-            {Object.entries(configurationData.current).map(([id, row]) => {
+            {Object.entries(userData).map(([id, row]) => {
                 return <UserManagementRow
                     key={id}
                     rowFlag={getRowFlag(id)}
