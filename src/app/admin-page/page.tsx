@@ -1,6 +1,8 @@
 "use client"
 import { ReactNode, useEffect, useState } from "react"
 import { Tables } from "../utils/supabase/database.types"
+import Footer from "../components/footer/footer"
+import Navbar from "../components/navbar/navbar"
 
 enum PageState {
     DEFAULT,
@@ -195,12 +197,28 @@ export default function AdminPage() {
     )
     switch (pageState) {
         case PageState.DEFAULT:
-            return <div>Figuring out who you are...</div>
+            return <>
+                <Navbar></Navbar>
+                Figuring out who you are...
+                <Footer></Footer>
+            </>
         case PageState.UNAUTHENTICATED:
-            return <div>I don&apos;t know who you are</div>
+            return <>
+                <Navbar></Navbar>
+                I don&apos;t know who you are
+                <Footer></Footer>
+            </>
         case PageState.AUTHORIZED:
-            return <AdminPageContent></AdminPageContent>
+            return <>
+                <Navbar></Navbar>
+                <AdminPageContent></AdminPageContent>
+                <Footer></Footer>
+            </>
         case PageState.UNAUTHORIZED:
-            return <div>You can&apos;t see this</div>
+            return <>
+                <Navbar></Navbar>
+                You can&apos;t see this
+                <Footer></Footer>
+            </>
     }
 }
