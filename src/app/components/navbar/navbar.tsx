@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Teachers } from "next/font/google";
+import NavBarLink from "./NavBarLink";
 
 const teachers = Teachers({
   subsets: ["latin"],
@@ -36,13 +37,9 @@ export default function Navbar() {
         {/* Navigation links - no visible separators */}
         <div className={`flex ${teachers.className}`}>
           {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
-            <Link
-              key={page}
-              href={`/${page.toLowerCase()}`}
-              className="flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors duration-200 h-full px-6"
-            >
+            <NavBarLink key={page} href={`/${page.toLowerCase()}`}>
               {page}
-            </Link>
+            </NavBarLink>
           ))}
         </div>
       </div>
