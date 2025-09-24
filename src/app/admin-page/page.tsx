@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 
 enum PageState {
     DEFAULT,
@@ -22,6 +22,22 @@ enum RowFlag {
     NONE
 }
 
+function AdminPageTableCell({
+    children
+}: {
+    children: ReactNode
+}) {
+    return <td className="p-2 border-2">{children}</td>
+}
+
+function AdminPageTableHeaderCell({
+    children
+}: {
+    children: ReactNode
+}) {
+    return <th className="p-2 border-2">{children}</th>
+}
+
 function UserManagementRow({
     rowFlag,
     setRowFlag,
@@ -40,19 +56,21 @@ function UserManagementRow({
         setUser(newUser);
         setRowFlag(RowFlag.MODIFIED)
     }
-    return <div>Hi, I am a row!!!!
-        <div className="flex gap-2">
-            {rowFlag === RowFlag.MODIFIED ? <div>*</div> : <></>}
-            {rowFlag === RowFlag.DELETED ? <div>X</div> : <></>}
-            <div>{user.id}</div>
-            <div>{user.username}</div>
-            <div>{user.email}</div>
-            <div>{user.bio}</div>
+
+    const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-50" :
+        rowFlag === RowFlag.DELETED ? "bg-red-50" : "";
+    return <tr className={`${colorClass}`}>
+        <AdminPageTableCell>{user.id}</AdminPageTableCell>
+        <AdminPageTableCell>{user.username}</AdminPageTableCell>
+        <AdminPageTableCell>{user.email}</AdminPageTableCell>
+        <AdminPageTableCell>{user.bio}</AdminPageTableCell>
+        <AdminPageTableCell>
             <input className="bg-amber-200" value={role} onChange={(e) => setRole(e.target.value)}></input>
+        </AdminPageTableCell>
+        <AdminPageTableCell>
             <button className="bg-red-500" onClick={() => setRowFlag(RowFlag.DELETED)}>DELETE</button>
-        </div>
-        <div><pre>{JSON.stringify(user)}</pre></div>
-    </div>
+        </AdminPageTableCell>
+    </tr>
 }
 
 function UserManagementTab() {
@@ -107,15 +125,27 @@ function UserManagementTab() {
         return <>loading...</>
     } else {
         return <>
-            {Object.entries(userData).map(([id, row]) => {
-                return <UserManagementRow
-                    key={id}
-                    rowFlag={getRowFlag(id)}
-                    setRowFlag={(rowFlag: RowFlag) => (setRowFlag(id, rowFlag))}
-                    user={row}
-                    setUser={(user) => setUser(id, user)}
-                ></UserManagementRow>;
-            })}
+            <table className="border-2">
+                <tbody>
+                    <tr>
+                        <AdminPageTableHeaderCell>ID</AdminPageTableHeaderCell>
+                        <AdminPageTableHeaderCell>Username</AdminPageTableHeaderCell>
+                        <AdminPageTableHeaderCell>Email</AdminPageTableHeaderCell>
+                        <AdminPageTableHeaderCell>Bio</AdminPageTableHeaderCell>
+                        <AdminPageTableHeaderCell>Role</AdminPageTableHeaderCell>
+                        <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
+                    </tr>
+                    {Object.entries(userData).map(([id, row]) => {
+                        return <UserManagementRow
+                            key={id}
+                            rowFlag={getRowFlag(id)}
+                            setRowFlag={(rowFlag: RowFlag) => (setRowFlag(id, rowFlag))}
+                            user={row}
+                            setUser={(user) => setUser(id, user)}
+                        ></UserManagementRow>;
+                    })}
+                </tbody>
+            </table>
             <button onClick={saveChanges}>SAVE</button>
         </>
     }
