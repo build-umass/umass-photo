@@ -16,12 +16,27 @@ type User = {
     role: string,
 }
 
-function UserManagementRow(props: {
-    deleteUser: () => void;
-    userReference: User;
+function UserManagementRow({
+    isDeleted,
+    setIsDeleted,
+    isModified,
+    setIsModified,
+    user,
+    setUser,
+}: {
+    isDeleted: boolean;
+    setIsDeleted: (isDeleted: boolean) => void;
+    isModified: boolean;
+    setIsModified: (isDeleted: boolean) => void;
+    user: User;
+    setUser: (isDeleted: User) => void;
 }) {
-    const [isModified, setIsModified] = useState(false);
-    const [role, setRole] = useState(props.userReference.role);
+    const role = user.role;
+    const setRole = (role: string) => {
+        const newUser: User = {...user};
+        newUser.role = role
+        setUser(user);
+    }
     const setRoleRich = (e: ChangeEvent<HTMLInputElement>) => {
         setRole(e.target.value);
         setIsModified(true)
@@ -29,14 +44,15 @@ function UserManagementRow(props: {
     return <div>Hi, I am a row!!!!
         <div className="flex gap-2">
             {isModified ? <div>*</div> : <></>}
-            <div>{props.userReference.id}</div>
-            <div>{props.userReference.username}</div>
-            <div>{props.userReference.email}</div>
-            <div>{props.userReference.bio}</div>
+            {isDeleted ? <div>X</div> : <></>}
+            <div>{user.id}</div>
+            <div>{user.username}</div>
+            <div>{user.email}</div>
+            <div>{user.bio}</div>
             <input className="bg-amber-200" value={role} onChange={setRoleRich}></input>
-            <button className="bg-red-500" onClick={() => props.deleteUser()}>DELETE</button>
+            <button className="bg-red-500" onClick={() => setIsDeleted(true)}>DELETE</button>
         </div>
-        <div><pre>{JSON.stringify(props.userReference)}</pre></div>
+        <div><pre>{JSON.stringify(user)}</pre></div>
     </div>
 }
 
@@ -44,6 +60,7 @@ function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [modifiedUserIds, setModifiedUserIds] = useState(new Set<string>());
     const [deletedUserIds, setDeletedUserIds] = useState(new Set<string>());
+    const configurationData = useRef<Record<string, User>>({});
     useEffect(() => {
         (async () => {
             const response = await fetch("/api/get-user-all");
@@ -53,18 +70,39 @@ function UserManagementTab() {
             setIsLoaded(true)
         })()
     }, [])
-    const configurationData = useRef<Record<string, User>>({});
-    const deleteRow = (id: string) => {
-        delete configurationData.current[id];
-        deletedUserIds.add(id);
-        setDeletedUserIds(new Set(deletedUserIds));
+    const setIsDeleted = (id: string, isDeleted: boolean) => {
+        setDeletedUserIds((deletedUserIds) => {
+            const newDeletedUserIds = new Set(deletedUserIds);
+            if(isDeleted) newDeletedUserIds.add(id);
+            else newDeletedUserIds.delete(id);
+            return newDeletedUserIds;
+        });
+    }
+    const setIsModified = (id: string, isModified: boolean) => {
+        setModifiedUserIds((modifiedUserIds) => {
+            const newModifiedUserIds = new Set(modifiedUserIds);
+            if(isModified) newModifiedUserIds.add(id);
+            else newModifiedUserIds.delete(id);
+            return newModifiedUserIds;
+        });
+    }
+    const setUser = (id: string, user: User) => {
+        configurationData.current[id] = user;
     }
     if (!isLoaded) {
         return <>loading...</>
     } else {
         return <>
         {Object.entries(configurationData.current).map(([id, row]) => {
-            return <UserManagementRow key={id} userReference={row} deleteUser={() => deleteRow(id)}></UserManagementRow>;
+            return <UserManagementRow
+            key={id}
+            isDeleted={deletedUserIds.has(id)}
+            setIsDeleted={(isDeleted) => setIsDeleted(id, isDeleted)}
+            isModified={modifiedUserIds.has(id)}
+            setIsModified={(isModified) => setIsModified(id, isModified)}
+            user={row}
+            setUser={(user) => setUser(id, user)}
+            ></UserManagementRow>;
         })}
         </>
 
