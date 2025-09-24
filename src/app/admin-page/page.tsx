@@ -197,10 +197,10 @@ export default function AdminPage() {
         case PageState.DEFAULT:
             return <div>Figuring out who you are...</div>
         case PageState.UNAUTHENTICATED:
-            return <div>I don&apost know who you are</div>
+            return <div>I don&apos;t know who you are</div>
         case PageState.AUTHORIZED:
             return <AdminPageContent></AdminPageContent>
         case PageState.UNAUTHORIZED:
-            return <div>You can&apost see this</div>
+            return <div>You can&apos;t see this</div>
     }
 }
