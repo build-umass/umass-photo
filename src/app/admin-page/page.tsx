@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import Footer from "../components/footer/footer"
 import Navbar from "../components/navbar/navbar"
 import UserManagementTab from "./UserManagementTab"
+import AdminPageButton from "./AdminPageButton"
 
 enum PageState {
     DEFAULT,
@@ -29,8 +30,8 @@ function AdminPageContent() {
 
     return <div>
         <div>
-            <button onClick={() => setTab(Tab.USER)}>Users</button>
-            <button onClick={() => setTab(Tab.EVENT)}>Events</button>
+            <AdminPageButton onClick={() => setTab(Tab.USER)}>Users</AdminPageButton>
+            <AdminPageButton onClick={() => setTab(Tab.EVENT)}>Events</AdminPageButton>
         </div>
         <div>
             {currentTab}

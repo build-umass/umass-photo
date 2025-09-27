@@ -1,6 +1,7 @@
 "use client"
 import { ReactNode, useEffect, useState } from "react";
 import { Tables } from "../utils/supabase/database.types";
+import AdminPageButton from "./AdminPageButton";
 
 enum RowFlag {
     MODIFIED,
@@ -132,7 +133,7 @@ export default function UserManagementTab() {
                     })}
                 </tbody>
             </table>
-            <button onClick={saveChanges}>SAVE</button>
+            <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
         </>
     }
 }
