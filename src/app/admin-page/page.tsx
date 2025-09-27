@@ -4,16 +4,13 @@ import Footer from "../components/footer/footer"
 import Navbar from "../components/navbar/navbar"
 import UserManagementTab from "./UserManagementTab"
 import AdminPageButton from "./AdminPageButton"
+import EventManagementTab from "./EventManagementTab"
 
 enum PageState {
     DEFAULT,
     UNAUTHENTICATED,
     AUTHORIZED,
     UNAUTHORIZED
-}
-
-function EventManagementTab() {
-    return <>event</>
 }
 
 enum Tab {
