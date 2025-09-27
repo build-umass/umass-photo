@@ -12,39 +12,39 @@ const teachers = Teachers({
 
 export default function Navbar() {
   return (
-    <nav className="bg-[#8E122A] text-white">
+    <nav className="bg-[#8E122A] text-white fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto flex items-stretch h-16">
-        {/* Logo without hover */}
-        <div className="flex items-center px-6 h-full">
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/photo.jpg"
-              alt="Photo Club Logo"
-              width={40}
-              height={40}
-              className="mr-2"
-            />
-            <h1 className={`text-xl font-bold ${teachers.className}`}>
-              UMass Photo
-            </h1>
-          </Link>
-        </div>
+      {/* Logo without hover */}
+      <div className="flex items-center px-6 h-full">
+        <Link href="/" className="flex items-center">
+        <Image
+          src="/photo.jpg"
+          alt="Photo Club Logo"
+          width={40}
+          height={40}
+          className="mr-2"
+        />
+        <h1 className={`text-xl font-bold ${teachers.className}`}>
+          UMass Photo
+        </h1>
+        </Link>
+      </div>
 
-        {/* Spacer */}
-        <div className="flex-grow"></div>
+      {/* Spacer */}
+      <div className="flex-grow"></div>
 
-        {/* Navigation links - no visible separators */}
-        <div className={`flex ${teachers.className}`}>
-          {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
-            <Link
-              key={page}
-              href={`/${page.toLowerCase()}`}
-              className="flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors duration-200 h-full px-6"
-            >
-              {page}
-            </Link>
-          ))}
-        </div>
+      {/* Navigation links - no visible separators */}
+      <div className={`flex ${teachers.className}`}>
+        {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
+        <Link
+          key={page}
+          href={`/${page.toLowerCase()}`}
+          className="flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors duration-200 h-full px-6"
+        >
+          {page}
+        </Link>
+        ))}
+      </div>
       </div>
     </nav>
   );
