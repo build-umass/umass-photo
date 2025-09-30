@@ -4,6 +4,7 @@ import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import Navbar from './components/navbar/navbar';
 
 
 export default function Home() {
@@ -14,27 +15,7 @@ export default function Home() {
         rel="stylesheet"
       />
       
-      <header className="sticky top-0 bg-[#971B2F] shadow-lg z-50" >
-        <div className = "max-w-screen-xl mx-auto px-2 py-3 flex items-center">
-          <div className="flex items-center transform -translate-x-20 space-x-5">
-            <img
-              src = "/logo2.png"
-              alt = "Umass Photo logo"
-              width = {60}
-              height = {60}
-            />
-            <p className= "font-Jaldi text-white text-3xl font-bold">Umass Photo</p>
-          </div>
-
-          <div className="ml-auto flex items-center pr-7">
-            <a className = "font-Jaldi text-white text-2xl font-normal mr-16" href = "#">home</a>
-            <a className = "font-Jaldi text-white text-2xl font-normal mr-16" href = "#">gallery</a>
-            <a className = "font-Jaldi text-white text-2xl font-normal mr-16" href = "#">events</a>
-            <a className = "font-Jaldi text-white text-2xl font-normal mr-16" href = "#">about</a>
-            <a className = "font-Jaldi text-white text-2xl font-normal ml-auto" href = "#">contact</a>
-          </div>
-        </div>
-      </header>
+      <Navbar></Navbar>
 
       <main className="flex-grow bg-white">
         <div className="relative overflow-x-auto whitespace-nowrap w-full h-[375px] bg-white shadow-xl mb-6">
