@@ -4,7 +4,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Jaldi, Arial, Helvetica, sans-serif;
+  font-family: var(--font-jaldi), Arial, Helvetica, sans-serif;
 }
 
 :root {

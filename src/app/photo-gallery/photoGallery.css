@@ -64,6 +64,14 @@
 #upload-date  {
     color:#881C1C;
 }
+#upload-date-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+#upload-date-container input {
+    background-color: #D9D9D9;
+}
 #menu-icon-circle {
     position: fixed;
     bottom: 1rem;
@@ -77,6 +85,11 @@
     z-index: 1001;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+}
+
+#menu-icon-circle.expanded {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #menu-icon {
@@ -93,13 +106,18 @@
     justify-content: right;
     align-items: left;
     z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+#menu-popup.closing {
+    animation: fadeOut 0.3s ease-out;
 }
 
 #menu-content {
-    background-color: white;
+    background-color: #EAEAEA;
     padding: 2rem;
     width: 500px;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     margin: 5rem;
@@ -107,6 +125,12 @@
     max-height: calc(100vh - 10rem);
     overflow-y: auto;
     overflow-x: hidden;
+    animation: slideInFromRight 0.3s ease-out;
+    font-family: var(--font-jaldi);
+}
+
+#menu-content.closing {
+    animation: slideOutToRight 0.3s ease-out;
 }
 
 #close-button {
@@ -124,11 +148,6 @@
     color: #000;
 }
 
-#menu-content nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
 
 #menu-content nav ul li {
     margin: 1rem 0;
@@ -138,7 +157,7 @@
     text-decoration: none;
     color: #333;
     font-size: 1.1rem;
-    font-family: "Gilda Display", serif;
+    font-family: var(--font-jaldi);
 }
 
 #menu-content nav ul li a:hover {
@@ -151,15 +170,26 @@
 }
 #popup-header {
     color: black;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-family: var(--font-jaldi);
 }
 #popup-subheader {
     color: black;
-    font-size: 1.25rem;
+    font-size: 2rem;
     margin: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s ease;
+    font-family: var(--font-jaldi);
+}
+
+#popup-subheader span:last-child {
+    transition: transform 0.3s ease;
+}
+
+#popup-subheader.active span:last-child {
+    transform: rotate(90deg);
 }
 #filter-container {
     display: flex;
@@ -173,6 +203,89 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 0.5rem;
+    animation: slideDown 0.3s ease-out;
+    font-family: var(--font-jaldi);
+}
+
+#filter-container input {
+    font-family: var(--font-jaldi);
+}
+
+#filter-container span {
+    font-family: var(--font-jaldi);
+}
+
+#filter-container.closing {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        max-height: 200px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
 }
 #filter-container input:hover { 
     cursor: pointer;
@@ -189,6 +302,7 @@
     font-size: 0.9rem;
     white-space: nowrap;
     flex-shrink: 0;
+    font-family: var(--font-jaldi);
 }
 #photographer-button:hover {
     background-color: #f5f5f5;
