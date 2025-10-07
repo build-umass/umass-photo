@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Reset database to clean slate
+This will explain how to reset the database to a "clean state" using the supabase console.
+- First, go to the project dashboard.
+- Next, go to the storage tab on the left, and create a bucket called `photos`.
+- Next, upload all of the files in `/sql/photos` into the bucket.
+- Next, go to the SQL console and run the following files in order:
+    - `\sql\teardown.sql`
+    - `\sql\setup.sql`
+    - `\sql\insert_data.sql`
