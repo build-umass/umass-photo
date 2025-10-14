@@ -13,13 +13,13 @@ CREATE TABLE photoclubuser (
 
 CREATE TABLE blog (
     id       SERIAL PRIMARY KEY,
-    authorid UUID REFERENCES photoclubuser(id) NOT NULL,
+    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
     file     VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE photo (
     id       SERIAL PRIMARY KEY, 
-    authorid UUID REFERENCES photoclubuser(id) NOT NULL ON DELETE CASCADE,
+    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL ,
     file     VARCHAR(128) NOT NULL
 );
 
@@ -28,8 +28,8 @@ CREATE TABLE tag (
 );
 
 CREATE TABLE phototag (
-    photoid  INTEGER REFERENCES photo(id) NOT NULL,
-    tag      VARCHAR(32) REFERENCES tag(name) NOT NULL
+    photoid  INTEGER REFERENCES photo(id) ON DELETE CASCADE NOT NULL,
+    tag      VARCHAR(32) REFERENCES tag(name) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE event (
