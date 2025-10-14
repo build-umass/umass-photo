@@ -29,7 +29,7 @@ INSERT
   );
 
 CREATE POLICY "Allow admins to manage people" ON "public"."photoclubuser" AS PERMISSIVE FOR
-INSERT
+ALL
   TO public WITH CHECK (
     (
       SELECT
