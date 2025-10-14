@@ -10,8 +10,14 @@ export async function POST(request: NextRequest) {
   const client = getUserClient(request);
 
   const { toDelete, toModify }: { toDelete: Tables<"photoclubuser">["id"][], toModify: Tables<"photoclubuser">[] } = await request.json();
-  await client.from("photoclubuser").upsert(toModify);
-  await client.from("photoclubuser").delete().in("id", toDelete);
+  const { error: upsertError } = await client.from("photoclubuser").upsert(toModify);
+  if (upsertError) {
+    console.log(JSON.stringify(upsertError, undefined, "    "));
+  }
+  const { error: deleteError } = await client.from("photoclubuser").delete().in("id", toDelete);
+  if (deleteError) {
+    console.log(JSON.stringify(deleteError, undefined, "    "));
+  }
 
   const response = new Response();
   return attachCookies(client, response);
