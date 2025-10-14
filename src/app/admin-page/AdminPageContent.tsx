@@ -22,17 +22,17 @@ function getTabName(tab: Tab): string {
 }
 
 export default function AdminPageContent() {
-    const [tab, setTab] = useState<Tab>(Tab.USER)
+    const [activeTab, setActiveTab] = useState<Tab>(Tab.USER)
     const currentTab =
-        tab == Tab.USER ? <UserManagementTab></UserManagementTab> :
-            tab == Tab.EVENT ? <EventManagementTab></EventManagementTab> :
+        activeTab == Tab.USER ? <UserManagementTab></UserManagementTab> :
+            activeTab == Tab.EVENT ? <EventManagementTab></EventManagementTab> :
                 <div></div>
 
 
     return <div className="flex">
         <div className="flex flex-col bg-[#8E122A]">
             {getTabValues().map(tab => {
-                return <AdminPageButton key={tab} onClick={() => setTab(tab)}>{getTabName(tab)}</AdminPageButton>
+                return <AdminPageButton key={tab} onClick={() => setActiveTab(tab)} highlighted={tab == activeTab}>{getTabName(tab)}</AdminPageButton>
             })}
         </div>
         <div>
