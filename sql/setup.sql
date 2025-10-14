@@ -19,7 +19,7 @@ CREATE TABLE blog (
 
 CREATE TABLE photo (
     id       SERIAL PRIMARY KEY, 
-    authorid UUID REFERENCES photoclubuser(id) NOT NULL,
+    authorid UUID REFERENCES photoclubuser(id) NOT NULL ON DELETE CASCADE,
     file     VARCHAR(128) NOT NULL
 );
 
