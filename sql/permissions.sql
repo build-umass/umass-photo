@@ -28,7 +28,7 @@ INSERT
     )
   );
 
-CREATE POLICY "Only allow eboard to create events" ON "event" AS PERMISSIVE FOR ALL TO authenticated USING (
+CREATE POLICY "Only allow eboard to create events" ON "public"."event" AS PERMISSIVE FOR ALL TO authenticated USING (
   (
     SELECT
       "role"
