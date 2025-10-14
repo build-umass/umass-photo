@@ -6,7 +6,7 @@ export default function AdminPageButton({
   ...props
 }: {
   children: ReactNode,
-  highlighted: boolean,
+  highlighted?: boolean,
   [key: string]: unknown
 }) {
   const color = highlighted ? "bg-white/10": ""

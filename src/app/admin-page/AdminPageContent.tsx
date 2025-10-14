@@ -1,5 +1,5 @@
 import UserManagementTab from "./UserManagementTab"
-import AdminPageButton from "./AdminPageButton"
+import AdminPageButton from "./common/AdminPageButton"
 import EventManagementTab from "./EventManagementTab"
 import { useState } from "react"
 

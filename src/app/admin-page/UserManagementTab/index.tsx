@@ -1,64 +1,10 @@
 "use client"
-import { ReactNode, useEffect, useState } from "react";
-import { Tables } from "../utils/supabase/database.types";
-import AdminPageButton from "./AdminPageButton";
+import { useEffect, useState } from "react";
+import { Tables } from "../../utils/supabase/database.types";
+import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
+import AdminPageButton from "../common/AdminPageButton";
+import UserManagementRow, { RowFlag } from "./UserManagementRow";
 
-enum RowFlag {
-    MODIFIED,
-    DELETED,
-    NONE
-}
-
-function AdminPageTableCell({
-    children
-}: {
-    children: ReactNode
-}) {
-    return <td className="p-2 border-2">{children}</td>
-}
-
-function AdminPageTableHeaderCell({
-    children
-}: {
-    children: ReactNode
-}) {
-    return <th className="p-2 border-2">{children}</th>
-}
-
-function UserManagementRow({
-    rowFlag,
-    setRowFlag,
-    user,
-    setUser,
-}: {
-    rowFlag: RowFlag;
-    setRowFlag: (rowFlag: RowFlag) => void;
-    user: Tables<"photoclubuser">;
-    setUser: (isDeleted: Tables<"photoclubuser">) => void;
-}) {
-    const role = user.role;
-    const setRole = (role: string) => {
-        const newUser: Tables<"photoclubuser"> = { ...user };
-        newUser.role = role
-        setUser(newUser);
-        setRowFlag(RowFlag.MODIFIED)
-    }
-
-    const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-50" :
-        rowFlag === RowFlag.DELETED ? "bg-red-50" : "";
-    return <tr className={`${colorClass}`}>
-        <AdminPageTableCell>{user.id}</AdminPageTableCell>
-        <AdminPageTableCell>{user.username}</AdminPageTableCell>
-        <AdminPageTableCell>{user.email}</AdminPageTableCell>
-        <AdminPageTableCell>{user.bio}</AdminPageTableCell>
-        <AdminPageTableCell>
-            <input className="bg-amber-200" value={role} onChange={(e) => setRole(e.target.value)}></input>
-        </AdminPageTableCell>
-        <AdminPageTableCell>
-            <button className="bg-red-500" onClick={() => setRowFlag(RowFlag.DELETED)}>DELETE</button>
-        </AdminPageTableCell>
-    </tr>
-}
 
 export default function UserManagementTab() {
     const [isLoaded, setIsLoaded] = useState(false);
