@@ -13,7 +13,7 @@ FOR INSERT
 TO public
 WITH CHECK (
   ((SELECT auth.uid()) = id) and
-  ((SELECT isadmin FROM "public"."photoclubrole" WHERE roleid = role) = false)
+  ((SELECT is_admin FROM "public"."photoclubrole" WHERE roleid = role) = false)
 );
 
 CREATE POLICY "Only allow eboard to create events"
