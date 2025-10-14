@@ -18,6 +18,19 @@ enum Tab {
     EVENT
 }
 
+function getTabValues(): Tab[] {
+    return Object.values(Tab).filter(x => typeof x === "number")
+}
+
+function getTabName(tab: Tab): string {
+    switch (tab) {
+        case Tab.USER:
+            return "Users"
+        case Tab.EVENT:
+            return "Events"
+    }
+}
+
 function AdminPageContent() {
     const [tab, setTab] = useState<Tab>(Tab.USER)
     const currentTab =
@@ -25,10 +38,12 @@ function AdminPageContent() {
             tab == Tab.EVENT ? <EventManagementTab></EventManagementTab> :
                 <div></div>
 
-    return <div>
-        <div>
-            <AdminPageButton onClick={() => setTab(Tab.USER)}>Users</AdminPageButton>
-            <AdminPageButton onClick={() => setTab(Tab.EVENT)}>Events</AdminPageButton>
+
+    return <div className="flex">
+        <div className="flex flex-col bg-[#8E122A]">
+            {getTabValues().map(tab => {
+                return <AdminPageButton key={tab} onClick={() => setTab(tab)}>{getTabName(tab)}</AdminPageButton>
+            })}
         </div>
         <div>
             {currentTab}
