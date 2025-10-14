@@ -4,8 +4,8 @@ INSERT INTO photoclubrole VALUES
 ('eboard', true );
 
 INSERT INTO photoclubuser VALUES
-('43188856-13db-410a-b1a2-b006056cd84f', 'max 1', 'amoinus@gmail.com',     'hi', 'member'),
-('beebdcae-ba00-4c16-9e1c-2103381337bf', 'max 2', 'maxwelltang@umass.edu', 'hi', 'eboard');
+('43188856-13db-410a-b1a2-b006056cd84f', 'max 1', 'amoinus@gmail.com',     'hi', 'eboard'),
+('beebdcae-ba00-4c16-9e1c-2103381337bf', 'max 2', 'maxwelltang@umass.edu', 'hi', 'member');
 
 INSERT INTO photo(id, authorid, file) VALUES
 (1, '43188856-13db-410a-b1a2-b006056cd84f', '01.png'),
