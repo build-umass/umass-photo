@@ -62,6 +62,7 @@ export default function UserManagementTab() {
             <table className="border-2">
                 <tbody>
                     <tr>
+                        <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
                         <AdminPageTableHeaderCell>ID</AdminPageTableHeaderCell>
                         <AdminPageTableHeaderCell>Username</AdminPageTableHeaderCell>
                         <AdminPageTableHeaderCell>Email</AdminPageTableHeaderCell>

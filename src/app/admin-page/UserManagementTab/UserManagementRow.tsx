@@ -26,9 +26,10 @@ export default function UserManagementRow({
         setRowFlag(RowFlag.MODIFIED)
     }
 
-    const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-50" :
-        rowFlag === RowFlag.DELETED ? "bg-red-50" : "";
-    return <tr className={`${colorClass}`}>
+    const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-500" :
+        rowFlag === RowFlag.DELETED ? "bg-red-500" : "";
+    return <tr>
+        <AdminPageTableCell className={`w-2 ${colorClass}`}></AdminPageTableCell>
         <AdminPageTableCell>{user.id}</AdminPageTableCell>
         <AdminPageTableCell>{user.username}</AdminPageTableCell>
         <AdminPageTableCell>{user.email}</AdminPageTableCell>
