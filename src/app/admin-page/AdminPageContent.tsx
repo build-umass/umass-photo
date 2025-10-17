@@ -26,8 +26,6 @@ export default function AdminPageContent() {
                 >{tab.title}</AdminPageTabButton>
             })}
         </div>
-        <div>
-            {currentTab}
-        </div>
+        {currentTab}
     </div>
 }

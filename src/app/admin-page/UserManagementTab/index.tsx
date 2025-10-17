@@ -57,12 +57,12 @@ export default function UserManagementTab() {
     if (!isLoaded) {
         return <>loading...</>
     } else {
-        return <div className="p-24 flex flex-col">
+        return <div className="p-24 flex flex-col bg-gray-100 grow">
             <div className="flex justify-between">
                 <h1 className="text-7xl text-umass-red font-bold">Users</h1>
                 <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
             </div>
-            <table className="border-2">
+            <table className="border-2 border-gray-200">
                 <tbody>
                     <tr>
                         <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
