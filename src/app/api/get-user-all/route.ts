@@ -4,10 +4,11 @@ import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
 
 dotenv.config();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   const client = getUserClient(request);
-
-  const { data: userData } = await client.auth.getUser();
-  const response = new Response(JSON.stringify(userData));
+  
+  const { data: userList } = await client.from("photoclubuser").select();
+  const response = new Response(JSON.stringify(userList));
   return attachCookies(client, response);
 }
