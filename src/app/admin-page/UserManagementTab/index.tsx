@@ -73,13 +73,14 @@ export default function UserManagementTab() {
                         <AdminPageTableHeaderCell>Role</AdminPageTableHeaderCell>
                         <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
                     </tr>
-                    {Object.entries(userData).map(([id, row]) => {
+                    {Object.entries(userData).map(([id, row], index) => {
                         return <UserManagementRow
                             key={id}
                             rowFlag={getRowFlag(id)}
                             setRowFlag={(rowFlag: RowFlag) => (setRowFlag(id, rowFlag))}
                             user={row}
                             setUser={(user) => setUser(id, user)}
+                            index={index}
                         ></UserManagementRow>;
                     })}
                 </tbody>

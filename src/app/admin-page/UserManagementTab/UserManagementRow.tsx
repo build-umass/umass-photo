@@ -12,11 +12,13 @@ export default function UserManagementRow({
     setRowFlag,
     user,
     setUser,
+    index,
 }: {
     rowFlag: RowFlag;
     setRowFlag: (rowFlag: RowFlag) => void;
     user: Tables<"photoclubuser">;
     setUser: (isDeleted: Tables<"photoclubuser">) => void;
+    index: number;
 }) {
     const role = user.role;
     const setRole = (role: string) => {
@@ -28,7 +30,10 @@ export default function UserManagementRow({
 
     const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-500" :
         rowFlag === RowFlag.DELETED ? "bg-red-500" : "";
-    return <tr>
+
+    const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
+
+    return <tr className={rowBackgroundColor}>
         <AdminPageTableCell className={`w-2 ${colorClass}`}></AdminPageTableCell>
         <AdminPageTableCell>{user.id}</AdminPageTableCell>
         <AdminPageTableCell>{user.username}</AdminPageTableCell>
