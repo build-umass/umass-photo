@@ -1,7 +1,7 @@
 import UserManagementTab from "./UserManagementTab"
-import AdminPageButton from "./common/AdminPageButton"
 import EventManagementTab from "./EventManagementTab"
 import { useState } from "react"
+import AdminPageTabButton from "./AdminPageTabButton"
 
 enum Tab {
     USER,
@@ -32,7 +32,7 @@ export default function AdminPageContent() {
     return <div className="flex">
         <div className="flex flex-col bg-umass-red w-96">
             {getTabValues().map(tab => {
-                return <AdminPageButton key={tab} onClick={() => setActiveTab(tab)} highlighted={tab == activeTab} className="text-white">{getTabName(tab)}</AdminPageButton>
+                return <AdminPageTabButton key={tab} onClick={() => setActiveTab(tab)} highlighted={tab == activeTab}>{getTabName(tab)}</AdminPageTabButton>
             })}
         </div>
         <div>
