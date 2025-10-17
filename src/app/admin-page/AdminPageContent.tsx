@@ -14,7 +14,7 @@ const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab];
 
 export default function AdminPageContent() {
     const [activeTab, setActiveTab] = useState<TabInfo>(userTab)
-    const currentTab = activeTab.component();
+    const TabContent = activeTab.component;
 
     return <div className="flex">
         <div className="flex flex-col bg-umass-red w-96">
@@ -26,6 +26,6 @@ export default function AdminPageContent() {
                 >{tab.title}</AdminPageTabButton>
             })}
         </div>
-        {currentTab}
+        <TabContent></TabContent>
     </div>
 }
