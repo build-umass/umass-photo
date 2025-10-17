@@ -33,30 +33,21 @@ export default function AdminPage() {
         },
         []
     )
-    switch (pageState) {
-        case PageState.DEFAULT:
-            return <>
-                <Navbar></Navbar>
-                Figuring out who you are...
-                <Footer></Footer>
-            </>
-        case PageState.UNAUTHENTICATED:
-            return <>
-                <Navbar></Navbar>
-                I don&apos;t know who you are
-                <Footer></Footer>
-            </>
-        case PageState.AUTHORIZED:
-            return <>
-                <Navbar></Navbar>
-                <AdminPageContent></AdminPageContent>
-                <Footer></Footer>
-            </>
-        case PageState.UNAUTHORIZED:
-            return <>
-                <Navbar></Navbar>
-                You can&apos;t see this
-                <Footer></Footer>
-            </>
+    const actualContent = () => {
+        switch (pageState) {
+            case PageState.DEFAULT:
+                return <>Figuring out who you are...</>
+            case PageState.UNAUTHENTICATED:
+                return <>I don&apos;t know who you are</>
+            case PageState.AUTHORIZED:
+                return <AdminPageContent></AdminPageContent>
+            case PageState.UNAUTHORIZED:
+                return <>You can&apos;t see this</>
+        }
     }
+    return <>
+        <Navbar></Navbar>
+        {actualContent()}
+        <Footer></Footer>
+    </>
 }
