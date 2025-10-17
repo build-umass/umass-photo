@@ -57,8 +57,8 @@ export default function UserManagementTab() {
     if (!isLoaded) {
         return <>loading...</>
     } else {
-        return <div className="p-64">
-            <h1 className="text-6xl text-umass-red">Users</h1>
+        return <div className="p-24">
+            <h1 className="text-6xl text-umass-red font-bold">Users</h1>
             <table className="border-2">
                 <tbody>
                     <tr>
