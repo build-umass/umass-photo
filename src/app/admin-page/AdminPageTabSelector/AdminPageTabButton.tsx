@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import AdminPageButton from "./common/AdminPageButton"
+import AdminPageButton from "../common/AdminPageButton"
 
 export default function AdminPageTabButton({
   children,
