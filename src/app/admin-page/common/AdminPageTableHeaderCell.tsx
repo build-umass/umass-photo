@@ -1,9 +1,11 @@
 import { ReactNode } from "react"
 
 export default function AdminPageTableHeaderCell({
-    children
+    children,
+    ...props
 }: {
-    children: ReactNode
+    children?: ReactNode,
+    [key: string]: unknown
 }) {
-    return <th className="p-2 bg-umass-red text-white text-center">{children}</th>
+    return <th className={`${props.className} p-2 bg-umass-red text-white text-center`}>{children}</th>
 }
