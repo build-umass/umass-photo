@@ -7,5 +7,5 @@ export default function AdminPageTableHeaderCell({
     children?: ReactNode,
     [key: string]: unknown
 }) {
-    return <th className={`${props.className} p-2 bg-umass-red text-white text-center`}>{children}</th>
+    return <th className={`${props.className} p-2 bg-umass-red text-white text-center text-5xl`}>{children}</th>
 }
