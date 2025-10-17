@@ -10,5 +10,5 @@ export default function AdminPageButton({
   [key: string]: unknown
 }) {
   const color = highlighted ? "bg-white/20": ""
-  return <button className={`p-1 w-96 ${color}`} {...props}>{children}</button>
+  return <button className={`${props.className} p-5 ${color} font-bold text-3xl`} {...props}>{children}</button>
 }
