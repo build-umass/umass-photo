@@ -32,7 +32,7 @@ export default function AdminPageContent() {
     return <div className="flex">
         <div className="flex flex-col bg-umass-red w-96">
             {getTabValues().map(tab => {
-                return <AdminPageButton key={tab} onClick={() => setActiveTab(tab)} highlighted={tab == activeTab}>{getTabName(tab)}</AdminPageButton>
+                return <AdminPageButton key={tab} onClick={() => setActiveTab(tab)} highlighted={tab == activeTab} className="text-white">{getTabName(tab)}</AdminPageButton>
             })}
         </div>
         <div>
