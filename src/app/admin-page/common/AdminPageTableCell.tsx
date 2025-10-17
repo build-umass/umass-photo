@@ -5,5 +5,5 @@ export default function AdminPageTableCell({
 }: {
     children: ReactNode
 }) {
-    return <td className="p-2 border-2">{children}</td>
+    return <td className="p-2 text-umass-red text-center">{children}</td>
 }
