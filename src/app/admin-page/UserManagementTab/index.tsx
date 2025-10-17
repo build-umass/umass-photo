@@ -57,7 +57,8 @@ export default function UserManagementTab() {
     if (!isLoaded) {
         return <>loading...</>
     } else {
-        return <>
+        return <div className="p-64">
+            <h1 className="text-6xl text-umass-red">Users</h1>
             <table className="border-2">
                 <tbody>
                     <tr>
@@ -80,6 +81,6 @@ export default function UserManagementTab() {
                 </tbody>
             </table>
             <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
-        </>
+        </div>
     }
 }
