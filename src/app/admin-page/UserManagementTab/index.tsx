@@ -62,7 +62,7 @@ export default function UserManagementTab() {
                 <h1 className="text-7xl text-umass-red font-bold">Users</h1>
                 <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
             </div>
-            <table className="border-2 border-gray-200">
+            <table className="border-2 border-gray-200 drop-shadow-xl">
                 <tbody>
                     <tr>
                         <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
