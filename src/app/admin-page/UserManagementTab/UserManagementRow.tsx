@@ -28,13 +28,13 @@ export default function UserManagementRow({
         setRowFlag(RowFlag.MODIFIED)
     }
 
-    const colorClass = rowFlag === RowFlag.MODIFIED ? "bg-yellow-500" :
+    const indicatorColor = rowFlag === RowFlag.MODIFIED ? "bg-yellow-500" :
         rowFlag === RowFlag.DELETED ? "bg-red-500" : "";
 
     const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
 
     return <tr className={rowBackgroundColor}>
-        <AdminPageTableCell className={`w-2 ${colorClass}`}></AdminPageTableCell>
+        <AdminPageTableCell className={`w-2 ${indicatorColor}`}></AdminPageTableCell>
         <AdminPageTableCell>{user.id}</AdminPageTableCell>
         <AdminPageTableCell>{user.username}</AdminPageTableCell>
         <AdminPageTableCell>{user.email}</AdminPageTableCell>
