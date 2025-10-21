@@ -9,5 +9,5 @@ export default function AdminPageTableHeaderCell({
     className?: string,
     [key: string]: unknown
 }) {
-    return <th className={`${className ?? ""} p-2 bg-umass-red text-white text-center text-5xl`} {...props}>{children}</th>
+    return <th className={`${className ?? ""} p-5 bg-umass-red text-white text-center text-4xl`} {...props}>{children}</th>
 }

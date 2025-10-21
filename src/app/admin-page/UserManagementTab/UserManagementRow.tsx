@@ -1,5 +1,6 @@
 import { Tables } from "@/app/utils/supabase/database.types";
 import AdminPageTableCell from "../common/AdminPageTableCell";
+import AdminPageButton from "../common/AdminPageButton";
 
 export enum RowFlag {
     MODIFIED,
@@ -43,7 +44,7 @@ export default function UserManagementRow({
             <input className="bg-amber-200" value={role} onChange={(e) => setRole(e.target.value)}></input>
         </AdminPageTableCell>
         <AdminPageTableCell>
-            <button className="bg-red-500" onClick={() => setRowFlag(RowFlag.DELETED)}>DELETE</button>
+            <AdminPageButton className="bg-umass-red text-white" onClick={() => setRowFlag(RowFlag.DELETED)}>X</AdminPageButton>
         </AdminPageTableCell>
     </tr>
 }

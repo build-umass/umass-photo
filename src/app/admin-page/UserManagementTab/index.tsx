@@ -59,7 +59,7 @@ export default function UserManagementTab() {
     } else {
         return <div className="p-24 flex flex-col bg-gray-100 grow">
             <div className="flex justify-between">
-                <h1 className="text-7xl text-umass-red font-bold">Users</h1>
+                <h1 className="text-6xl text-umass-red font-bold">Users</h1>
                 <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
             </div>
             <table className="border-2 border-gray-200 drop-shadow-xl">
