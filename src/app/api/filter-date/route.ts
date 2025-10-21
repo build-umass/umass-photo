@@ -13,11 +13,13 @@ export async function GET(request: NextRequest) {
 
   const client = createClient(supabaseUrl, supabaseApiKey);
 
-  const arg = [
-    1
-  ]
-  const result = await client.rpc('test_1', {ids: JSON.stringify(arg)}, {get:true})
+  const arg1 = "2022-01-01";
+  const arg2 = "2025-01-01";
+  const result = await client.rpc('filter_date', {querystart: arg1, queryend: arg2}, {get:true})
+
   const resultString = JSON.stringify(result, undefined, '    ');
   console.log(resultString)
   return new Response(resultString);
 }
+
+
