@@ -256,7 +256,6 @@ export default function ComponentsPreview() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <MarkdownElement content={sampleText}></MarkdownElement>
-      <EventChip></EventChip>
       <Footer />
     </div>
   );
