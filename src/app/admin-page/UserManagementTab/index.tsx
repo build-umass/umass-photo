@@ -10,10 +10,9 @@ export default function UserManagementTab() {
     const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
     const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">> | null>(null);
     const refreshData = async () => {
-        const response = await fetch("/api/get-user-all");
-        const data = await response.json();
-        const recordEntries = data.map((user: Tables<"photoclubuser">) => [user.id, user])
-        setUserData(Object.fromEntries(recordEntries));
+        const userList = await (await fetch("/api/get-user-all")).json();
+        const userRecord = userList.map((user: Tables<"photoclubuser">) => [user.id, user])
+        setUserData(Object.fromEntries(userRecord));
         setRowFlags({});
     }
     useEffect(() => {
