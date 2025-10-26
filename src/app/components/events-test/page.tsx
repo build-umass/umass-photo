@@ -256,7 +256,15 @@ export default function ComponentsPreview() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <MarkdownElement content={sampleText}></MarkdownElement>
-      <EventChip></EventChip>
+      <EventChip eventData={{
+        id: 2,
+        name: 'Summer Contest',
+        startdate: '2025-07-01T00:00:00Z',
+        enddate: '2025-07-31T23:59:59Z',
+        tag: 'Summer Contest',
+        description: 'Monthly summer photo contest; open to all members.',
+        heroid: 5,
+      }}></EventChip>
       <Footer />
     </div>
   );
