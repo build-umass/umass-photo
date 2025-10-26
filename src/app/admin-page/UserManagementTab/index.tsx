@@ -7,16 +7,14 @@ import UserManagementRow, { RowFlag } from "./UserManagementRow";
 
 
 export default function UserManagementTab() {
-    const [isLoaded, setIsLoaded] = useState(false);
     const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
-    const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">>>({});
+    const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">> | null>(null);
     const refreshData = async () => {
         const response = await fetch("/api/get-user-all");
         const data = await response.json();
         const recordEntries = data.map((user: Tables<"photoclubuser">) => [user.id, user])
         setUserData(Object.fromEntries(recordEntries));
         setRowFlags({});
-        setIsLoaded(true)
     }
     useEffect(() => {
         refreshData()
@@ -39,6 +37,7 @@ export default function UserManagementTab() {
     }
 
     const saveChanges = async () => {
+        if (userData === null) throw new Error("Called saveChanges with userdata==null!")
         const toDelete: string[] = []
         const toModify: Tables<"photoclubuser">[] = []
         Object.entries(userData).forEach(([id, row]) => {
@@ -47,14 +46,14 @@ export default function UserManagementTab() {
             if (rowFlags[id] === RowFlag.MODIFIED)
                 toModify.push(row);
         });
-        setIsLoaded(false);
+        setUserData(null);
         await fetch("/api/update-user-data", {
             method: "POST",
             body: JSON.stringify({ toDelete, toModify })
         });
         await refreshData();
     }
-    if (!isLoaded) {
+    if (userData === null) {
         return <>loading...</>
     } else {
         return <div className="p-24 flex flex-col bg-gray-100 grow">
