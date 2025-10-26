@@ -14,12 +14,14 @@ export default function UserManagementRow({
     user,
     setUser,
     index,
+    roles,
 }: {
     rowFlag: RowFlag;
     setRowFlag: (rowFlag: RowFlag) => void;
     user: Tables<"photoclubuser">;
     setUser: (isDeleted: Tables<"photoclubuser">) => void;
     index: number;
+    roles: ReadonlyArray<string>;
 }) {
     const role = user.role;
     const setRole = (role: string) => {
@@ -41,7 +43,9 @@ export default function UserManagementRow({
         <AdminPageTableCell>{user.email}</AdminPageTableCell>
         <AdminPageTableCell>{user.bio}</AdminPageTableCell>
         <AdminPageTableCell>
-            <input className="bg-amber-200" value={role} onChange={(e) => setRole(e.target.value)}></input>
+            <select defaultValue={role} onChange={(e) => setRole(e.target.value)}>
+                {roles.map(role => <option value={role} key={role}>{role}</option>)}
+            </select>
         </AdminPageTableCell>
         <AdminPageTableCell>
             <AdminPageButton className="bg-umass-red text-white" onClick={() => setRowFlag(RowFlag.DELETED)}>X</AdminPageButton>

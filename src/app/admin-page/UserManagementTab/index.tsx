@@ -58,7 +58,8 @@ export default function UserManagementTab() {
         });
         await refreshData();
     }
-    if (userData === null) {
+
+    if (userData === null || roles === null) {
         return <>loading...</>
     } else {
         return <div className="p-24 flex flex-col bg-gray-100 grow">
@@ -85,6 +86,7 @@ export default function UserManagementTab() {
                             user={row}
                             setUser={(user) => setUser(id, user)}
                             index={index}
+                            roles={roles}
                         ></UserManagementRow>;
                     })}
                 </tbody>
