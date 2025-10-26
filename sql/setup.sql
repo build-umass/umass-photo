@@ -35,8 +35,8 @@ CREATE TABLE phototag (
 CREATE TABLE event (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(64) NOT NULL,
-    startdate   DATE NOT NULL,
-    enddate     DATE NOT NULL,
+    startdate   TIMESTAMP NOT NULL,
+    enddate     TIMESTAMP NOT NULL,
     tag         VARCHAR(32) REFERENCES tag(name) NOT NULL,
     description TEXT NOT NULL,
     heroid      INTEGER REFERENCES photo(id) NOT NULL
