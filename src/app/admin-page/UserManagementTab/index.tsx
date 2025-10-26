@@ -9,10 +9,14 @@ import UserManagementRow, { RowFlag } from "./UserManagementRow";
 export default function UserManagementTab() {
     const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
     const [userData, setUserData] = useState<Record<string, Tables<"photoclubuser">> | null>(null);
+    const [roles, setRoles] = useState<ReadonlyArray<string> | null>(null);
     const refreshData = async () => {
         const userList = await (await fetch("/api/get-user-all")).json();
         const userRecord = userList.map((user: Tables<"photoclubuser">) => [user.id, user])
         setUserData(Object.fromEntries(userRecord));
+        const roleList: Tables<"photoclubrole">[] = await (await fetch("/api/get-role-all")).json();
+        const roleNameList = roleList.map(role => role.roleid)
+        setRoles(roleNameList);
         setRowFlags({});
     }
     useEffect(() => {
