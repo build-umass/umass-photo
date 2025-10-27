@@ -2,6 +2,7 @@ import React from 'react';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import menu from '../../../public/menu.svg';
 import './photoGallery.css';
+import UploadChip from './UploadChip';
 
 interface PhotoItem {
     id: number;
@@ -36,6 +37,7 @@ const PhotoGallery = () => {
                     </div>
                 ))}
             </div>
+            <UploadChip></UploadChip>
         </div>
     );
 };
