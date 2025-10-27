@@ -1,7 +1,6 @@
 import Navbar from "./navbar/navbar"; // Import Navbar from the navbar folder
 import Footer from "./footer/footer"; // Import Footer from the footer folder
 import MarkdownElement from "./markdown/MarkdownElement";
-import EventChip from "./EventChip";
 
 const sampleText = `
 ---
