@@ -12,7 +12,7 @@ WHERE
             COUNT(*)
         FROM
             json_array_elements(querytags) AS tagquery
-            LEFT JOIN phototag ON phototag.tag = tagquery.value :: text
+            LEFT JOIN phototag ON (phototag.tag = json_value(tagquery.value, '$')
         WHERE
             phototag.photoid = photo.id
     ) = (
