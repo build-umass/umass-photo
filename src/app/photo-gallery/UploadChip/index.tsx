@@ -1,4 +1,8 @@
-export default function UploadChip() {
+export default function UploadChip({
+    closeCallback
+} : {
+    closeCallback: () => void
+}) {
     return <div className="fixed inset-0 flex items-center justify-center bg-black/20">
         <div className="w-2/3 h-2/3 bg-white p-12">
             <form
@@ -12,7 +16,7 @@ export default function UploadChip() {
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description"></textarea>
                 <div className="flex flex-row">
                 {/* TODO convert to common button style */}
-                <button>Close</button>
+                <button onClick={closeCallback}>Close</button>
                 <button>Preview</button>
                 <button type="submit">Upload</button>
                 </div>
