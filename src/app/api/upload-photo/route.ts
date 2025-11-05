@@ -9,6 +9,11 @@ dotenv.config();
 export async function POST(request: NextRequest) {
   const client = getUserClient(request);
 
+  const userId = (await client.auth.getUser()).data?.user?.id
+  if (!userId) {
+    throw new Error("userId could not be found")
+  }
+
   const formData = await request.formData();
   const image = formData.get("image") as (File | null)
   if (!image) {
@@ -26,12 +31,7 @@ export async function POST(request: NextRequest) {
 
   console.log("success");
 
-  const userId = (await client.auth.getUser()).data?.user?.id
-  if (!userId) {
-    throw new Error("userId could not be found")
-  }
   await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
-
 
   const response = new Response("", { status: 201 });
   return attachCookies(client, response);
