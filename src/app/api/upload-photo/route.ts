@@ -29,9 +29,10 @@ export async function POST(request: NextRequest) {
     throw storageUploadError
   }
 
-  console.log("success");
-
-  await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
+  const {data: _, error: databaseUploadError} = await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
+  if (databaseUploadError) {
+    throw databaseUploadError
+  }
 
   const response = new Response("", { status: 201 });
   return attachCookies(client, response);
