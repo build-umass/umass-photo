@@ -1,7 +1,6 @@
 'use client'
 import UmassPhotoButton from "@/app/components/UmassPhotoButton";
 import { FormEvent } from "react";
-import { useFormStatus } from "react-dom";
 
 export default function UploadChip({
     closeCallback
