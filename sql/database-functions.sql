@@ -1,53 +1,34 @@
-CREATE
-OR REPLACE FUNCTION filter_tags(
-    querytags json
+CREATE OR REPLACE FUNCTION filter_photos(
+    filtering_tags boolean,
+    filtering_authors boolean,
+    filtering_date boolean,
+    querytags json,
+    queryauthor UUID,
+    querystart TIMESTAMP,
+    queryend TIMESTAMP
 ) RETURNS SETOF photo AS $$
-SELECT
-    *
-FROM
-    photo
+SELECT *
+FROM photo p
 WHERE
     (
-        SELECT
-            COUNT(*)
-        FROM
-            json_array_elements(querytags) AS tagquery
-            LEFT JOIN phototag ON (phototag.tag = json_value(tagquery.value, '$')
-        WHERE
-            phototag.photoid = photo.id
-    ) = (
-        SELECT
-            COUNT(*)
-        FROM
-            json_array_elements(querytags)
+        (NOT filtering_tags) OR (
+            (
+                SELECT COUNT(DISTINCT pt.tag)
+                FROM phototag pt
+                WHERE pt.photoid = p.id
+                  AND pt.tag IN (
+                      SELECT value FROM json_array_elements_text(querytags)
+                  )
+            ) = (
+                SELECT COUNT(*) FROM json_array_elements_text(querytags)
+            )
+        )
+    )
+AND
+    (
+        (NOT filtering_authors) OR (p.authorid = queryauthor)
+    )
+AND
+    (
+        (NOT filtering_date) OR (p.postdate BETWEEN querystart AND queryend)
     ) $$ LANGUAGE SQL;
-
-CREATE
-OR REPLACE FUNCTION filter_authors (queryauthor UUID) RETURNS SETOF photo as $$
-SELECT
-    *
-FROM
-    photo
-WHERE
-    (
-        photo.authorid = queryauthor
-) $$ LANGUAGE SQL;
-
-CREATE
-OR REPLACE FUNCTION filter_date (querystart TIMESTAMP, queryend TIMESTAMP) RETURNS SETOF photo as $$
-SELECT
-    *
-FROM
-    photo
-WHERE
-    (
-        photo.postdate BETWEEN querystart
-        AND queryend
-    ) $$ LANGUAGE SQL;
-
-
-
--- querytags json
--- queryauthor varchar,
--- querytime TIMESTAMP,
--- queryend TIMESTAMP
