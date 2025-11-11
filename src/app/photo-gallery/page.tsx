@@ -41,7 +41,8 @@ const PhotoGallery = () => {
         <div>
             <img src={menu.src} alt="Menu" id="menu-icon" />
             <div id="photo-grid">
-                {[addPhotoButton, ...photoElements]}
+                {addPhotoButton}
+                {photoElements}
             </div>
             {
                 uploadingPhoto ?
