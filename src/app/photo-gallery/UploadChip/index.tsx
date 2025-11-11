@@ -1,4 +1,5 @@
 'use client'
+import UmassPhotoButton from "@/app/components/UmassPhotoButton";
 import { FormEvent } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -33,11 +34,15 @@ export default function UploadChip({
                 <input type="file" name="image" className="bg-gray-200 p-3 border-2 border-dashed border-gray-600 grow"></input>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title"></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description"></textarea>
-                <div className="flex flex-row">
+                <div className="flex flex-row gap-3">
                     {/* TODO convert to common button style */}
-                    <button onClick={closeCallback}>Close</button>
-                    <button>Preview</button>
-                    <button type="submit">Upload</button>
+                    <UmassPhotoButton className="bg-gray-400" onClick={closeCallback}>Close</UmassPhotoButton>
+                    <div
+                        aria-hidden="true"
+                        className="grow"
+                    ></div>
+                    <UmassPhotoButton className="bg-umass-red">Preview</UmassPhotoButton>
+                    <UmassPhotoButton className="bg-umass-red" type="submit">Upload</UmassPhotoButton>
                 </div>
             </form>
         </div>
