@@ -15,8 +15,12 @@ export default function UploadChip({
             method: 'POST',
             body: formData,
         })
-        if (response.status != 201) {
-            throw Error("Bad Upload!")
+        switch (response.status) {
+            case 201:
+                closeCallback();
+                return;
+            default:
+                throw Error("Bad Upload!")
         }
     }
 
