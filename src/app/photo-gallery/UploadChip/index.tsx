@@ -1,6 +1,7 @@
 'use client'
 import UmassPhotoButton from "@/app/components/UmassPhotoButton";
 import { FormEvent, useRef, useState } from "react";
+import PreviewPage from "./PreviewPage";
 
 export default function UploadChip({
     closeCallback
@@ -29,20 +30,19 @@ export default function UploadChip({
 
     async function processFileLoad() {
         const selectedImage = imageField.current?.files?.item(0)
-        if(!selectedImage) return;
+        if (!selectedImage) return;
         const fr = new FileReader();
         fr.onload = function () {
             if (typeof fr.result !== "string") throw new Error("File was not read as a data URL!")
             setImageDataUrl(fr.result);
         }
         fr.readAsDataURL(selectedImage);
-
     }
 
     return <div className="fixed inset-0 flex items-center justify-center bg-black/20">
         <div className="w-2/3 h-2/3 bg-white p-12">
-            <div hidden={!previewMode}>
-                <img src={imageDataURL}></img>
+            <div className="w-full h-full" hidden={!previewMode}>
+                <PreviewPage previewImageUrl={imageDataURL} setPreviewMode={setPreviewMode}></PreviewPage>
             </div>
             <form
                 onSubmit={uploadPhoto}
@@ -59,7 +59,7 @@ export default function UploadChip({
                         aria-hidden="true"
                         className="grow"
                     ></div>
-                    <UmassPhotoButton className="bg-umass-red" type="button" onClick={() => {setPreviewMode(true)}}>Preview</UmassPhotoButton>
+                    <UmassPhotoButton className="bg-umass-red" type="button" onClick={() => { setPreviewMode(previewMode => !previewMode) }}>Preview</UmassPhotoButton>
                     <UmassPhotoButton className="bg-umass-red" type="submit">Upload</UmassPhotoButton>
                 </div>
             </form>
