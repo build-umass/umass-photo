@@ -72,7 +72,8 @@ export default function UploadChip({
         fr.readAsDataURL(selectedImage);
     }
 
-    const tagList = selectedTags.map(tag => <div key={tag} className="bg-gray-300 rounded-xl py-1 px-4 text-2xl">{tag}
+    const tagList = selectedTags.map(tag => <div key={tag} className="bg-gray-300 rounded-xl py-1 px-4 text-2xl flex align-middle gap-2">
+        <div>{tag}</div>
         <button type="button" onClick={() => { removeTag(tag) }}>X</button>
     </div>)
 
@@ -91,9 +92,9 @@ export default function UploadChip({
                 <input type="file" name="image" className="bg-gray-200 p-3 border-2 border-dashed border-gray-600 grow" required ref={imageField} onChange={processFileLoad}></input>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
-                <div className="flex flex-row gap-3">
+                <div className="flex flex-row flex-wrap gap-3 align-middle">
                     {tagList}
-                    <select defaultValue="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
+                    <select defaultValue="default" value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
                         <option value="default">+</option>
                         {tagOptionElements}
                     </select>
