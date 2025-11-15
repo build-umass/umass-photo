@@ -29,7 +29,15 @@ export async function POST(request: NextRequest) {
     throw storageUploadError
   }
 
-  const { error: databaseUploadError } = await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
+  const title = formData.get("title")
+  const description = formData.get("description")
+  const { error: databaseUploadError } = await client.from("photo").insert({
+    authorid: userId,
+    file: fileName,
+    postdate: new Date(Date.now()).toISOString(),
+    title,
+    description
+  })
   if (databaseUploadError) {
     throw databaseUploadError
   }
