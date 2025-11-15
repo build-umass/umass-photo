@@ -2,6 +2,7 @@
 import UmassPhotoButton from "@/app/components/UmassPhotoButton";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import PreviewPage from "./PreviewPage";
+import Image from "next/image";
 
 export default function UploadChip({
     closeCallback
@@ -79,6 +80,12 @@ export default function UploadChip({
 
     const tagOptionElements = Array.from(tagOptions).map(tag => <option key={tag} value={tag}>{tag}</option>)
 
+    const fileSelectContent = imageDataURL ? <div className="flex flex-col w-full h-full">
+        <div className="relative grow">
+            <Image alt="Image Preview" src={imageDataURL} fill={true} className="object-contain"></Image>
+        </div>
+        <div className="text-center">{imageField.current?.value.substring(12)}</div>
+    </div> : "Select a photo"
     return <div className="fixed inset-0 flex items-center justify-center bg-black/20">
         <div className="w-2/3 h-2/3 bg-white p-12">
             <div className="w-full h-full" hidden={!previewMode}>
@@ -89,7 +96,20 @@ export default function UploadChip({
                 className="flex flex-col gap-4 h-full box-border"
                 hidden={previewMode}
             >
-                <input type="file" name="image" className="bg-gray-200 p-3 border-2 border-dashed border-gray-600 grow" required ref={imageField} onChange={processFileLoad}></input>
+                <input
+                    type="file"
+                    name="image"
+                    id="file-upload-image"
+                    accept="image/*"
+                    required
+                    ref={imageField}
+                    onChange={processFileLoad}
+                    hidden
+                ></input>
+                <label
+                    htmlFor="file-upload-image"
+                    className="bg-gray-200 p-3 border-2 border-dashed border-gray-600 grow bg-cover bg-center"
+                >{fileSelectContent}</label>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
                 <div className="flex flex-row flex-wrap gap-3 align-middle">
