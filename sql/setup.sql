@@ -15,6 +15,7 @@ CREATE TABLE blog (
 CREATE TABLE photo (
     id       SERIAL PRIMARY KEY, 
     title    VARCHAR(128) NOT NULL,
+    description TEXT,
     authorid UUID REFERENCES photoclubuser(id) NOT NULL,
     file     VARCHAR(128) NOT NULL,
     postdate TIMESTAMP NOT NULL

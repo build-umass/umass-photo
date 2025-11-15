@@ -2,16 +2,16 @@ INSERT INTO photoclubuser VALUES
 ('43188856-13db-410a-b1a2-b006056cd84f', 'max 1', 'amoinus@gmail.com',     'hi', 'admin' ),
 ('beebdcae-ba00-4c16-9e1c-2103381337bf', 'max 2', 'maxwelltang@umass.edu', 'hi', 'eboard');
 
-INSERT INTO photo(id, authorid, file, postdate) VALUES
-(1, '43188856-13db-410a-b1a2-b006056cd84f', '01.png', '2020-03-15 14:30:00'),
-(2, 'beebdcae-ba00-4c16-9e1c-2103381337bf', '02.png', '2020-07-22 16:45:00'),
-(3, '43188856-13db-410a-b1a2-b006056cd84f', '03.png', '2021-01-10 09:15:00'),
-(4, 'beebdcae-ba00-4c16-9e1c-2103381337bf', '04.png', '2021-05-18 12:20:00'),
-(5, '43188856-13db-410a-b1a2-b006056cd84f', '05.png', '2022-02-28 18:00:00'),
-(6, 'beebdcae-ba00-4c16-9e1c-2103381337bf', '06.png', '2022-08-14 11:30:00'),
-(7, '43188856-13db-410a-b1a2-b006056cd84f', '07.png', '2023-04-03 15:45:00'),
-(8, 'beebdcae-ba00-4c16-9e1c-2103381337bf', '08.png', '2023-11-12 13:10:00'),
-(9, '43188856-13db-410a-b1a2-b006056cd84f', '09.png', '2024-06-25 17:30:00');
+INSERT INTO photo(id, title, authorid, description, file, postdate) VALUES
+(1, 'title 1', '43188856-13db-410a-b1a2-b006056cd84f', 'description 1', '01.png', '2020-03-15 14:30:00'),
+(2, 'title 2', 'beebdcae-ba00-4c16-9e1c-2103381337bf', 'description 2', '02.png', '2020-07-22 16:45:00'),
+(3, 'title 3', '43188856-13db-410a-b1a2-b006056cd84f', 'description 3', '03.png', '2021-01-10 09:15:00'),
+(4, 'title 4', 'beebdcae-ba00-4c16-9e1c-2103381337bf', 'description 4', '04.png', '2021-05-18 12:20:00'),
+(5, 'title 5', '43188856-13db-410a-b1a2-b006056cd84f', 'description 5', '05.png', '2022-02-28 18:00:00'),
+(6, 'title 6', 'beebdcae-ba00-4c16-9e1c-2103381337bf', 'description 6', '06.png', '2022-08-14 11:30:00'),
+(7, 'title 7', '43188856-13db-410a-b1a2-b006056cd84f', 'description 7', '07.png', '2023-04-03 15:45:00'),
+(8, 'title 8', 'beebdcae-ba00-4c16-9e1c-2103381337bf', 'description 8', '08.png', '2023-11-12 13:10:00'),
+(9, 'title 9', '43188856-13db-410a-b1a2-b006056cd84f', 'description 9', '09.png', '2024-06-25 17:30:00');
 
 INSERT INTO tag VALUES
 ('nature'),
