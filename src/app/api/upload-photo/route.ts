@@ -24,12 +24,12 @@ export async function POST(request: NextRequest) {
   console.log(`fileName: ${fileName}`);
   console.log(image);
 
-  const { data: _storageUploadData, error: storageUploadError } = await client.storage.from("photos").upload(fileName, image);
+  const { error: storageUploadError } = await client.storage.from("photos").upload(fileName, image);
   if (storageUploadError) {
     throw storageUploadError
   }
 
-  const {data: _, error: databaseUploadError} = await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
+  const { error: databaseUploadError } = await client.from("photo").insert({ authorid: userId, file: fileName, postdate: new Date(Date.now()).toISOString() })
   if (databaseUploadError) {
     throw databaseUploadError
   }
