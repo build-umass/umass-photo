@@ -26,6 +26,7 @@ export default function UploadChip({
         event.preventDefault()
 
         const formData = new FormData(event.currentTarget)
+        formData.set("tags", JSON.stringify(selectedTags))
         const response = await fetch('/api/upload-photo', {
             method: 'POST',
             body: formData,

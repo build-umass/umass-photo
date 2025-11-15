@@ -31,15 +31,26 @@ export async function POST(request: NextRequest) {
 
   const title = formData.get("title")
   const description = formData.get("description")
-  const { error: databaseUploadError } = await client.from("photo").insert({
+  const tags: string[] = JSON.parse(formData.get("tags")!.toString())
+  const { data: photoData, error: databaseUploadError } = await client.from("photo").insert({
     authorid: userId,
     file: fileName,
     postdate: new Date(Date.now()).toISOString(),
     title,
     description
-  })
+  }).select()
   if (databaseUploadError) {
     throw databaseUploadError
+  }
+
+  for(const tag of tags){
+    const { error: databaseUploadError } = await client.from("phototag").insert({
+      photoid: photoData[0].id,
+      tag,
+    });
+    if (databaseUploadError) {
+      throw databaseUploadError
+    }
   }
 
   const response = new Response("", { status: 201 });
