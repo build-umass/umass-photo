@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import menu from '../../../public/menu.svg';
 import Navbar from '../components/navbar/navbar';
@@ -11,6 +11,7 @@ interface PhotoItem {
     title: string;
     author: string;
     date: string;
+    imageUrl?: string;
 }
 
 const PhotoGallery = () => {
@@ -20,6 +21,9 @@ const PhotoGallery = () => {
     const [showPhotographer, setShowPhotographer] = useState(false);
     const [showTags, setShowTags] = useState(false);
     const [closingSection, setClosingSection] = useState<'uploadDate' | 'photographer' | 'tags' | null>(null);
+    const [photos, setPhotos] = useState<PhotoItem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
     
     const handleMenuClose = () => {
         setMenuClosing(true);
@@ -33,6 +37,34 @@ const PhotoGallery = () => {
         }, 300);
     };
     
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/get-photos');
+                const result = await response.json();
+                
+                if (result.data) {
+                    setPhotos(result.data);
+                } else {
+                    console.error('Error fetching photos:', result.error);
+                    setPhotos([]);
+                }
+            } catch (error) {
+                console.error('Error fetching photos:', error);
+                setPhotos([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPhotos();
+    }, []);
+
+    const handleImageError = (photoId: number) => {
+        setImageErrors(prev => new Set(prev).add(photoId));
+    };
+
     const handleSectionToggle = (section: 'uploadDate' | 'photographer' | 'tags' ) => {
 
         if ((section === 'uploadDate' && showUploadDate) ||
@@ -59,13 +91,6 @@ const PhotoGallery = () => {
             }, 50);
         }
     };
-
-    const photos: PhotoItem[] = Array.from({ length: 12 }, (_, i) => ({
-        id: i,
-        title: 'Lorem ipsum',
-        author: 'John Doe',
-        date: new Date(2023, 0, 1).toLocaleDateString(),
-    }));
 
     return (
         <div>
@@ -196,19 +221,29 @@ const PhotoGallery = () => {
             )}
             
             <div id="photo-grid">
-                {photos.map((photo) => (
-                    <div key={photo.id}>
-                        <img src={stockPhoto.src} alt="Stock photo" id="photo-item" />
-                        <div id="details-container">
-                            <div id="title-author-flex">
-                                <h3 id="title">{photo.title}</h3>
-                                <p id="author">{photo.author}</p>
+                {loading ? (
+                    <div>Loading photos...</div>
+                ) : photos.length === 0 ? (
+                    <div>No photos found.</div>
+                ) : (
+                    photos.map((photo) => (
+                        <div key={photo.id}>
+                            <img 
+                                src={imageErrors.has(photo.id) || !photo.imageUrl ? stockPhoto.src : photo.imageUrl} 
+                                alt={photo.title || "Photo"} 
+                                id="photo-item"
+                                onError={() => handleImageError(photo.id)}
+                            />
+                            <div id="details-container">
+                                <div id="title-author-flex">
+                                    <h3 id="title">{photo.title}</h3>
+                                    <p id="author">{photo.author}</p>
+                                </div>
+                                <p id="upload-date">Uploaded {photo.date}</p>
                             </div>
-                            <p id="upload-date">Uploaded {photo.date}</p>
                         </div>
-                        
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );
