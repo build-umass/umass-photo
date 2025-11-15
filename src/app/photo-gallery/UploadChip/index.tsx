@@ -94,7 +94,7 @@ export default function UploadChip({
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
                 <div className="flex flex-row flex-wrap gap-3 align-middle">
                     {tagList}
-                    <select defaultValue="default" value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
+                    <select value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
                         <option value="default">+</option>
                         {tagOptionElements}
                     </select>
