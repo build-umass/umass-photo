@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import stockPhoto from '../../../public/stock-photo.jpg';
-import menu from '../../../public/menu.svg';
 import Navbar from '../components/navbar/navbar';
+import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
 
 interface PhotoItem {
@@ -15,210 +15,77 @@ interface PhotoItem {
 }
 
 const PhotoGallery = () => {
-    const [showMenu, setShowMenu] = useState(false);
-    const [menuClosing, setMenuClosing] = useState(false);
-    const [showUploadDate, setShowUploadDate] = useState(false);
-    const [showPhotographer, setShowPhotographer] = useState(false);
-    const [showTags, setShowTags] = useState(false);
-    const [closingSection, setClosingSection] = useState<'uploadDate' | 'photographer' | 'tags' | null>(null);
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
     
-    const handleMenuClose = () => {
-        setMenuClosing(true);
-        setTimeout(() => {
-            setShowMenu(false);
-            setMenuClosing(false);
-            setShowUploadDate(false);
-            setShowPhotographer(false);
-            setShowTags(false);
-            setClosingSection(null);
-        }, 300);
-    };
-    
-    useEffect(() => {
-        const fetchPhotos = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch('/api/get-photos');
-                const result = await response.json();
-                
-                if (result.data) {
-                    setPhotos(result.data);
-                } else {
-                    console.error('Error fetching photos:', result.error);
-                    setPhotos([]);
-                }
-            } catch (error) {
-                console.error('Error fetching photos:', error);
-                setPhotos([]);
-            } finally {
-                setLoading(false);
+    const fetchPhotos = async (filters?: {
+        filtering_tags: boolean;
+        filtering_authors: boolean;
+        filtering_date: boolean;
+        querytags: string[];
+        queryauthor: string;
+        querystart: string;
+        queryend: string;
+    }) => {
+        try {
+            setLoading(true);
+            let url = '/api/get-photos';
+            
+            if (filters) {
+                const params = new URLSearchParams({
+                    filtering_tags: filters.filtering_tags.toString(),
+                    filtering_authors: filters.filtering_authors.toString(),
+                    filtering_date: filters.filtering_date.toString(),
+                    querytags: JSON.stringify(filters.querytags),
+                    queryauthor: filters.queryauthor,
+                    querystart: filters.querystart,
+                    queryend: filters.queryend
+                });
+                url = `/api/filter-photos?${params.toString()}`;
             }
-        };
+            
+            const response = await fetch(url);
+            const result = await response.json();
+            
+            if (result.data) {
+                setPhotos(result.data);
+            } else {
+                console.error('Error fetching photos:', result.error);
+                setPhotos([]);
+            }
+        } catch (error) {
+            console.error('Error fetching photos:', error);
+            setPhotos([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchPhotos();
     }, []);
+
+    const handleFilterSubmit = (filters: {
+        filtering_tags: boolean;
+        filtering_authors: boolean;
+        filtering_date: boolean;
+        querytags: string[];
+        queryauthor: string;
+        querystart: string;
+        queryend: string;
+    }) => {
+        fetchPhotos(filters);
+    };
 
     const handleImageError = (photoId: number) => {
         setImageErrors(prev => new Set(prev).add(photoId));
     };
 
-    const handleSectionToggle = (section: 'uploadDate' | 'photographer' | 'tags' ) => {
-
-        if ((section === 'uploadDate' && showUploadDate) ||
-            (section === 'photographer' && showPhotographer) ||
-            (section === 'tags' && showTags)) {
-            setClosingSection(section);
-            setTimeout(() => {
-                if (section === 'uploadDate') setShowUploadDate(false);
-                if (section === 'photographer') setShowPhotographer(false);
-                if (section === 'tags') setShowTags(false);
-                setClosingSection(null);
-            }, 300);
-        } else {
-
-            setShowUploadDate(false);
-            setShowPhotographer(false);
-            setShowTags(false);
-            setClosingSection(null);
-            
-            setTimeout(() => {
-                if (section === 'uploadDate') setShowUploadDate(true);
-                if (section === 'photographer') setShowPhotographer(true);
-                if (section === 'tags') setShowTags(true);
-            }, 50);
-        }
-    };
-
     return (
         <div>
             <Navbar/>
-            <button id="menu-icon-circle" onClick={() => {
-                if (showMenu) {
-                    handleMenuClose();
-                } else {
-                    setShowMenu(true);
-                }
-            }} className={showMenu ? 'expanded' : ''}>
-                <img src={menu.src} alt="Menu" id="menu-icon" />
-
-            </button> 
-
-            {showMenu && (
-                <div id="menu-popup" className={menuClosing ? 'closing' : ''} onClick={handleMenuClose}>
-                    <div id="menu-content" className={menuClosing ? 'closing' : ''} onClick={(e) => e.stopPropagation()}>
-                        <h1 id="popup-header" >Filters</h1>
-                        <hr id="menu-line" />
-                        <div>
-                            <h2 id="popup-subheader" 
-                                className={showUploadDate ? 'active' : ''}
-                                onClick={() => handleSectionToggle('uploadDate')}
-                                style={{
-                                cursor: 'pointer',
-                                fontWeight: showUploadDate ? 'bold' : 'normal'
-                            }}>
-                                <span>Upload Date</span>
-                                <span>▶</span>
-                            </h2>
-                            {showUploadDate && (
-                                <div id="filter-container" className={closingSection === 'uploadDate' ? 'closing' : ''}>
-                                    <div id="upload-date-container">
-                                        <span>from</span>
-                                        <input 
-                                            type="date" 
-                                            id="start-date"
-                                            name="start-date"
-                                            aria-label="Start date"
-                                        />
-                                        <span>to</span>
-                                        <input 
-                                            type="date" 
-                                            id="end-date"
-                                            name="end-date"
-                                            aria-label="End date"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        
-                        <hr id="menu-line" />
-                        
-                        <div>
-                            <h2 id="popup-subheader" 
-                                className={showPhotographer ? 'active' : ''}
-                                onClick={() => handleSectionToggle('photographer')}
-                                style={{
-                                cursor: 'pointer',
-                                fontWeight: showPhotographer ? 'bold' : 'normal'
-                            }}>
-                                <span>Photographer</span>
-                                <span>▶</span>
-                            </h2>
-                            {showPhotographer && (
-                                <div id="filter-container" className={closingSection === 'photographer' ? 'closing' : ''}>
-                                    <button id="photographer-button">John Doe</button>
-                                    <button id="photographer-button">Jane Smith</button>
-                                    <button id="photographer-button">Alice Johnson</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                    <button id="photographer-button">Bob Brown</button>
-                                </div>
-                            )}
-                        </div>
-                        
-                        <hr id="menu-line" />
-                        
-                        <div>
-                            <h2 id="popup-subheader" 
-                                className={showTags ? 'active' : ''}
-                                onClick={() => handleSectionToggle('tags')}
-                                style={{
-                                cursor: 'pointer',
-                                fontWeight: showTags ? 'bold' : 'normal'
-                            }}>
-                                <span>Tags</span>
-                                <span>▶</span>
-                            </h2>
-                            {showTags && (
-                                <div id="filter-container" className={closingSection === 'tags' ? 'closing' : ''}>
-                                    <button id="photographer-button">Nature</button>
-                                    <button id="photographer-button">Portrait</button>
-                                    <button id="photographer-button">Landscape</button>
-                                    <button id="photographer-button">Architecture</button>
-                                    <button id="photographer-button">Event</button>
-                                    <button id="photographer-button">Street</button>
-                                    <button id="photographer-button">Abstract</button>
-                                    <button id="photographer-button">Black & White</button>
-                                    <button id="photographer-button">Macro</button>
-                                    <button id="photographer-button">Wildlife</button>
-                                    <button id="photographer-button">Sports</button>
-                                    <button id="photographer-button">Travel</button>
-                                    <button id="photographer-button">Fashion</button>
-                                    <button id="photographer-button">Food</button>
-                                    <button id="photographer-button">Documentary</button>
-                                    <button id="photographer-button">Fine Art</button>
-                                </div>
-                            )}
-                        </div>
-                        <hr id="menu-line" />
-                        
-                        
-                    </div>
-                </div>
-            )}
+            <FilterMenu onFilterSubmit={handleFilterSubmit} />
             
             <div id="photo-grid">
                 {loading ? (

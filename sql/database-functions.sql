@@ -31,4 +31,7 @@ AND
 AND
     (
         (NOT filtering_date) OR (p.postdate BETWEEN querystart AND queryend)
-    ) $$ LANGUAGE SQL;
+    ) 
+ORDER BY
+    CASE WHEN NOT filtering_date THEN p.postdate END DESC;
+$$ LANGUAGE SQL;

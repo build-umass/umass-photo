@@ -4,7 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 
 dotenv.config();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -12,17 +11,84 @@ export async function GET(request: NextRequest) {
   if(!supabaseUrl) throw new Error("No Supabase URL found!");
 
   const client = createClient(supabaseUrl, supabaseApiKey);
-        
-  
-  const start_date = "2022-01-01";
-  const end_date = "2025-01-01";
-  const tags = ["nature"];
-  const author = "43188856-13db-410a-b1a2-b006056cd84f";
-  const result = await client.rpc('filter_photos', {filtering_tags: true, filtering_authors: true, filtering_date: false, queryauthor: author, querystart: start_date, queryend: end_date, querytags: JSON.stringify(tags)}, {get:true})
 
-  const resultString = JSON.stringify(result, undefined, '    ');
-  console.log(resultString)
-  return new Response(resultString);
+  // Get query parameters
+  const searchParams = request.nextUrl.searchParams;
+  const filteringTags = searchParams.get('filtering_tags') === 'true';
+  const filteringAuthors = searchParams.get('filtering_authors') === 'true';
+  const filteringDate = searchParams.get('filtering_date') === 'true';
+  const queryTags = searchParams.get('querytags') ? JSON.parse(searchParams.get('querytags')!) : [];
+  const queryAuthor = filteringAuthors && searchParams.get('queryauthor') 
+  ? searchParams.get('queryauthor')! 
+  : '00000000-0000-0000-0000-000000000000';
+  const queryStartRaw = searchParams.get('querystart') || '';
+  const queryEndRaw = searchParams.get('queryend') || '';
+
+  // Convert date strings to TIMESTAMP format (YYYY-MM-DD HH:MM:SS)
+  // If date is provided, add time component; otherwise use empty string
+  const queryStart = queryStartRaw ? `${queryStartRaw} 00:00:00` : '1970-01-01 00:00:00';
+  const queryEnd = queryEndRaw ? `${queryEndRaw} 23:59:59` : '2099-12-31 23:59:59';
+
+  // Call the filter_photos function
+  const { data: filteredPhotos, error } = await client.rpc('filter_photos', {
+    filtering_tags: filteringTags,
+    filtering_authors: filteringAuthors,
+    filtering_date: filteringDate,
+    querytags: JSON.stringify(queryTags),
+    queryauthor: queryAuthor,
+    querystart: queryStart,
+    queryend: queryEnd
+  }, { get: true }, );
+
+  if(error) {
+    console.error("Error filtering photos:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
+  // Get unique author IDs from filtered photos
+  const authorIds = [...new Set(filteredPhotos?.map((p: any) => p.authorid) || [])];
+  
+  // Fetch author information
+  const { data: authors, error: authorsError } = await client
+    .from("photoclubuser")
+    .select("id, username, email")
+    .in("id", authorIds);
+
+  if(authorsError) {
+    console.error("Error fetching authors:", authorsError);
+  }
+
+  // Create a map of author ID to author info
+  const authorMap = new Map(
+    authors?.map(author => [author.id, author]) || []
+  );
+
+  // Transform the data and get image URLs
+  const photosWithUrls = filteredPhotos?.map((photo: any) => {
+    const imageUrl = client.storage
+      .from("photos")
+      .getPublicUrl(photo.file).data.publicUrl;
+
+    const author = authorMap.get(photo.authorid);
+
+    return {
+      id: photo.id,
+      title: photo.title || "Untitled",
+      description: photo.description,
+      author: author?.username || "Unknown",
+      date: new Date(photo.postdate).toLocaleDateString(),
+      imageUrl: imageUrl,
+      file: photo.file
+    };
+  }) || [];
+
+  return new Response(JSON.stringify({ data: photosWithUrls }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" }
+  });
 }
 
 
