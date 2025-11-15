@@ -1,6 +1,4 @@
-DROP FUNCTION IF EXISTS filter_authors;
-DROP FUNCTION IF EXISTS filter_date;
-DROP FUNCTION IF EXISTS filter_tags;
+DROP FUNCTION IF EXISTS filter_photos;
 DROP TABLE event;
 DROP TABLE phototag;
 DROP TABLE tag;

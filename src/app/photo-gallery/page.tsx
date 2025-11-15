@@ -34,7 +34,7 @@ const PhotoGallery = () => {
     };
     
     const handleSectionToggle = (section: 'uploadDate' | 'photographer' | 'tags' ) => {
-        // If clicking the same section that's already open, close it
+
         if ((section === 'uploadDate' && showUploadDate) ||
             (section === 'photographer' && showPhotographer) ||
             (section === 'tags' && showTags)) {
@@ -46,13 +46,12 @@ const PhotoGallery = () => {
                 setClosingSection(null);
             }, 300);
         } else {
-            // Close all other sections first
+
             setShowUploadDate(false);
             setShowPhotographer(false);
             setShowTags(false);
             setClosingSection(null);
             
-            // Then open the clicked section
             setTimeout(() => {
                 if (section === 'uploadDate') setShowUploadDate(true);
                 if (section === 'photographer') setShowPhotographer(true);
@@ -79,7 +78,7 @@ const PhotoGallery = () => {
                 }
             }} className={showMenu ? 'expanded' : ''}>
                 <img src={menu.src} alt="Menu" id="menu-icon" />
-                {/* <button  id="close-button"></button> */}
+
             </button> 
 
             {showMenu && (
