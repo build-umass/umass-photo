@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Jaldi } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Next.js seems to require this to be assigned even though it is never used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const jaldi = Jaldi({
+  weight: ["400", "700"]
 });
 
 const jaldi = Jaldi({

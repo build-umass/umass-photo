@@ -5,6 +5,7 @@ import stockPhoto from '../../../public/stock-photo.jpg';
 import Navbar from '../components/navbar/navbar';
 import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
+import UploadChip from './UploadChip';
 
 interface PhotoItem {
     id: number;
@@ -82,6 +83,22 @@ const PhotoGallery = () => {
         setImageErrors(prev => new Set(prev).add(photoId));
     };
 
+    const addPhotoButton = <button onClick={() => setUploadingPhoto(true)}>Add Photo</button>
+
+    const photoElements = photos.map((photo) => (
+        <div key={photo.id}>
+            <img src={stockPhoto.src} alt="Stock photo" id="photo-item" />
+            <div id="details-container">
+                <div id="title-author-flex">
+                    <h3 id="title">{photo.title}</h3>
+                    <p id="author">{photo.author}</p>
+                </div>
+                <p id="upload-date">Uploaded {photo.date}</p>
+            </div>
+
+        </div>
+    ))
+
     return (
         <div>
             <Navbar/>
@@ -111,7 +128,15 @@ const PhotoGallery = () => {
                         </div>
                     ))
                 )}
+                {addPhotoButton}
+                {photoElements}
             </div>
+            {
+                uploadingPhoto ?
+                    <UploadChip
+                        closeCallback={() => setUploadingPhoto(false)}
+                    ></UploadChip> :
+                    <></>}
         </div>
     );
 };

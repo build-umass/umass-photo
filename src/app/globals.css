@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@theme {
+  --color-umass-red: #8E122A;
+}
 
 body {
   color: var(--foreground);
