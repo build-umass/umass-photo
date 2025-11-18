@@ -92,6 +92,7 @@ const PhotoGallery = () => {
             <FilterMenu onFilterSubmit={handleFilterSubmit} />
 
             <div id="photo-grid">
+                {addPhotoButton}
                 {loading ? (
                     <div>Loading photos...</div>
                 ) : photos.length === 0 ? (
@@ -115,7 +116,6 @@ const PhotoGallery = () => {
                         </div>
                     ))
                 )}
-                {addPhotoButton}
             </div>
             {uploadingPhoto ?
                 <UploadChip
