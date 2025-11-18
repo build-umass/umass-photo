@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Jaldi } from "next/font/google";
+import { Jaldi } from "next/font/google";
 import "./globals.css";
 
 // Next.js seems to require this to be assigned even though it is never used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const jaldi = Jaldi({
   weight: ["400", "700"]
-});
-
-const jaldi = Jaldi({
-  variable: "--font-jaldi",
-  subsets: ["latin"],
-  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jaldi.variable} antialiased`}
+        className={`font-jaldi antialiased`}
       >
         {children}
       </body>
