@@ -86,20 +86,6 @@ const PhotoGallery = () => {
 
     const addPhotoButton = <button onClick={() => setUploadingPhoto(true)}>Add Photo</button>
 
-    const photoElements = photos.map((photo) => (
-        <div key={photo.id}>
-            <img src={stockPhoto.src} alt="Stock photo" id="photo-item" />
-            <div id="details-container">
-                <div id="title-author-flex">
-                    <h3 id="title">{photo.title}</h3>
-                    <p id="author">{photo.author}</p>
-                </div>
-                <p id="upload-date">Uploaded {photo.date}</p>
-            </div>
-
-        </div>
-    ))
-
     return (
         <div>
             <Navbar />
@@ -130,7 +116,6 @@ const PhotoGallery = () => {
                     ))
                 )}
                 {addPhotoButton}
-                {photoElements}
             </div>
             {uploadingPhoto ?
                 <UploadChip
