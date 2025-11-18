@@ -16,6 +16,7 @@ interface PhotoItem {
 }
 
 const PhotoGallery = () => {
+    const [uploadingPhoto, setUploadingPhoto] = useState(false)
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
