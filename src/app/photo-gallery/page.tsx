@@ -19,7 +19,7 @@ const PhotoGallery = () => {
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
-    
+
     const fetchPhotos = async (filters?: {
         filtering_tags: boolean;
         filtering_authors: boolean;
@@ -32,7 +32,7 @@ const PhotoGallery = () => {
         try {
             setLoading(true);
             let url = '/api/get-photos';
-            
+
             if (filters) {
                 const params = new URLSearchParams({
                     filtering_tags: filters.filtering_tags.toString(),
@@ -45,10 +45,10 @@ const PhotoGallery = () => {
                 });
                 url = `/api/filter-photos?${params.toString()}`;
             }
-            
+
             const response = await fetch(url);
             const result = await response.json();
-            
+
             if (result.data) {
                 setPhotos(result.data);
             } else {
@@ -101,9 +101,9 @@ const PhotoGallery = () => {
 
     return (
         <div>
-            <Navbar/>
+            <Navbar />
             <FilterMenu onFilterSubmit={handleFilterSubmit} />
-            
+
             <div id="photo-grid">
                 {loading ? (
                     <div>Loading photos...</div>
@@ -112,9 +112,9 @@ const PhotoGallery = () => {
                 ) : (
                     photos.map((photo) => (
                         <div key={photo.id}>
-                            <img 
-                                src={imageErrors.has(photo.id) || !photo.imageUrl ? stockPhoto.src : photo.imageUrl} 
-                                alt={photo.title || "Photo"} 
+                            <img
+                                src={imageErrors.has(photo.id) || !photo.imageUrl ? stockPhoto.src : photo.imageUrl}
+                                alt={photo.title || "Photo"}
                                 id="photo-item"
                                 onError={() => handleImageError(photo.id)}
                             />
@@ -131,12 +131,11 @@ const PhotoGallery = () => {
                 {addPhotoButton}
                 {photoElements}
             </div>
-            {
-                uploadingPhoto ?
-                    <UploadChip
-                        closeCallback={() => setUploadingPhoto(false)}
-                    ></UploadChip> :
-                    <></>}
+            {uploadingPhoto ?
+                <UploadChip
+                    closeCallback={() => setUploadingPhoto(false)}
+                ></UploadChip> :
+                <></>}
         </div>
     );
 };
