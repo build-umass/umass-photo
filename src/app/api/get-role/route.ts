@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   if (!user) return new Response("{}");
   const id = user.id;
   const { data: roleObjectList } = await client.from("photoclubuser").select("photoclubrole(*)").eq("id", id);
-  if (!roleObjectList) return new Response("{}");
+  if (roleObjectList === null || roleObjectList.length === 0) return new Response("{}");
   const [{ photoclubrole: roleData }] = roleObjectList
 
   const response = new Response(JSON.stringify(roleData));
