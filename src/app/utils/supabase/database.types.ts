@@ -42,27 +42,40 @@ export type Database = {
       }
       event: {
         Row: {
+          description: string
           enddate: string
+          heroid: number
           id: number
           name: string
           startdate: string
           tag: string
         }
         Insert: {
+          description: string
           enddate: string
+          heroid: number
           id?: number
           name: string
           startdate: string
           tag: string
         }
         Update: {
+          description?: string
           enddate?: string
+          heroid?: number
           id?: number
           name?: string
           startdate?: string
           tag?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "event_heroid_fkey"
+            columns: ["heroid"]
+            isOneToOne: false
+            referencedRelation: "photo"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "event_tag_fkey"
             columns: ["tag"]
