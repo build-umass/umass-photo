@@ -1,4 +1,3 @@
-import { Tables } from "@/app/utils/supabase/database.types"
 import Image from "next/image"
 
 /**
