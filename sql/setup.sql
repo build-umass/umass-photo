@@ -18,7 +18,7 @@ CREATE TABLE blog (
 );
 
 CREATE TABLE photo (
-    id       PRIMARY KEY DEFAULT (random()*2147483647),
+    id       INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
     title    VARCHAR(128) NOT NULL,
     description TEXT,
     authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
