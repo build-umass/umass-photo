@@ -12,32 +12,58 @@
     margin-left: 5rem;
     margin-right: 5rem;
 }
+
+/* Responsive grid layout - only grid structure changes, not content */
+@media (max-width: 1400px) {
+    #photo-grid {
+        grid-template-columns: repeat(3, 1fr);
+        margin-left: 3rem;
+        margin-right: 3rem;
+    }
+}
+
+@media (max-width: 1000px) {
+    #photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    #photo-grid {
+        grid-template-columns: 1fr;
+        grid-gap: 2rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+
 #photo-item {
     border-radius:.5rem;
 }
+
 #details-container {
     font-family: "Gilda Display", serif;
 }
+
 #title-author-flex {
     display: flex;
     flex-direction: row;
     align-items: baseline;
     gap: 0.25rem;
 }
+
 #title {
     font-size: 20px;
 }
+
 #author {
     color: #6C6C6C;
     font-size: 12px;
 }
 
-#upload-date  {
+#upload-date {
     color:#881C1C;
-}
-#menu-icon {
-    position: fixed;
-    top: 1rem;
-    left: .75rem;
-    transform: scale(0.90);
 }

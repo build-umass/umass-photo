@@ -18,9 +18,12 @@ CREATE TABLE blog (
 );
 
 CREATE TABLE photo (
-    id       SERIAL PRIMARY KEY, 
-    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL ,
-    file     VARCHAR(128) NOT NULL
+    id       INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
+    title    VARCHAR(128) NOT NULL,
+    description TEXT,
+    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
+    file     VARCHAR(128) NOT NULL,
+    postdate TIMESTAMP NOT NULL
 );
 
 CREATE TABLE tag (
