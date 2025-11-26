@@ -127,24 +127,32 @@ export type Database = {
           bio: string | null
           email: string
           id: string
-          role: string | null
+          role: string
           username: string
         }
         Insert: {
           bio?: string | null
           email: string
           id: string
-          role?: string | null
+          role: string
           username: string
         }
         Update: {
           bio?: string | null
           email?: string
           id?: string
-          role?: string | null
+          role?: string
           username?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "photoclubuser_role_fkey"
+            columns: ["role"]
+            isOneToOne: false
+            referencedRelation: "photoclubrole"
+            referencedColumns: ["roleid"]
+          },
+        ]
       }
       phototag: {
         Row: {
