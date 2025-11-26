@@ -14,11 +14,7 @@ function dateToDateTimeLocalString(date: Date) {
     return date.toISOString().slice(0, 16);
 }
 
-export default function EditEventChip({
-    eventData,
-}: {
-    eventData: Tables<"event">
-}) {
+export default function EditEventChip() {
     console.debug(new Date(Date.now()).toString());
     return <div className="fixed inset-0 bg-black/25 flex items-center justify-center">
         <div className="w-2/3 h-2/3 bg-gray-200 rounded-xl flex flex-col">
