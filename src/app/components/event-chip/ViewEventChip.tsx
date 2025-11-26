@@ -35,9 +35,11 @@ export default function EventChip({
                     {eventData.description}
                 </div>
             </div>
-            <div className="px-14 py-5 flex justify-between">
+            <div className="px-14 py-5 flex justify-between gap-2">
                 <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white">Close</button>
-                <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">Confirm Changes</button>
+                <div className="grow"></div>
+                <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">Submit</button>
+                <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">View Gallery</button>
             </div>
         </div>
     </div>
