@@ -42,5 +42,5 @@ CREATE TABLE event (
     enddate     TIMESTAMP NOT NULL,
     tag         VARCHAR(32) REFERENCES tag(name) NOT NULL,
     description TEXT NOT NULL,
-    heroid      INTEGER REFERENCES photo(id) NOT NULL
+    herofile    VARCHAR(128) NOT NULL
 );

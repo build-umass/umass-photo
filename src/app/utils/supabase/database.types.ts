@@ -44,7 +44,7 @@ export type Database = {
         Row: {
           description: string
           enddate: string
-          heroid: number
+          herofile: string
           id: number
           name: string
           startdate: string
@@ -53,7 +53,7 @@ export type Database = {
         Insert: {
           description: string
           enddate: string
-          heroid: number
+          herofile: string
           id?: number
           name: string
           startdate: string
@@ -62,20 +62,13 @@ export type Database = {
         Update: {
           description?: string
           enddate?: string
-          heroid?: number
+          herofile?: string
           id?: number
           name?: string
           startdate?: string
           tag?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "event_heroid_fkey"
-            columns: ["heroid"]
-            isOneToOne: false
-            referencedRelation: "photo"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "event_tag_fkey"
             columns: ["tag"]
