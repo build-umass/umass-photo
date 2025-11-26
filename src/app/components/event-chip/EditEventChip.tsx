@@ -1,4 +1,6 @@
+'use client'
 import Image from "next/image"
+import { useRef, useState } from "react"
 
 /**
  * Converts a Date object into the [datetime-local](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Date_and_time_formats#local_date_and_time_strings) format
@@ -14,17 +16,52 @@ function dateToDateTimeLocalString(date: Date) {
 }
 
 export default function EditEventChip() {
-    return <div className="fixed inset-0 bg-black/25 flex items-center justify-center">
-        <div className="w-2/3 h-2/3 bg-gray-200 rounded-xl flex flex-col">
-            <div className="overflow-hidden relative h-64">
+    const imageField = useRef<HTMLInputElement | null>(null);
+    const [imageDataURL, setImageDataUrl] = useState("");
+    const [filename, setFilename] = useState("");
+
+    function processFileLoad() {
+        const selectedImage = imageField.current?.files?.item(0)
+        if (!selectedImage) return;
+        const fr = new FileReader();
+        fr.onload = function () {
+            if (typeof fr.result !== "string") throw new Error("File was not read as a data URL!")
+            setImageDataUrl(fr.result);
+            setFilename(selectedImage.name);
+        }
+        fr.readAsDataURL(selectedImage);
+    }
+
+    const heroLabelContents = imageDataURL ? (
+        <div className="flex flex-col w-full h-full">
+            <div className="relative grow">
                 <Image
-                    src="https://placehold.co/600x400.png"
-                    alt="placeholder"
+                    src={imageDataURL}
+                    alt="selected image preview"
                     fill
                     style={{ objectFit: 'cover' }}
-                    className="rounded-xl"
                 ></Image>
             </div>
+            <div className="text-center text-sm mt-2">{filename}</div>
+        </div>
+    ) : (
+        <div className="w-full h-full flex items-center justify-center text-lg">
+            Click to select image
+        </div>
+    )
+    return <div className="fixed inset-0 bg-black/25 flex items-center justify-center">
+        <div className="w-2/3 h-2/3 bg-gray-200 rounded-xl flex flex-col">
+            <input
+                type="file"
+                accept="image/*"
+                id="event-hero-upload"
+                ref={imageField}
+                onChange={processFileLoad}
+                className="hidden"
+            />
+            <label htmlFor="event-hero-upload" className="overflow-hidden relative h-64 cursor-pointer bg-gray-300 rounded-xl p-2 flex items-center justify-center">
+                {heroLabelContents}
+            </label>
             <div className="grow p-9 flex flex-col">
                 <input className="text-4xl font-bold p-5 rounded-xl bg-gray-300"></input>
                 <div className="text-2xl px-5 flex gap-1 items-center pt-1 pb-4">
