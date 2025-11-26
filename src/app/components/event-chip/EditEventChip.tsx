@@ -14,7 +14,7 @@ function dateToDateTimeLocalString(date: Date) {
     return date.toISOString().slice(0, 16);
 }
 
-export default function EventChip({
+export default function EditEventChip({
     eventData,
 }: {
     eventData: Tables<"event">
