@@ -263,7 +263,7 @@ export default function ComponentsPreview() {
         enddate: '2025-07-31T23:59:59Z',
         tag: 'Summer Contest',
         description: 'Monthly summer photo contest; open to all members.',
-        heroid: 5,
+        herofile: "",
       }}></ViewEventChip>
       <Footer />
     </div>
