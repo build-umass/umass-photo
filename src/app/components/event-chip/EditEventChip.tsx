@@ -1,6 +1,5 @@
 "use client"
-import Image from "next/image"
-import { useRef, useState } from "react"
+import ImageSelectField from "@/app/components/ImageSelectField"
 import EventChipCommon from "./EventChipCommon"
 
 /**
@@ -13,54 +12,8 @@ function dateToDateTimeLocalString(date: Date) {
 }
 
 export default function EditEventChipFromTemplate() {
-    const imageField = useRef<HTMLInputElement | null>(null);
-    const [imageDataURL, setImageDataUrl] = useState("");
-    const [filename, setFilename] = useState("");
-
-    function processFileLoad() {
-        const selectedImage = imageField.current?.files?.item(0)
-        if (!selectedImage) return;
-        const fr = new FileReader();
-        fr.onload = function () {
-            if (typeof fr.result !== "string") throw new Error("File was not read as a data URL!")
-            setImageDataUrl(fr.result);
-            setFilename(selectedImage.name);
-        }
-        fr.readAsDataURL(selectedImage);
-    }
-
-    const heroLabelContents = imageDataURL ? (
-        <div className="flex flex-col w-full h-full">
-            <div className="relative grow">
-                <Image
-                    src={imageDataURL}
-                    alt="selected image preview"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                ></Image>
-            </div>
-            <div className="text-center text-sm mt-2">{filename}</div>
-        </div>
-    ) : (
-        <div className="w-full h-full flex items-center justify-center text-lg">
-            Click to select image
-        </div>
-    )
-
     const heroContent = (
-        <>
-            <input
-                type="file"
-                accept="image/*"
-                id="event-hero-upload-from-template"
-                ref={imageField}
-                onChange={processFileLoad}
-                className="hidden"
-            />
-            <label htmlFor="event-hero-upload-from-template" className="overflow-hidden relative h-64 cursor-pointer bg-gray-300 rounded-xl p-2 flex items-center justify-center">
-                {heroLabelContents}
-            </label>
-        </>
+        <ImageSelectField id="event-hero-upload-from-template" name="hero-image" className="w-full h-full"/>
     )
 
     const headerContent = (
