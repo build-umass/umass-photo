@@ -27,7 +27,7 @@ export default function EventChipCommon({
                         {headerContent}
                     </div>
 
-                    <div className="text-2xl px-5 flex gap-1 items-baseline pt-1 pb-4">
+                    <div className="text-2xl px-5 flex gap-1 items-center pt-1 pb-4">
                         {timeSection}
                     </div>
 
