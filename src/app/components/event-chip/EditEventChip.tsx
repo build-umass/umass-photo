@@ -59,6 +59,9 @@ export default function EditEventChip() {
                 if (endTimeRef.current) endTimeRef.current.value = "";
                 if (descriptionRef.current) descriptionRef.current.value = "";
                 setImageDataUrl("");
+            } else if (response.status === 401) {
+                setValidationErrorMessage("Please login and try again");
+                window.open("/login", "_blank");
             } else {
                 alert("Failed to create event");
             }
