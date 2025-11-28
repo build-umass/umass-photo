@@ -2,7 +2,7 @@ import { Tables } from "@/app/utils/supabase/database.types"
 import Image from "next/image"
 import EventChipCommon from "./EventChipCommon"
 
-export default function ViewEventChipFromTemplate({
+export default function ViewEventChip({
     eventData,
 }: {
     eventData: Tables<"event">

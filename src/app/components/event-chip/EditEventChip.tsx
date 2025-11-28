@@ -12,7 +12,7 @@ function dateToDateTimeLocalString(date: Date) {
     return date.toISOString().slice(0, 16);
 }
 
-export default function EditEventChipFromTemplate() {
+export default function EditEventChip() {
     const [imageDataURL, setImageDataUrl] = useState("");
     const [validationErrorMessage, setValidationErrorMessage] = useState("");
     const titleRef = useRef<HTMLInputElement>(null);
