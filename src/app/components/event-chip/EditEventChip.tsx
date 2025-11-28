@@ -12,7 +12,11 @@ function dateToDateTimeLocalString(date: Date) {
     return date.toISOString().slice(0, 16);
 }
 
-export default function EditEventChip() {
+export default function EditEventChip({
+    closeCallback
+}: {
+    closeCallback: () => void
+}) {
     const [imageDataURL, setImageDataUrl] = useState("");
     const [validationErrorMessage, setValidationErrorMessage] = useState("");
     const titleRef = useRef<HTMLInputElement>(null);
@@ -51,19 +55,14 @@ export default function EditEventChip() {
             });
 
             if (response.status === 201) {
-                // Event created successfully
-                alert("Event created successfully");
-                // Reset form
-                if (titleRef.current) titleRef.current.value = "";
-                if (startTimeRef.current) startTimeRef.current.value = "";
-                if (endTimeRef.current) endTimeRef.current.value = "";
-                if (descriptionRef.current) descriptionRef.current.value = "";
-                setImageDataUrl("");
+                closeCallback()
             } else if (response.status === 401) {
                 setValidationErrorMessage("Please login and try again");
                 window.open("/login", "_blank");
+            } else if (response.status === 400) {
+                setValidationErrorMessage("Bad input");
             } else {
-                alert("Failed to create event");
+                setValidationErrorMessage("We are experiencing internal issues. Please try again.");
             }
         } catch (error) {
             console.error("Error creating event:", error);
@@ -108,7 +107,7 @@ export default function EditEventChip() {
 
     const footerContent = (
         <>
-            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white">Close</button>
+            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white" onClick={closeCallback}>Close</button>
             {validationErrorMessage ?
                 <div className="text-umass-red">{validationErrorMessage}</div> :
                 <></>}
