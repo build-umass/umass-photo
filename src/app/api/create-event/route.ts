@@ -10,14 +10,16 @@ export async function POST(request: NextRequest) {
 
   const userId = (await client.auth.getUser()).data?.user?.id
   if (!userId) {
-    throw new Error("userId could not be found")
+    const response = new Response("", { status: 401 });
+    return attachCookies(client, response);
   }
 
   const body = await request.json();
   const { title, description, startTime, endTime, imageDataURL } = body;
 
   if (!imageDataURL) {
-    throw new Error("Image data missing")
+    const response = new Response("", { status: 400 });
+    return attachCookies(client, response);
   }
 
   // Convert data URL to File
