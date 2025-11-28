@@ -14,6 +14,7 @@ function dateToDateTimeLocalString(date: Date) {
 
 export default function EditEventChipFromTemplate() {
     const [imageDataURL, setImageDataUrl] = useState("");
+    const [validationErrorMessage, setValidationErrorMessage] = useState("");
     const titleRef = useRef<HTMLInputElement>(null);
     const startTimeRef = useRef<HTMLInputElement>(null);
     const endTimeRef = useRef<HTMLInputElement>(null);
@@ -26,8 +27,11 @@ export default function EditEventChipFromTemplate() {
         const description = descriptionRef.current?.value;
 
         if (!title || !startTime || !endTime || !description || !imageDataURL) {
-            alert(`${!title} ${!startTime} ${!endTime} ${!description} ${!imageDataURL}`)
-            // alert("Please fill in all fields and select an image");
+            if (!title) setValidationErrorMessage("Missing Title!")
+            if (!startTime) setValidationErrorMessage("Select a start time!")
+            if (!endTime) setValidationErrorMessage("Select an end time!")
+            if (!description) setValidationErrorMessage("Create a description!")
+            if (!imageDataURL) setValidationErrorMessage("Select a banner image!")
             return;
         }
 
@@ -65,7 +69,7 @@ export default function EditEventChipFromTemplate() {
     }
 
     const heroContent = (
-        <ImageSelectField id="event-hero-upload-from-template" name="hero-image" onImageChange={setImageDataUrl} className="w-full h-full"/>
+        <ImageSelectField id="event-hero-upload-from-template" name="hero-image" onImageChange={setImageDataUrl} className="w-full h-full" />
     )
 
     const headerContent = (
@@ -102,6 +106,9 @@ export default function EditEventChipFromTemplate() {
     const footerContent = (
         <>
             <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white">Close</button>
+            {validationErrorMessage ?
+                <div className="text-umass-red">{validationErrorMessage}</div> :
+                <></>}
             <button onClick={handleConfirmChanges} className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">Confirm Changes</button>
         </>
     )
