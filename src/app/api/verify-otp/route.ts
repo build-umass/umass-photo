@@ -29,7 +29,8 @@ export async function POST(request: Request) {
   console.log(`Access token:\n${data.session.access_token}\n`);
 
   return new Response(JSON.stringify({
-    session: data.session
+    session: data.session,
+    expires_at: data.session.expires_at
   }), {
     status: 200,
     headers: [
