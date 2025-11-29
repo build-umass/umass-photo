@@ -3,8 +3,8 @@
 import { useEffect } from "react"
 
 // Refresh every 5 seconds for testing
-const REFRESH_MARGIN_MS = 3595000
-// const REFRESH_MARGIN_MS = 60000
+// const REFRESH_MARGIN_MS = 3595000
+const REFRESH_MARGIN_MS = 60000
 
 export default function RefreshHandler() {
     useEffect(() => {
