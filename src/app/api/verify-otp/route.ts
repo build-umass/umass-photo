@@ -33,8 +33,8 @@ export async function POST(request: Request) {
   }), {
     status: 200,
     headers: [
-      ["Set-Cookie", `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure`],
-      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure`]
+      ["Set-Cookie", `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure; Path=/api`],
+      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure; Path=/api/refresh`]
     ]
   });
 }
