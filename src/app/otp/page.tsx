@@ -12,8 +12,11 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
       token
     }
   });
-  if (response.ok)
+  const responseData = await response.json();
+  if (response.ok) {
+    localStorage.setItem("loginExpiryTime", (responseData.expires_at * 1000).toString())
     window.location.assign("/")
+  }
 };
 
 const OtpPage = ({
