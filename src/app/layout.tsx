@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Jaldi } from "next/font/google";
 import "./globals.css";
+import RefreshHandler from "./components/RefreshHandler";
 
 // Next.js seems to require this to be assigned even though it is never used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -20,6 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <RefreshHandler></RefreshHandler>
       <body
         className={`font-jaldi antialiased`}
       >
