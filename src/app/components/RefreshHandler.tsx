@@ -3,27 +3,28 @@
 import { useEffect } from "react"
 
 // Refresh every 5 seconds for testing
-// const REFRESH_MARGIN_MS = 3595000
-const REFRESH_MARGIN_MS = 60000
+// const REFRESH_MARGIN_MS = 60 * 60 * 1000 - 5 * 1000
+// Normal refrsh overlap
+const REFRESH_MARGIN_MS = 60 * 1000
 
 export default function RefreshHandler() {
     useEffect(() => {
-        let breakRefreshHook = () => {};
+        let stopRefreshLoop = () => { };
         let refreshTimeout = 0;
 
-        const refreshTask = async () => {
-            while (true) {
+        const refreshLoop = async () => {
+            let doRefreshLoop = true;
+            while (doRefreshLoop) {
                 const loginExpiryTime = localStorage.getItem("loginExpiryTime")
                 if (loginExpiryTime === null) return;
                 const millisUntilRefresh = parseInt(loginExpiryTime) - Date.now() - REFRESH_MARGIN_MS
 
                 const shouldBreak = await new Promise<boolean>(res => {
-                    const resumeRefreshLoop = () => {res(false)}
-                    const breakRefreshLoop = () => {res(true)}
-                    breakRefreshHook = breakRefreshLoop
+                    const resumeRefreshLoop = () => { res(false) }
+                    stopRefreshLoop = () => { doRefreshLoop = false; res(true); }
                     refreshTimeout = window.setTimeout(resumeRefreshLoop, millisUntilRefresh)
                 })
-                breakRefreshHook = () => {};
+                stopRefreshLoop = () => { doRefreshLoop = false; };
                 refreshTimeout = 0;
 
                 if (shouldBreak) break;
@@ -33,9 +34,9 @@ export default function RefreshHandler() {
                 localStorage.setItem("loginExpiryTime", (expiry.expires_at * 1000).toString())
             }
         }
-        refreshTask();
+        refreshLoop();
         return () => {
-            breakRefreshHook()
+            stopRefreshLoop()
             clearTimeout(refreshTimeout)
         }
     }, [])
