@@ -7,6 +7,11 @@ import { useEffect } from "react"
 // Normal refrsh overlap
 const REFRESH_MARGIN_MS = 60 * 1000
 
+/**
+ * This component handles refreshing login sessions.
+ * If `loginExpiryTime` is set in local storage, then it waits untl that Unix timestamp to request a
+ * refresh from `/api/refresh`.
+ */
 export default function RefreshHandler() {
     useEffect(() => {
         let stopRefreshLoop = () => { };
