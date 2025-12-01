@@ -34,6 +34,7 @@ const PhotoGallery = () => {
             setLoading(true);
             let url = '/api/get-photos';
 
+            // boilerplate
             if (filters) {
                 const params = new URLSearchParams({
                     filtering_tags: filters.filtering_tags.toString(),
