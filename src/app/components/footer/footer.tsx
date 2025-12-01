@@ -22,7 +22,7 @@ export default function Footer() {
             <div className="">
               <h3 className="font-Jaldi font-bold text-lg mb-6 text-gray-700">Gallery</h3>
               <div className="flex flex-col space-y-2">
-                <a className= "font-Jaldi block text-gray-700 hover:underline mb-4" href = "#">All Photos</a>
+                <a className= "font-Jaldi block text-gray-700 hover:underline mb-4" href = "/photo-gallery">All Photos</a>
                 <a className = "font-Jaldi block text-gray-700 hover:underline" href = "#">Submit Your photos</a>
               </div>
             </div>
