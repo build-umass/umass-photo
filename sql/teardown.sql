@@ -1,6 +1,8 @@
-DROP TABLE event;
-DROP TABLE phototag;
-DROP TABLE tag;
-DROP TABLE photo;
-DROP TABLE blog;
-DROP TABLE photoclubuser;
+DROP FUNCTION IF EXISTS filter_photos;
+DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS phototag;
+DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS photo;
+DROP TABLE IF EXISTS blog;
+DROP TABLE IF EXISTS photoclubuser;
+DROP TABLE IF EXISTS photoclubrole;
