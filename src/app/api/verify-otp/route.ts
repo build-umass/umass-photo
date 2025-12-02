@@ -26,15 +26,14 @@ export async function POST(request: Request) {
     status: 400
   });
 
-  console.log(`Access token:\n${data.session.access_token}\n`);
-
   return new Response(JSON.stringify({
-    session: data.session
+    session: data.session,
+    expires_at: data.session.expires_at
   }), {
     status: 200,
     headers: [
-      ["Set-Cookie", `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure`],
-      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure`]
+      ["Set-Cookie", `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure; Path=/api`],
+      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure; Path=/api/refresh`]
     ]
   });
 }
