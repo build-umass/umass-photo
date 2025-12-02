@@ -37,11 +37,11 @@ export default function Navbar() {
 
         {/* Navigation links - no visible separators */}
         <div className={`flex ${teachers.className}`}>
-          {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
-            <NavBarLink key={page} href={`/${page.toLowerCase()}`}>
-              {page}
-            </NavBarLink>
-          ))}
+          <NavBarLink href={"/"}>Home</NavBarLink>
+          <NavBarLink href={"/photo-gallery"}>Gallery</NavBarLink>
+          <NavBarLink href={"/events"}>Events</NavBarLink>
+          <NavBarLink href={"/about"}>About</NavBarLink>
+          <NavBarLink href={"/contact"}>Contact</NavBarLink>
           <UserChip></UserChip>
         </div>
       </div>
