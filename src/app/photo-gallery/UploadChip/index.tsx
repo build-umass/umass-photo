@@ -1,6 +1,7 @@
 'use client'
 import UmassPhotoButton from "@/app/components/UmassPhotoButton";
 import ImageSelectField from "@/app/components/ImageSelectField";
+import ModalCommon from "@/app/components/modal/ModalCommon";
 import { FormEvent, useEffect, useState } from "react";
 import PreviewPage from "./PreviewPage";
 
@@ -67,15 +68,19 @@ export default function UploadChip({
 
     const tagOptionElements = Array.from(tagOptions).map(tag => <option key={tag} value={tag}>{tag}</option>)
 
-    return <div className="fixed inset-0 flex items-center justify-center bg-black/20">
-        <div className="w-2/3 h-2/3 bg-white p-12">
-            <div className="w-full h-full" hidden={!previewMode}>
+    if (previewMode) {
+        return (
+            <ModalCommon>
                 <PreviewPage previewImageUrl={imageDataURL} setPreviewMode={setPreviewMode}></PreviewPage>
-            </div>
+            </ModalCommon>
+        );
+    }
+
+    return (
+        <ModalCommon>
             <form
                 onSubmit={uploadPhoto}
                 className="flex flex-col gap-4 h-full box-border"
-                hidden={previewMode}
             >
                 <ImageSelectField id="file-upload-image" name="image" onImageChange={setImageDataUrl} className="grow"/>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
@@ -88,7 +93,6 @@ export default function UploadChip({
                     </select>
                 </div>
                 <div className="flex flex-row gap-3">
-                    {/* TODO convert to common button style */}
                     <UmassPhotoButton className="bg-gray-400" type="button" onClick={closeCallback}>Close</UmassPhotoButton>
                     <div
                         aria-hidden="true"
@@ -98,6 +102,6 @@ export default function UploadChip({
                     <UmassPhotoButton className="bg-umass-red" type="submit">Upload</UmassPhotoButton>
                 </div>
             </form>
-        </div>
-    </div>
+        </ModalCommon>
+    );
 }
