@@ -14,7 +14,7 @@ const teachers = Teachers({
 
 export default function Navbar() {
   return (
-    <nav className="bg-[#8E122A] text-white fixed top-0 left-0 right-0 z-50">
+    <nav className="bg-[#8E122A] text-white sticky top-0 left-0 right-0 z-50">
       <div className="container mx-auto flex items-stretch h-16">
       {/* Logo without hover */}
       <div className="flex items-center px-6 h-full">
@@ -37,11 +37,11 @@ export default function Navbar() {
 
         {/* Navigation links - no visible separators */}
         <div className={`flex ${teachers.className}`}>
-          {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
-            <NavBarLink key={page} href={`/${page.toLowerCase()}`}>
-              {page}
-            </NavBarLink>
-          ))}
+          <NavBarLink href={"/"}>Home</NavBarLink>
+          <NavBarLink href={"/photo-gallery"}>Gallery</NavBarLink>
+          <NavBarLink href={"/events"}>Events</NavBarLink>
+          <NavBarLink href={"/about"}>About</NavBarLink>
+          <NavBarLink href={"/contact"}>Contact</NavBarLink>
           <UserChip></UserChip>
         </div>
       </div>
