@@ -118,13 +118,7 @@ export default function EditEventChip({
 
     return (
         <ModalCommon>
-            <form
-                onSubmit={async (e) => {
-                    e.preventDefault()
-                    await handleConfirmChanges()
-                }}
-                className="flex flex-col gap-4 h-full box-border"
-            >
+            <div className="flex flex-col gap-4 h-full box-border" >
                 {/* Hero Section */}
                 <div className="overflow-hidden relative h-48 rounded-xl">
                     {heroContent}
@@ -149,7 +143,7 @@ export default function EditEventChip({
                 <div className="flex justify-between gap-3 flex-wrap">
                     {footerContent}
                 </div>
-            </form>
+            </div>
         </ModalCommon>
     )
 }
