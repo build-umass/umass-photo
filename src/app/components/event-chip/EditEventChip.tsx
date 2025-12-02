@@ -76,7 +76,7 @@ export default function EditEventChip({
     )
 
     const headerContent = (
-        <input ref={titleRef} className="w-full text-4xl font-bold rounded-xl bg-gray-300" placeholder="Event Title" />
+        <input ref={titleRef} className="w-full text-4xl font-bold rounded-xl bg-gray-200" placeholder="Event Title" />
     )
 
     const timeSection = (
@@ -84,7 +84,7 @@ export default function EditEventChip({
             <div className="font-bold">Date:</div>
             <input
                 ref={startTimeRef}
-                className="px-2 rounded-xl bg-gray-300"
+                className="px-2 rounded-xl bg-gray-200"
                 type="datetime-local"
                 id="start-time-input-from-template"
                 name="start-time"
@@ -93,7 +93,7 @@ export default function EditEventChip({
             <div>&ndash;</div>
             <input
                 ref={endTimeRef}
-                className="px-2 rounded-xl bg-gray-300"
+                className="px-2 rounded-xl bg-gray-200"
                 type="datetime-local"
                 id="end-time-input-from-template"
                 name="end-time"
@@ -103,7 +103,7 @@ export default function EditEventChip({
     )
 
     const descriptionSection = (
-        <textarea ref={descriptionRef} className="w-full text-2xl rounded-xl bg-gray-300" placeholder="Event Description" />
+        <textarea ref={descriptionRef} className="w-full text-2xl rounded-xl bg-gray-200" placeholder="Event Description" />
     )
 
     const footerContent = (
