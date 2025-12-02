@@ -1,6 +1,6 @@
 "use client"
 import ImageSelectField from "@/app/components/ImageSelectField"
-import EventChipCommon from "./EventChipCommon"
+import ModalCommon from "@/app/components/modal/ModalCommon"
 import { useRef, useState } from "react"
 
 /**
@@ -116,12 +116,39 @@ export default function EditEventChip({
     )
 
     return (
-        <EventChipCommon
-            heroContent={heroContent}
-            headerContent={headerContent}
-            timeSection={timeSection}
-            descriptionSection={descriptionSection}
-            footerContent={footerContent}
-        />
+        <ModalCommon>
+            <form
+                onSubmit={async (e) => {
+                    e.preventDefault()
+                    await handleConfirmChanges()
+                }}
+                className="flex flex-col gap-4 h-full box-border"
+            >
+                {/* Hero Section */}
+                <div className="overflow-hidden relative h-48 rounded-xl">
+                    {heroContent}
+                </div>
+
+                {/* Main Content Section */}
+                <div className="grow flex flex-col gap-4 overflow-y-auto">
+                    <div className="text-4xl font-bold p-5 rounded-xl bg-gray-300">
+                        {headerContent}
+                    </div>
+
+                    <div className="text-2xl px-5 flex gap-1 items-center">
+                        {timeSection}
+                    </div>
+
+                    <div className="text-2xl px-5 py-4 rounded-xl bg-gray-300">
+                        {descriptionSection}
+                    </div>
+                </div>
+
+                {/* Footer Section */}
+                <div className="px-5 py-5 flex justify-between gap-2 flex-wrap">
+                    {footerContent}
+                </div>
+            </form>
+        </ModalCommon>
     )
 }
