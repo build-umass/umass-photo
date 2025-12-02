@@ -24,24 +24,24 @@ export default function ViewEventChip({
     )
 
     const headerContent = (
-        <h1 className="text-4xl font-bold rounded-xl bg-gray-300">{eventData.name}</h1>
+        <h1 className="text-4xl font-bold rounded-xl bg-gray-200">{eventData.name}</h1>
     )
 
     const timeSection = (
         <>
             <div className="font-bold">Date:</div>
-            <div className="px-5 py-1 rounded-xl bg-gray-300">{startTime.toDateString()}</div>
+            <div className="px-5 py-1 rounded-xl bg-gray-200">{startTime.toDateString()}</div>
             <div>|</div>
-            <div className="px-5 py-1 rounded-xl bg-gray-300">{startTime.toTimeString()}</div>
+            <div className="px-5 py-1 rounded-xl bg-gray-200">{startTime.toTimeString()}</div>
             <div>&ndash;</div>
-            <div className="px-5 py-1 rounded-xl bg-gray-300">{endTime.toDateString()}</div>
+            <div className="px-5 py-1 rounded-xl bg-gray-200">{endTime.toDateString()}</div>
             <div>|</div>
-            <div className="px-5 py-1 rounded-xl bg-gray-300">{endTime.toTimeString()}</div>
+            <div className="px-5 py-1 rounded-xl bg-gray-200">{endTime.toTimeString()}</div>
         </>
     )
 
     const descriptionSection = (
-        <div className="text-2xl rounded-xl bg-gray-300">{eventData.description}</div>
+        <div className="text-2xl rounded-xl bg-gray-200">{eventData.description}</div>
     )
 
     const footerContent = (
@@ -63,7 +63,7 @@ export default function ViewEventChip({
 
                 {/* Main Content Section */}
                 <div className="grow flex flex-col gap-4 overflow-y-auto">
-                    <div className="text-4xl font-bold p-5 rounded-xl bg-gray-300">
+                    <div className="text-4xl font-bold p-5 rounded-xl bg-gray-200">
                         {headerContent}
                     </div>
 
@@ -71,7 +71,7 @@ export default function ViewEventChip({
                         {timeSection}
                     </div>
 
-                    <div className="text-2xl px-5 py-4 rounded-xl bg-gray-300">
+                    <div className="text-2xl px-5 py-4 rounded-xl bg-gray-200">
                         {descriptionSection}
                     </div>
                 </div>

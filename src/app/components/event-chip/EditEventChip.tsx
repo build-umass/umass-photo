@@ -132,7 +132,7 @@ export default function EditEventChip({
 
                 {/* Main Content Section */}
                 <div className="grow flex flex-col gap-4 overflow-y-auto">
-                    <div className="text-4xl font-bold p-5 rounded-xl bg-gray-300">
+                    <div className="text-4xl font-bold p-5 rounded-xl bg-gray-200">
                         {headerContent}
                     </div>
 
@@ -140,7 +140,7 @@ export default function EditEventChip({
                         {timeSection}
                     </div>
 
-                    <div className="text-2xl px-5 py-4 rounded-xl bg-gray-300">
+                    <div className="text-2xl px-5 py-4 rounded-xl bg-gray-200">
                         {descriptionSection}
                     </div>
                 </div>
