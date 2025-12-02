@@ -1,6 +1,7 @@
 import { Tables } from "@/app/utils/supabase/database.types"
 import Image from "next/image"
 import ModalCommon from "@/app/components/modal/ModalCommon"
+import UmassPhotoButton from "@/app/components/UmassPhotoButton"
 
 export default function ViewEventChip({
     eventData,
@@ -45,10 +46,10 @@ export default function ViewEventChip({
 
     const footerContent = (
         <>
-            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white">Close</button>
+            <UmassPhotoButton className="bg-gray-400">Close</UmassPhotoButton>
             <div className="grow"></div>
-            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">Submit</button>
-            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">View Gallery</button>
+            <UmassPhotoButton className="bg-umass-red">Submit</UmassPhotoButton>
+            <UmassPhotoButton className="bg-umass-red">View Gallery</UmassPhotoButton>
         </>
     )
 
@@ -76,7 +77,7 @@ export default function ViewEventChip({
                 </div>
 
                 {/* Footer Section */}
-                <div className="px-5 py-5 flex justify-between gap-2 flex-wrap">
+                <div className="flex justify-between gap-3 flex-wrap">
                     {footerContent}
                 </div>
             </div>

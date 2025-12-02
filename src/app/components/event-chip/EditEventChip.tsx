@@ -1,6 +1,7 @@
 "use client"
 import ImageSelectField from "@/app/components/ImageSelectField"
 import ModalCommon from "@/app/components/modal/ModalCommon"
+import UmassPhotoButton from "@/app/components/UmassPhotoButton"
 import { useRef, useState } from "react"
 
 /**
@@ -107,11 +108,11 @@ export default function EditEventChip({
 
     const footerContent = (
         <>
-            <button className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-gray-400 text-white" onClick={closeCallback}>Close</button>
+            <UmassPhotoButton className="bg-gray-400" onClick={closeCallback}>Close</UmassPhotoButton>
             {validationErrorMessage ?
                 <div className="text-umass-red">{validationErrorMessage}</div> :
                 <></>}
-            <button onClick={handleConfirmChanges} className="px-8 py-1 font-bold text-2xl rounded-xl cursor-pointer bg-umass-red text-white">Confirm Changes</button>
+            <UmassPhotoButton className="bg-umass-red" onClick={handleConfirmChanges}>Confirm Changes</UmassPhotoButton>
         </>
     )
 
@@ -145,7 +146,7 @@ export default function EditEventChip({
                 </div>
 
                 {/* Footer Section */}
-                <div className="px-5 py-5 flex justify-between gap-2 flex-wrap">
+                <div className="flex justify-between gap-3 flex-wrap">
                     {footerContent}
                 </div>
             </form>
