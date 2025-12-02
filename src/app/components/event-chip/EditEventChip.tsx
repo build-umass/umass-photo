@@ -1,6 +1,6 @@
 "use client"
 import ImageSelectField from "@/app/components/ImageSelectField"
-import ModalCommon from "@/app/components/modal/ModalCommon"
+import ModalCommon from "@/app/components/ChipLayout"
 import UmassPhotoButton from "@/app/components/UmassPhotoButton"
 import { useRef, useState } from "react"
 
