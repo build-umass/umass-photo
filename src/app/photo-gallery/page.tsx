@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import stockPhoto from '../../../public/stock-photo.jpg';
+import BackArrow from '../../../public/back_arrow.svg';
+import ForwardArrow from '../../../public/forward_arrow.svg';
+import CloseIcon from '../../../public/close.svg';
 import Navbar from '../components/navbar/navbar';
 import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
@@ -20,6 +23,8 @@ const PhotoGallery = () => {
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+    const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+    const [modalImageError, setModalImageError] = useState(false);
 
     const fetchPhotos = async (filters?: {
         filtering_tags: boolean;
@@ -84,6 +89,34 @@ const PhotoGallery = () => {
         setImageErrors(prev => new Set(prev).add(photoId));
     };
 
+    const openModal = (index: number) => {
+        setSelectedPhotoIndex(index);
+        setModalImageError(false);
+    };
+
+    const closeModal = () => {
+        setSelectedPhotoIndex(null);
+        setModalImageError(false);
+    };
+
+    const goToPreviousPhoto = () => {
+        if (selectedPhotoIndex !== null && selectedPhotoIndex > 0) {
+            setSelectedPhotoIndex(selectedPhotoIndex - 1);
+            setModalImageError(false);
+        }
+    };
+
+    const goToNextPhoto = () => {
+        if (selectedPhotoIndex !== null && selectedPhotoIndex < photos.length - 1) {
+            setSelectedPhotoIndex(selectedPhotoIndex + 1);
+            setModalImageError(false);
+        }
+    };
+
+    const handleModalImageError = () => {
+        setModalImageError(true);
+    };
+
     const addPhotoButton = <button onClick={() => setUploadingPhoto(true)}>Add Photo</button>
 
     return (
@@ -98,13 +131,15 @@ const PhotoGallery = () => {
                 ) : photos.length === 0 ? (
                     <div>No photos found.</div>
                 ) : (
-                    photos.map((photo) => (
+                    photos.map((photo, index) => (
                         <div key={photo.id}>
                             <img
                                 src={imageErrors.has(photo.id) || !photo.imageUrl ? stockPhoto.src : photo.imageUrl}
                                 alt={photo.title || "Photo"}
                                 id="photo-item"
                                 onError={() => handleImageError(photo.id)}
+                                onClick={() => openModal(index)}
+                                style={{ cursor: 'pointer' }}
                             />
                             <div id="details-container">
                                 <div id="title-author-flex">
@@ -117,6 +152,61 @@ const PhotoGallery = () => {
                     ))
                 )}
             </div>
+            
+            {/* Photo Modal */}
+            {selectedPhotoIndex !== null && (
+                <div id="photo-modal" onClick={closeModal}>
+                    <div id="modal-content" onClick={(e) => e.stopPropagation()}>
+                        {/* Navigation Arrows */}
+                        <button
+                            id="prev-arrow"
+                            onClick={goToPreviousPhoto}
+                            disabled={selectedPhotoIndex === 0}
+                            style={{
+                                opacity: selectedPhotoIndex === 0 ? 0.3 : 1,
+                                cursor: selectedPhotoIndex === 0 ? 'not-allowed' : 'pointer'
+                            }}
+                        >
+                            <img src={BackArrow.src} alt="Previous photo" />
+                        </button>
+                        
+                        <button
+                            id="next-arrow"
+                            onClick={goToNextPhoto}
+                            disabled={selectedPhotoIndex === photos.length - 1}
+                            style={{
+                                opacity: selectedPhotoIndex === photos.length - 1 ? 0.3 : 1,
+                                cursor: selectedPhotoIndex === photos.length - 1 ? 'not-allowed' : 'pointer'
+                            }}
+                        >
+                            <img src={ForwardArrow.src} alt="Next photo" />
+                        </button>
+                        
+                        {/* Close Button */}
+                        <button id="modal-close" onClick={closeModal}>
+                            <img src={CloseIcon.src} alt="Close modal" />
+                        </button>
+                        
+                        {/* Photo */}
+                        <img
+                            src={modalImageError || imageErrors.has(photos[selectedPhotoIndex].id) || !photos[selectedPhotoIndex].imageUrl 
+                                ? stockPhoto.src 
+                                : photos[selectedPhotoIndex].imageUrl
+                            }
+                            alt={photos[selectedPhotoIndex].title || "Photo"}
+                            id="modal-photo"
+                            onError={handleModalImageError}
+                        />
+                        
+                        {/* Photo Details */}
+                        <div id="modal-details">
+                            <h2>{photos[selectedPhotoIndex].title}</h2>
+                            <p>{photos[selectedPhotoIndex].author}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             {uploadingPhoto ?
                 <UploadChip
                     closeCallback={() => setUploadingPhoto(false)}
