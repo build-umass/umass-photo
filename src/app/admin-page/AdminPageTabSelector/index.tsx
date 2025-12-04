@@ -8,8 +8,8 @@ export type TabInfo = Readonly<{
     component: () => ReactNode;
 }>;
 
-export const userTab = { title: "Users", component: UserManagementTab };
-export const eventTab = { title: "Events", component: EventManagementTab };
+export const userTab: TabInfo = { title: "Users", component: UserManagementTab };
+export const eventTab: TabInfo = { title: "Events", component: EventManagementTab };
 export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab];
 
 export default function AdminPageTabSelector({

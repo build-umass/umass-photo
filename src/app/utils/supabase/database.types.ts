@@ -42,21 +42,27 @@ export type Database = {
       }
       event: {
         Row: {
+          description: string
           enddate: string
+          herofile: string
           id: number
           name: string
           startdate: string
           tag: string
         }
         Insert: {
+          description: string
           enddate: string
+          herofile: string
           id?: number
           name: string
           startdate: string
           tag: string
         }
         Update: {
+          description?: string
           enddate?: string
+          herofile?: string
           id?: number
           name?: string
           startdate?: string
@@ -75,18 +81,27 @@ export type Database = {
       photo: {
         Row: {
           authorid: string
+          description: string | null
           file: string
           id: number
+          postdate: string
+          title: string
         }
         Insert: {
           authorid: string
+          description?: string | null
           file: string
           id?: number
+          postdate: string
+          title: string
         }
         Update: {
           authorid?: string
+          description?: string | null
           file?: string
           id?: number
+          postdate?: string
+          title?: string
         }
         Relationships: [
           {
@@ -192,7 +207,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      filter_photos: {
+        Args: {
+          filtering_authors: boolean
+          filtering_date: boolean
+          filtering_tags: boolean
+          queryauthor: string
+          queryend: string
+          querystart: string
+          querytags: Json
+        }
+        Returns: {
+          authorid: string
+          description: string | null
+          file: string
+          id: number
+          postdate: string
+          title: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "photo"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never
