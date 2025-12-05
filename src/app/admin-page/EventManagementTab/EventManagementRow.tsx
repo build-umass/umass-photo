@@ -29,7 +29,6 @@ export default function EventManagementRow({
     event: Tables<"event">;
     setEvent: (ev: Tables<"event">) => void;
     index: number;
-    tags: ReadonlyArray<string>;
 }) {
     const tag = event.tag;
 
