@@ -36,7 +36,7 @@ CREATE TABLE phototag (
 );
 
 CREATE TABLE event (
-    id          SERIAL PRIMARY KEY,
+    id          INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
     name        VARCHAR(64) NOT NULL,
     startdate   TIMESTAMP NOT NULL,
     enddate     TIMESTAMP NOT NULL,
