@@ -3,10 +3,13 @@ import Image from "next/image"
 import ModalCommon from "@/app/components/ChipLayout"
 import UmassPhotoButton from "@/app/components/UmassPhotoButton"
 
+type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
     eventData,
+    onClose,
 }: {
-    eventData: Tables<"event">
+    eventData: EventWithURL
+    onClose: () => void
 }) {
     const startTime = new Date(eventData.startdate)
     const endTime = new Date(eventData.enddate)
@@ -18,8 +21,8 @@ export default function ViewEventChip({
                 <div className="overflow-hidden relative h-48 rounded-xl">
                     <div className="overflow-hidden relative h-64">
                         <Image
-                            src="https://placehold.co/600x400.png"
-                            alt="placeholder"
+                            src={eventData.herofileURL}
+                            alt={`Hero image for ${eventData.name}`}
                             fill
                             style={{ objectFit: 'cover' }}
                             className="rounded-xl"
@@ -40,7 +43,7 @@ export default function ViewEventChip({
 
                 {/* Footer Section */}
                 <div className="flex justify-between gap-3 flex-wrap">
-                    <UmassPhotoButton className="bg-gray-400">Close</UmassPhotoButton>
+                    <UmassPhotoButton className="bg-gray-400" onClick={onClose}>Close</UmassPhotoButton>
                     <div className="grow"></div>
                     <UmassPhotoButton className="bg-umass-red">Submit</UmassPhotoButton>
                     <UmassPhotoButton className="bg-umass-red">View Gallery</UmassPhotoButton>

@@ -5,10 +5,12 @@ import Footer from "../components/footer/footer";
 import { useEffect, useState } from "react";
 import { Tables } from "../utils/supabase/database.types";
 import Image from "next/image";
+import ViewEventChip from "../components/event-chip/ViewEventChip";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function EventsPage() {
   const [events, setEvents] = useState<EventWithURL[]>([]);
+  const [currentFocusedEvent, setCurrentFocusedEvent] = useState<EventWithURL | null>(null);
 
   useEffect(() => {
     async function fetchEvents() {
@@ -32,6 +34,7 @@ export default function EventsPage() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
+
       <main className="flex-grow bg-gray-50">
         {/* Hero Section */}
         <section className="bg-[#8E122A] text-white py-16">
@@ -51,7 +54,7 @@ export default function EventsPage() {
               <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
                 {/* Image Block - Left */}
                 <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0 relative">
-                <Image
+                  <Image
                     src={event.herofileURL}
                     alt={`Hero image for ${event.name}`}
                     fill
@@ -70,7 +73,7 @@ export default function EventsPage() {
                   <p className="mb-6 text-gray-700">
                     {event.description}
                   </p>
-                  <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit">
+                  <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit" onClick={() => setCurrentFocusedEvent(event)}>
                     Learn More
                   </button>
                 </div>
@@ -89,6 +92,7 @@ export default function EventsPage() {
           </div>
         </section>
       </main>
+      {currentFocusedEvent && <ViewEventChip eventData={currentFocusedEvent} onClose={() => setCurrentFocusedEvent(null)} />}
 
       <Footer />
     </div>
