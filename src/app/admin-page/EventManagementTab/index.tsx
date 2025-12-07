@@ -4,11 +4,13 @@ import { Tables } from "../../utils/supabase/database.types";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
 import AdminPageButton from "../common/AdminPageButton";
 import EventManagementRow, { RowFlag } from "./EventManagementRow";
+import EditEventChip from "@/app/components/event-chip/EditEventChip";
 
 
 export default function EventManagementTab() {
   const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
   const [eventData, setEventData] = useState<Record<string, Tables<"event">> | null>(null);
+  const [editingEvent, setEditingEvent] = useState<boolean>(false);
   const refreshData = async () => {
     setEventData(null);
     const eventList: Tables<"event">[] = await (await fetch("/api/get-event-all")).json();
@@ -58,6 +60,7 @@ export default function EventManagementTab() {
     return <>loading...</>
   } else {
     return <div className="p-24 flex flex-col bg-gray-100 grow">
+      {editingEvent && <EditEventChip closeCallback={() => { setEditingEvent(false); refreshData() }}></EditEventChip>}
       <div className="flex justify-between">
         <h1 className="text-6xl text-umass-red font-bold">Events</h1>
         <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
@@ -73,6 +76,9 @@ export default function EventManagementTab() {
             <AdminPageTableHeaderCell>End</AdminPageTableHeaderCell>
             <AdminPageTableHeaderCell>Tag</AdminPageTableHeaderCell>
             <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
+          </tr>
+          <tr>
+            <td colSpan={8}><button onClick={() => { setEditingEvent(true); }} className="w-full text-umass-red border-8 border-umass-red text-center">+ Add New Event</button></td>
           </tr>
           {Object.entries(eventData).map(([id, row], index) => {
             return <EventManagementRow
