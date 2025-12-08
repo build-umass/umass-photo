@@ -21,7 +21,7 @@ export default function RefreshHandler() {
             let doRefreshLoop = true;
             while (doRefreshLoop) {
                 const loginExpiryTime = localStorage.getItem("loginExpiryTime")
-                if (loginExpiryTime === null) return;
+                if (loginExpiryTime === null) break;
                 const millisUntilRefresh = parseInt(loginExpiryTime) - Date.now() - REFRESH_MARGIN_MS
 
                 const shouldBreak = await new Promise<boolean>(res => {
