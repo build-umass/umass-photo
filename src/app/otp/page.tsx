@@ -12,10 +12,15 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
       token
     }
   });
-  const responseData = await response.json();
-  if (response.ok) {
-    localStorage.setItem("loginExpiryTime", (responseData.expires_at * 1000).toString())
+  try {
+    if (!response.ok) {
+      throw new Error("Failed to verify OTP");
+    }
+    const {expires_at: atExpiryTime} = await response.json();
+    localStorage.setItem("loginExpiryTime", (atExpiryTime * 1000).toString())
     window.location.assign("/")
+  } catch (error) {
+    console.error(error);
   }
 };
 
