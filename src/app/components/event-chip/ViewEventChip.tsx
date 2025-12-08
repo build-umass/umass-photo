@@ -2,6 +2,7 @@ import { Tables } from "@/app/utils/supabase/database.types"
 import Image from "next/image"
 import ModalCommon from "@/app/components/ChipLayout"
 import UmassPhotoButton from "@/app/components/UmassPhotoButton"
+import { formatDate } from "@/app/utils/dates";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
@@ -35,7 +36,7 @@ export default function ViewEventChip({
                     <h1 className="text-4xl font-bold">{eventData.name}</h1>
 
                     <div className="text-2xl">
-                        Date: {startTime.toDateString()} | {startTime.toTimeString()}&ndash;{endTime.toDateString()} | {endTime.toTimeString()}
+                        <b>Date:</b> {formatDate(startTime)} &ndash; {formatDate(endTime)}
                     </div>
 
                     <div className="text-2xl overflow-scroll mt-4">{eventData.description}</div>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Tables } from "../utils/supabase/database.types";
 import Image from "next/image";
 import ViewEventChip from "../components/event-chip/ViewEventChip";
+import { formatDate } from "../utils/dates";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function EventsPage() {
@@ -31,6 +32,7 @@ export default function EventsPage() {
   }, []);
 
   function getEventListingElement(event: EventWithURL) {
+    const endDate = new Date(event.enddate);
     return <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
       {/* Image Block - Left */}
       <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0 relative">
@@ -48,7 +50,7 @@ export default function EventsPage() {
           {event.name}
         </h2>
         <p className="text-gray-600 mb-4 text-lg">
-          {event.enddate}
+          {formatDate(endDate)}
         </p>
         <p className="mb-6 text-gray-700">
           {event.description}
