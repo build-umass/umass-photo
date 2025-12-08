@@ -38,3 +38,10 @@ INSERT INTO phototag VALUES
 (7, 'people'        ),
 (8, 'nature'        ),
 (9, 'sky'           );
+
+INSERT INTO event VALUES
+(1, 'Spring Photo Walk',  '2025-04-12 09:00:00', '2025-04-12 17:00:00', 'nature',         'A community walk to photograph spring blooms.',        '01.png'),
+(2, 'Summer Contest',     '2025-07-01 00:00:00', '2025-07-31 23:59:59', 'Summer Contest', 'Monthly summer photo contest; open to all members.',   '05.png'),
+(3, 'Night Sky Workshop', '2025-09-15 20:00:00', '2025-09-15 23:30:00', 'sky',            'Learn long exposure techniques for astrophotography.', '09.png'),
+(4, 'Waterfall Hike',     '2025-05-20 08:00:00', '2025-05-20 14:00:00', 'water',          'Day trip to nearby waterfall for landscape shots.',    '02.png'),
+(5, 'Portrait Session',   '2025-11-08 18:00:00', '2025-11-08 20:00:00', 'people',         'Portrait lighting and posing session.',                '07.png');
