@@ -34,9 +34,20 @@ export default function RefreshHandler() {
 
                 if (shouldBreak) break;
 
-                const response = await fetch("/api/refresh", { method: "POST" });
-                const expiry = await response.json();
-                localStorage.setItem("loginExpiryTime", (expiry.expires_at * 1000).toString())
+                try {
+                    const response = await fetch("/api/refresh", { method: "POST" });
+                    if (!response.ok)
+                        throw new Error(`Failed to refresh: ${response.status} ${response.statusText}`);
+                    const { expires_at: newATExpiryTime } = await response.json();
+                    if (typeof newATExpiryTime !== "number")
+                        throw new Error(`Invalid expiry time: ${newATExpiryTime}`);
+                    if (newATExpiryTime * 1000 - Date.now() <= REFRESH_MARGIN_MS)
+                        throw new Error(`Expiry time too close: ${newATExpiryTime}`);
+                    localStorage.setItem("loginExpiryTime", (newATExpiryTime * 1000).toString())
+                } catch (e) {
+                    console.error("Error refreshing session: ", e);
+                    break;
+                }
             }
         }
         refreshLoop();
