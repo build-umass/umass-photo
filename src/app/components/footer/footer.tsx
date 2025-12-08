@@ -1,103 +1,64 @@
 "use client";
 
-import Link from "next/link";
-import { Teachers } from "next/font/google";
-import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
-
-const teachers = Teachers({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  style: ["normal", "italic"],
-});
+import { faFacebook, faInstagram, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#EAEAEA] text-gray-800 py-2">
-      <div className="container mx-auto px-4 flex flex-col justify-center min-h-[300px]">
-        <div className="w-full flex flex-row justify-between items-start flex-nowrap">
-          {/* Left side with logo and socials */}
-          <div className="flex flex-col items-start space-y-4 w-1/4 min-w-[140px] pr-8">
-            <h1 className={`text-4xl ${teachers.className} text-[#8f1229]`}>
-              UMass Photo
-            </h1>
-            <p className="text-md text-gray-600">BUILD UMass 2025</p>
-            <div className="flex space-x-3">
-              <Link
-                href="#"
-                className="text-gray-700 hover:text-[#8f1229] transition-colors duration-200"
-              >
-                <FaFacebook className="h-6 w-6" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-700 hover:text-[#8f1229] transition-colors duration-200"
-              >
-                <FaInstagram className="h-6 w-6" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-700 hover:text-[#8f1229] transition-colors duration-200"
-              >
-                <FaLinkedin className="h-6 w-6" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-700 hover:text-[#8f1229] transition-colors duration-200"
-              >
-                <FaYoutube className="h-6 w-6" />
-              </Link>
+    <footer className="bg-gray-200">
+      <div className="max-w-screen-xl mx-auto px-3 py-15">
+        <div className="flex flex-wrap justify-between">
+          <div className="">
+            <h3 className="font-Jaldi font-bold text-[#971B2F] text-3xl mb-4">Umass Photo</h3>
+            <div className="flex space-x-6 hover:underline mb-4">
+              <a className="text-gray-500 hover:text-gray-700" href="#"><FontAwesomeIcon icon={faFacebook} /></a>
+              <a className="text-gray-500 hover:text-gray-700" href="#"><FontAwesomeIcon icon={faLinkedin} /></a>
+              <a className="text-gray-500 hover:text-gray-700" href="#"><FontAwesomeIcon icon={faYoutube} /></a>
+              <a className="text-gray-500 hover:text-gray-700" href="#"><FontAwesomeIcon icon={faInstagram} /></a>
             </div>
+            <p className="text-gray-400 text-base font-normal">Website © BUILD Umass 2025</p>
           </div>
-
-          {/* Right side with horizontal navigation links */}
-          <div className="flex justify-between flex-nowrap w-3/4 pl-8">
-            {[
-              {
-                title: "Gallery",
-                links: ["All Photos", "Submit Your Photos"],
-                path: "/gallery",
-              },
-              {
-                title: "Events",
-                links: [
-                  "Spring Contest",
-                  "Fall Foliage Contest",
-                  "Summer Contest",
-                ],
-                path: "/events",
-              },
-              {
-                title: "Mission",
-                links: ["Our Story", "E-Board"],
-                path: "/about",
-              },
-              {
-                title: "Contact",
-                links: ["Email", "Instagram", "Campus Pulse", "Page"],
-                path: "/contact",
-              },
-            ].map((section) => (
-              <div key={section.title} className="space-y-2 min-w-[140px] px-4">
-                <h2 className="text-md text-black font-semibold">
-                  {section.title}
-                </h2>
-                <ul className="space-y-2 text-sm">
-                  {section.links.map((link) => (
-                    <li key={link}>
-                      <Link
-                        href={section.path}
-                        className="text-gray-700 hover:text-[#8f1229] transition-colors duration-200"
-                      >
-                        {link}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+          <div className="ml-auto flex space-x-20">
+            <div className="">
+              <h3 className="font-Jaldi font-bold text-lg mb-6 text-gray-700">Gallery</h3>
+              <div className="flex flex-col space-y-2">
+                <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="/photo-gallery">All Photos</a>
+                <a className="font-Jaldi block text-gray-700 hover:underline" href="#">Submit Your photos</a>
               </div>
-            ))}
+            </div>
+            <div className="">
+              <h3 className="font-Jaldi font-bold text-lg mb-6 text-gray-700">Events</h3>
+              <div className="flex flex-col space-y-2">
+                <div className="font-Jaldi flex flex-col space-y-2">
+                  <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="#">Spring contest</a>
+                  <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="#">Fall Foliage Contest</a>
+                  <a className="font-Jaldi block text-gray-700 hover:underline" href="#">Summer Contest</a>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <h3 className="font-Jaldi font-bold text-lg mb-6 text-gray-700">Mission</h3>
+              <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2">
+                  <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="#">Our Story</a>
+                  <a className="font-Jaldi block text-gray-700 hover:underline" href="#">E-Board</a>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <h3 className="font-Jaldi font-bold text-lg mb-6 text-gray-700">Contact</h3>
+              <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2">
+                  <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="#">Instagram</a>
+                  <a className="font-Jaldi block text-gray-700 hover:underline mb-4" href="#">Email</a>
+                  <a className="font-Jaldi block text-gray-700 hover:underline" href="#">Page</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
     </footer>
   );
 }
