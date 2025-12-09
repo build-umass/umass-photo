@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import BackArrow from '../../../public/back_arrow.svg';
 import ForwardArrow from '../../../public/forward_arrow.svg';
@@ -19,6 +20,7 @@ interface PhotoItem {
 }
 
 const PhotoGallery = () => {
+    const searchParams = useSearchParams();
     const [uploadingPhoto, setUploadingPhoto] = useState(false)
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -70,8 +72,35 @@ const PhotoGallery = () => {
     };
 
     useEffect(() => {
-        fetchPhotos();
-    }, []);
+        const uploadingPhotoParam = searchParams.get('uploadingPhoto');
+        if (uploadingPhotoParam === 'true') {
+            setUploadingPhoto(true);
+        }
+
+        const selectedAuthor = searchParams.get('selectedAuthor') ? decodeURIComponent(searchParams.get('selectedAuthor')!) : '';
+        const selectedTagsParam = searchParams.get('selectedTags');
+        const selectedTags = selectedTagsParam 
+            ? new Set(decodeURIComponent(selectedTagsParam).split(',').filter(tag => tag.trim() !== ''))
+            : new Set();
+        const startDate = searchParams.get('startDate') ? decodeURIComponent(searchParams.get('startDate')!) : '';
+        const endDate = searchParams.get('endDate') ? decodeURIComponent(searchParams.get('endDate')!) : '';
+
+        const hasFilters = selectedAuthor || selectedTags.size > 0 || (startDate && endDate);
+        if (hasFilters) {
+            const filters = {
+                filtering_tags: selectedTags.size > 0,
+                filtering_authors: selectedAuthor !== '',
+                filtering_date: startDate !== '' && endDate !== '',
+                querytags: Array.from(selectedTags) as string[],
+                queryauthor: selectedAuthor,
+                querystart: startDate,
+                queryend: endDate
+            };
+            fetchPhotos(filters);
+        } else {
+            fetchPhotos();
+        }
+    }, [searchParams]);
 
     const handleFilterSubmit = (filters: {
         filtering_tags: boolean;
