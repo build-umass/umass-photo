@@ -7,6 +7,7 @@ import BackArrow from '../../../public/back_arrow.svg';
 import ForwardArrow from '../../../public/forward_arrow.svg';
 import CloseIcon from '../../../public/close.svg';
 import Navbar from '../components/navbar/navbar';
+import { parseBooleanParam, parseStringParam, parseCommaSeparatedListParam, parseDateParam } from './queryValidation';
 import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
 import UploadChip from './UploadChip';
@@ -72,20 +73,17 @@ const PhotoGallery = () => {
     };
 
     useEffect(() => {
-        const uploadingPhotoParam = searchParams.get('uploadingPhoto');
-        if (uploadingPhotoParam === 'true') {
+        const uploading = parseBooleanParam(searchParams.get('uploadingPhoto'), 'uploadingPhoto');
+        if (uploading === true) {
             setUploadingPhoto(true);
         }
 
-        const selectedAuthor = searchParams.get('selectedAuthor') ? decodeURIComponent(searchParams.get('selectedAuthor')!) : '';
-        const selectedTagsParam = searchParams.get('selectedTags');
-        const selectedTags = selectedTagsParam 
-            ? new Set(decodeURIComponent(selectedTagsParam).split(',').filter(tag => tag.trim() !== ''))
-            : new Set();
-        const startDate = searchParams.get('startDate') ? decodeURIComponent(searchParams.get('startDate')!) : '';
-        const endDate = searchParams.get('endDate') ? decodeURIComponent(searchParams.get('endDate')!) : '';
+        const selectedAuthor = parseStringParam(searchParams.get('selectedAuthor'), 'selectedAuthor');
+        const selectedTags = parseCommaSeparatedListParam(searchParams.get('selectedTags'), 'selectedTags');
+        const startDate = parseDateParam(searchParams.get('startDate'), 'startDate');
+        const endDate = parseDateParam(searchParams.get('endDate'), 'endDate');
 
-        const hasFilters = selectedAuthor || selectedTags.size > 0 || (startDate && endDate);
+        const hasFilters = selectedAuthor !== '' || selectedTags.size > 0 || (startDate !== '' && endDate !== '');
         if (hasFilters) {
             const filters = {
                 filtering_tags: selectedTags.size > 0,
