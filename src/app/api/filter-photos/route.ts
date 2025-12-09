@@ -21,13 +21,8 @@ export async function GET(request: NextRequest) {
   const queryAuthor = filteringAuthors && searchParams.get('queryauthor') 
   ? searchParams.get('queryauthor')! 
   : '00000000-0000-0000-0000-000000000000';
-  const queryStartRaw = searchParams.get('querystart') || '';
-  const queryEndRaw = searchParams.get('queryend') || '';
-
-  // Convert date strings to TIMESTAMP format (YYYY-MM-DD HH:MM:SS)
-  // If date is provided, add time component; otherwise use empty string
-  const queryStart = queryStartRaw ? `${queryStartRaw} 00:00:00` : '1970-01-01 00:00:00';
-  const queryEnd = queryEndRaw ? `${queryEndRaw} 23:59:59` : '2099-12-31 23:59:59';
+  const queryStart = searchParams.get('querystart') || '1970-01-01T00:00:00';
+  const queryEnd = searchParams.get('queryend') || '2099-12-31T23:59:59';
 
   // Call the filter_photos function
   const { data: filteredPhotos, error } = await client.rpc('filter_photos', {
