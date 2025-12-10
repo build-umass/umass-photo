@@ -6,21 +6,79 @@ import { FormEvent, useEffect, useState } from "react";
 import PreviewPage from "./PreviewPage";
 
 export default function UploadChip({
-    closeCallback
+    closeCallback,
+    defaultTags = []
 }: {
-    closeCallback: () => void
+    closeCallback: () => void,
+    defaultTags?: string[]
 }) {
     const [previewMode, setPreviewMode] = useState(false);
     const [imageDataURL, setImageDataUrl] = useState("");
     const [tagOptions, setTagOptions] = useState<Set<string>>(new Set())
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [selectedTags, setSelectedTags] = useState<string[]>(defaultTags)
+    const [newTagInput, setNewTagInput] = useState("")
 
     async function refreshTagList() {
-        const response = await fetch('/api/get-tag-all', {
-            method: 'GET',
-        })
-        const tags = new Set(await response.json() as string[]);
-        setTagOptions(tags);
+        try {
+            const response = await fetch('/api/get-tag-all', {
+                method: 'GET',
+            });
+            const data = await response.json();
+            
+            // Ensure we have an array of strings
+            if (Array.isArray(data)) {
+                const tags = new Set(data as string[]);
+                setTagOptions(tags);
+            } else {
+                console.log('Unexpected response format:', data);
+                setTagOptions(new Set());
+            }
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+            setTagOptions(new Set());
+        }
+    }
+
+    async function createTag(tagName: string) {
+        const trimmed = tagName.trim();
+        if (!trimmed) return;
+
+        try {
+            const response = await fetch('/api/create-tag', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: trimmed })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = 'Failed to create tag';
+                
+                try {
+                    const errorData = JSON.parse(errorText);
+                    if (errorData.error === 'Not authenticated') {
+                        errorMessage = 'Please log in to create tags';
+                    } else {
+                        errorMessage = errorData.error || errorMessage;
+                    }
+                } catch {
+                    errorMessage = errorText || errorMessage;
+                }
+                
+                console.error('Failed to create tag:', errorMessage);
+                alert(errorMessage);
+                return;
+            }
+
+            setTagOptions(prev => new Set([...Array.from(prev), trimmed]));
+            addTag(trimmed);
+            setNewTagInput("");
+
+            await refreshTagList();
+        } catch (err) {
+            console.error('Error creating tag', err);
+            alert('Network error: Unable to create tag');
+        }
     }
 
     async function uploadPhoto(event: FormEvent<HTMLFormElement>) {
@@ -92,7 +150,26 @@ export default function UploadChip({
                         {tagOptionElements}
                     </select>
                 </div>
-                <div className="flex flex-row gap-3">
+
+                <div className="flex gap-2 items-center w-lg">
+                    <input
+                        type="text"
+                        value={newTagInput}
+                        onChange={(e) => setNewTagInput(e.target.value)}
+                        placeholder="Create new tag..."
+                        className="bg-gray-200 p-2 rounded-xl text-lg flex-grow"
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); createTag(newTagInput); } }}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => createTag(newTagInput)}
+                        className="bg-umass-red text-white px-4 py-2 rounded-xl text-lg hover:bg-red-700 transition-colors"
+                    >
+                        Add Tag
+                    </button>
+                </div>
+
+                <div className="flex flex-row gap-3 ">
                     <UmassPhotoButton className="bg-gray-400" type="button" onClick={closeCallback}>Close</UmassPhotoButton>
                     <div
                         aria-hidden="true"

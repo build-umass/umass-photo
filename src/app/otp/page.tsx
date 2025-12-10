@@ -12,8 +12,16 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
       token
     }
   });
-  if (response.ok)
+  try {
+    if (!response.ok) {
+      throw new Error("Failed to verify OTP");
+    }
+    const {expires_at: atExpiryTime} = await response.json();
+    localStorage.setItem("loginExpiryTime", (atExpiryTime * 1000).toString())
     window.location.assign("/")
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const OtpPage = ({
