@@ -144,15 +144,21 @@ const PhotoGallery = () => {
         setModalImageError(true);
     };
 
-    const addPhotoButton = <button onClick={() => setUploadingPhoto(true)}>Add Photo</button>
-
     return (
         <div>
             <Navbar />
             <FilterMenu onFilterSubmit={handleFilterSubmit} />
 
+            {/* Add Photo Button - positioned above filter button */}
+            <button 
+                id="add-photo-button" 
+                onClick={() => setUploadingPhoto(prev => !prev)}
+                className={uploadingPhoto ? 'expanded' : ''}
+            >
+                <span>+</span>
+            </button>
+
             <div id="photo-grid">
-                {addPhotoButton}
                 {loading ? (
                     <div>Loading photos...</div>
                 ) : photos.length === 0 ? (
