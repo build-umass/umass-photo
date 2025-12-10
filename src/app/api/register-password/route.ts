@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import zxcvbn from "zxcvbn";
 
 dotenv.config();
 
@@ -18,33 +19,104 @@ export async function POST(request: Request) {
     );
   }
 
-   // Basic server-side password policy:
-   // - At least 8 characters
-   // - Contains at least one lowercase letter
-   // - Contains at least one uppercase letter
-   // - Contains at least one number
-   // - Contains at least one special character
-   const passwordPolicy =
-     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  // Server-side password strength policy using zxcvbn.
+  // We require a score of at least 3 (out of 4), which corresponds to
+  // a reasonably strong password in practice.
+  const strength = zxcvbn(password);
+  if (strength.score < 3) {
+    return new Response(
+      JSON.stringify({
+        error:
+          strength.feedback.warning ||
+          "Password is too weak. Try using a longer passphrase with a mix of words, numbers, and symbols."
+      }),
+      { status: 400 }
+    );
+  }
 
-   if (!passwordPolicy.test(password)) {
-     return new Response(
-       JSON.stringify({
-         error:
-           "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
-       }),
-       { status: 400 }
-     );
-   }
+  const adminClient = createClient(supabaseUrl, supabaseApiKey);
 
-  const client = createClient(supabaseUrl, supabaseApiKey);
-
-  const { data, error } = await client.auth.signUp({
+  const { data, error } = await adminClient.auth.signUp({
     email,
     password
   });
 
+  // If the user already exists (for example, they previously registered via OTP),
+  // attempt to update their account to use this password instead.
   if (error) {
+    const message = error.message?.toLowerCase() ?? "";
+
+    // Supabase typically reports an "already registered" style error when the
+    // email is already in use. In that case, we try to update the existing user.
+    if (message.includes("already") && message.includes("registered")) {
+      const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+      if (!supabaseAnonKey) throw new Error("No Supabase anon key found!");
+
+      // Look up the existing user by email using the admin API.
+      const {
+        data: usersResult,
+        error: listError
+      } = await adminClient.auth.admin.listUsers({ email });
+
+      const existingUser = usersResult?.users?.[0];
+      if (listError || !existingUser) {
+        return new Response(
+          JSON.stringify({ error: error.message }),
+          { status: 400 }
+        );
+      }
+
+      const { error: updateError } =
+        await adminClient.auth.admin.updateUserById(existingUser.id, {
+          password
+        });
+
+      if (updateError) {
+        return new Response(
+          JSON.stringify({ error: updateError.message }),
+          { status: 400 }
+        );
+      }
+
+      // After setting the password, sign the user in so we can issue a session.
+      const anonClient = createClient(supabaseUrl, supabaseAnonKey);
+      const {
+        data: signInData,
+        error: signInError
+      } = await anonClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (signInError || !signInData.session) {
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message:
+              "Your password has been set. Please sign in with your new credentials."
+          }),
+          { status: 200 }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ success: true }),
+        {
+          status: 200,
+          headers: [
+            [
+              "Set-Cookie",
+              `access-token=${signInData.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
+            ],
+            [
+              "Set-Cookie",
+              `refresh-token=${signInData.session.refresh_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
+            ]
+          ]
+        }
+      );
+    }
+
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 400 }
@@ -60,11 +132,11 @@ export async function POST(request: Request) {
         headers: [
           [
             "Set-Cookie",
-            `access-token=${data.session.access_token}; Path=/; SameSite=strict; HttpOnly; Secure`
+            `access-token=${data.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
           ],
           [
             "Set-Cookie",
-            `refresh-token=${data.session.refresh_token}; Path=/; SameSite=strict; HttpOnly; Secure`
+            `refresh-token=${data.session.refresh_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
           ]
         ]
       }
