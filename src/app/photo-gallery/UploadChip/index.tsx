@@ -68,11 +68,10 @@ export default function UploadChip({
                 return;
             }
 
-            // Update local tag options and select the new tag
             setTagOptions(prev => new Set([...Array.from(prev), trimmed]));
             addTag(trimmed);
             setNewTagInput("");
-            // Also refresh from server to ensure global consistency
+
             await refreshTagList();
         } catch (err) {
             console.error('Error creating tag', err);
@@ -170,7 +169,6 @@ export default function UploadChip({
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
                     
-                    {/* Custom tag input */}
                     <div className="flex gap-2 items-center w-lg">
                         <div className="flex flex-row flex-wrap gap-3 align-middle">
                             {tagList}
@@ -196,14 +194,8 @@ export default function UploadChip({
                         </button>
                     </div>
                     
-                    {/* Show available tags if any */}
-                    {tagOptions.size > 0 && (
-                        <div className="text-sm text-gray-600">
-                            Available tags: {Array.from(tagOptions).join(", ")}
-                        </div>
-                    )}
+                
                 <div className="flex flex-row gap-3 ">
-                    {/* TODO convert to common button style */}
                     <UmassPhotoButton className="bg-gray-400" type="button" onClick={closeCallback}>Close</UmassPhotoButton>
                     <div
                         aria-hidden="true"

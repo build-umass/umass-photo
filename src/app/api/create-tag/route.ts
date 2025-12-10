@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
   try {
     const client = getUserClient(request);
     
-    // Check if user is authenticated
     const { data: { user } } = await client.auth.getUser();
     if (!user) {
       const response = new Response(JSON.stringify({ error: 'Not authenticated' }), { 
@@ -17,12 +16,9 @@ export async function POST(request: NextRequest) {
       });
       return attachCookies(client, response);
     }
-
-    // Get tag name from request body
     const body = await request.json();
     const { name } = body;
 
-    // Validate tag name
     if (!name || typeof name !== 'string' || !name.trim()) {
       const response = new Response(JSON.stringify({ error: 'Tag name is required' }), { 
         status: 400,
@@ -33,7 +29,6 @@ export async function POST(request: NextRequest) {
 
     const trimmedName = name.trim();
 
-    // Insert tag into database (use upsert to avoid duplicates)
     const { error } = await client
       .from('tag')
       .upsert([{ name: trimmedName }], { 
@@ -49,8 +44,7 @@ export async function POST(request: NextRequest) {
       });
       return attachCookies(client, response);
     }
-
-    // Return success response
+    
     const response = new Response(JSON.stringify({ 
       success: true, 
       tag: { name: trimmedName } 
