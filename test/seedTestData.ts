@@ -1,8 +1,5 @@
 import { Database, Tables, TablesInsert } from '@/app/utils/supabase/database.types';
 import { SupabaseClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 interface SeedDataResult {
   users: Tables<"photoclubuser">[];
