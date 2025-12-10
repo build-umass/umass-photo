@@ -14,6 +14,11 @@ interface DbOperationResult {
   error?: string;
 }
 
+/**
+ * Drops all tables in the public schema of the database
+ * @param connectionString - PostgreSQL connection string
+ * @returns Result object with success status and optional error message
+ */
 async function wipeTables(connectionString: string): Promise<DbOperationResult> {
   const sql = postgres(connectionString)
 
@@ -35,6 +40,12 @@ async function wipeTables(connectionString: string): Promise<DbOperationResult> 
   }
 }
 
+/**
+ * Executes a SQL file against the database
+ * @param connectionString - PostgreSQL connection string
+ * @param filePath - Absolute path to the SQL file to execute
+ * @returns Result object with success status and optional error message
+ */
 async function runQueryFile(connectionString: string, filePath: string): Promise<DbOperationResult> {
   const sql = postgres(connectionString)
 
