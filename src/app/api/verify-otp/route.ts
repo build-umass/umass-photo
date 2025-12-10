@@ -1,5 +1,9 @@
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import {
+  getSupabaseOtpType,
+  normalizeOtpMode
+} from "@/app/utils/otpModes";
 
 dotenv.config();
 
@@ -12,7 +16,8 @@ export async function POST(request: Request) {
 
   const token = request.headers.get("token");
   const email = request.headers.get("email");
-  const mode = request.headers.get("mode") ?? "login";
+  const rawMode = request.headers.get("mode");
+  const mode = normalizeOtpMode(rawMode);
   if (token === null) return new Response("No token", {
     status: 400
   });
@@ -21,8 +26,8 @@ export async function POST(request: Request) {
   });
 
   const client = createClient(supabaseUrl, supabaseApiKey);
-  const type = mode === "signup" ? "signup" : "email";
-  const { data } = await client.auth.verifyOtp({ email, token, type })
+  const type = getSupabaseOtpType(mode);
+  const { data } = await client.auth.verifyOtp({ email, token, type });
 
   if (!data.session) return new Response("No Session", {
     status: 400
@@ -35,8 +40,8 @@ export async function POST(request: Request) {
   }), {
     status: 200,
     headers: [
-      ["Set-Cookie", `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure`],
-      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure`]
+      ["Set-Cookie", `access-token=${data.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`],
+      ["Set-Cookie", `refresh-token=${data.session.refresh_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`]
     ]
   });
 }

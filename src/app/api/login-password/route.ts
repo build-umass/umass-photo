@@ -37,11 +37,11 @@ export async function POST(request: Request) {
     headers: [
       [
         "Set-Cookie",
-        `access-token=${data.session.access_token}; Path=/; SameSite=strict; HttpOnly; Secure`
+        `access-token=${data.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
       ],
       [
         "Set-Cookie",
-        `refresh-token=${data.session.refresh_token}; Path=/; SameSite=strict; HttpOnly; Secure`
+        `refresh-token=${data.session.refresh_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
       ]
     ]
   });
