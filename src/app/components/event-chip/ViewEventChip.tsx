@@ -1,8 +1,11 @@
+"use client";
+
 import { Tables } from "@/app/utils/supabase/database.types"
 import Image from "next/image"
 import ModalCommon from "@/app/components/ChipLayout"
 import UmassPhotoButton from "@/app/components/UmassPhotoButton"
 import { formatDate } from "@/app/utils/dates";
+import { useRouter } from "next/navigation";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
@@ -14,6 +17,7 @@ export default function ViewEventChip({
 }) {
     const startTime = new Date(eventData.startdate)
     const endTime = new Date(eventData.enddate)
+    const router = useRouter()
 
     return (
         <ModalCommon>
@@ -46,8 +50,29 @@ export default function ViewEventChip({
                 <div className="flex justify-between gap-3 flex-wrap">
                     <UmassPhotoButton className="bg-gray-400" onClick={onClose}>Close</UmassPhotoButton>
                     <div className="grow"></div>
-                    <UmassPhotoButton className="bg-umass-red">Submit</UmassPhotoButton>
-                    <UmassPhotoButton className="bg-umass-red">View Gallery</UmassPhotoButton>
+                    <UmassPhotoButton 
+                        className="bg-umass-red" 
+                        onClick={() => {
+                            const params = new URLSearchParams({
+                                uploadingPhoto: 'true',
+                                selectedTags: eventData.tag
+                            });
+                            router.push(`/photo-gallery?${params.toString()}`);
+                        }}
+                    >
+                        Submit
+                    </UmassPhotoButton>
+                    <UmassPhotoButton 
+                        className="bg-umass-red"
+                        onClick={() => {
+                            const params = new URLSearchParams({
+                                selectedTags: eventData.tag
+                            });
+                            router.push(`/photo-gallery?${params.toString()}`);
+                        }}
+                    >
+                        View Gallery
+                    </UmassPhotoButton>
                 </div>
             </div>
         </ModalCommon>
