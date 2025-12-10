@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from "path";
 import { seedTestData } from "./seedTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest"
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
 
 dotenv.config();
@@ -38,16 +38,9 @@ async function runQueryFile(filePath: string) {
 }
 
 describe("Database Rule Tests", () => {
+  let supabase: SupabaseClient<Database>;
+
   beforeAll(async () => {
-    await wipeTables();
-    await runQueryFile(path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
-    await seedTestData();
-  });
-
-  afterAll(async () => {
-  });
-
-  it("should have the correct number of records in each table", async () => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     
@@ -55,7 +48,7 @@ describe("Database Rule Tests", () => {
       throw new Error('Supabase URL or service key not found in environment!');
     }
 
-    const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, { 
+    supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, { 
       auth: { 
         persistSession: false,
         autoRefreshToken: false,
@@ -65,6 +58,15 @@ describe("Database Rule Tests", () => {
       },
     });
 
+    await wipeTables();
+    await runQueryFile(path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
+    await seedTestData(supabase);
+  });
+
+  afterAll(async () => {
+  });
+
+  it("should have the correct number of records in each table", async () => {
     // Check photoclubrole table - should have 3 roles
     const { data: roles, error: rolesError } = await supabase
       .from('photoclubrole')
