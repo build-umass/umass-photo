@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
 
   // Convert date strings to TIMESTAMP format (YYYY-MM-DD HH:MM:SS)
   // If date is provided, add time component; otherwise use empty string
-  const queryStart = queryStartRaw ? `${queryStartRaw} 00:00:00` : '1970-01-01 00:00:00';
-  const queryEnd = queryEndRaw ? `${queryEndRaw} 23:59:59` : '2099-12-31 23:59:59';
+  const queryStart = queryStartRaw ? `${queryStartRaw}T00:00:00Z` : '1970-01-01T00:00:00Z';
+  const queryEnd = queryEndRaw ? `${queryEndRaw}T23:59:59Z` : '2099-12-31T23:59:59Z';
 
   // Call the filter_photos function
   const { data: filteredPhotos, error } = await client.rpc('filter_photos', {
