@@ -16,11 +16,24 @@ export default function UploadChip({
     const [selectedTags, setSelectedTags] = useState<string[]>([])
 
     async function refreshTagList() {
-        const response = await fetch('/api/get-tag-all', {
-            method: 'GET',
-        })
-        const tags = new Set(await response.json() as string[]);
-        setTagOptions(tags);
+        try {
+            const response = await fetch('/api/get-tag-all', {
+                method: 'GET',
+            });
+            const data = await response.json();
+            
+            // Ensure we have an array of strings
+            if (Array.isArray(data)) {
+                const tags = new Set(data as string[]);
+                setTagOptions(tags);
+            } else {
+                console.log('Unexpected response format:', data);
+                setTagOptions(new Set());
+            }
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+            setTagOptions(new Set());
+        }
     }
 
     async function uploadPhoto(event: FormEvent<HTMLFormElement>) {
@@ -79,6 +92,8 @@ export default function UploadChip({
     </div>)
 
     const tagOptionElements = Array.from(tagOptions).map(tag => <option key={tag} value={tag}>{tag}</option>)
+
+    console.log('Available tags:', Array.from(tagOptions)); // Debug log
 
     const fileSelectContent = imageDataURL ? <div className="flex flex-col w-full h-full">
         <div className="relative grow">

@@ -44,6 +44,36 @@
     border-radius:.5rem;
 }
 
+/* Add Photo Button */
+#add-photo-button {
+    position: fixed;
+    bottom: 6.5rem;
+    right: 1rem;
+    width: 5rem;
+    height: 5rem;
+    background-color: #881C1C;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+#add-photo-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#add-photo-button span {
+    color: white;
+    font-size: 1.875rem;
+    font-weight: bold;
+}
+
 #details-container {
     font-family: "Gilda Display", serif;
 }
