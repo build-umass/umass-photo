@@ -1,63 +1,12 @@
 import dotenv from "dotenv";
-import postgres from 'postgres'
-import fs from 'fs/promises';
 import path from "path";
 import { seedTestData } from "./seedTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest"
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
+import { runQueryFile, wipeTables } from "./postgresOps";
 
 dotenv.config();
-
-interface DbOperationResult {
-  success: boolean;
-  error?: string;
-}
-
-/**
- * Drops all tables in the public schema of the database
- * @param connectionString - PostgreSQL connection string
- * @returns Result object with success status and optional error message
- */
-async function wipeTables(connectionString: string): Promise<DbOperationResult> {
-  const sql = postgres(connectionString)
-
-  try {
-    const res = await sql`
-        SELECT * FROM information_schema.tables WHERE table_schema='public';
-      `;
-
-    for (const tableMetadata of res) {
-      const tableName = tableMetadata.table_name;
-      await sql`
-          DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
-        `;
-    }
-    await sql.end();
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-}
-
-/**
- * Executes a SQL file against the database
- * @param connectionString - PostgreSQL connection string
- * @param filePath - Absolute path to the SQL file to execute
- * @returns Result object with success status and optional error message
- */
-async function runQueryFile(connectionString: string, filePath: string): Promise<DbOperationResult> {
-  const sql = postgres(connectionString)
-
-  try {
-    const query = await fs.readFile(filePath, 'utf-8');
-    await sql.unsafe(query);
-    await sql.end();
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
-  }
-}
 
 describe("Database Rule Tests", () => {
   let supabase: SupabaseClient<Database>;
@@ -66,7 +15,7 @@ describe("Database Rule Tests", () => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     const databaseUrl = process.env.DATABASE_URL;
-    
+
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error('Supabase URL or service key not found in environment!');
     }
@@ -75,8 +24,8 @@ describe("Database Rule Tests", () => {
       throw new Error('Database URL not found in environment!');
     }
 
-    supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, { 
-      auth: { 
+    supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, {
+      auth: {
         persistSession: false,
         autoRefreshToken: false,
       },
