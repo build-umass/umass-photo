@@ -23,7 +23,7 @@ CREATE TABLE photo (
     description TEXT,
     authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
     file     VARCHAR(128) NOT NULL,
-    postdate TIMESTAMP NOT NULL
+    postdate TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE tag (
@@ -38,8 +38,8 @@ CREATE TABLE phototag (
 CREATE TABLE event (
     id          INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
     name        VARCHAR(64) NOT NULL,
-    startdate   TIMESTAMP NOT NULL,
-    enddate     TIMESTAMP NOT NULL,
+    startdate   TIMESTAMPTZ NOT NULL,
+    enddate     TIMESTAMPTZ NOT NULL,
     tag         VARCHAR(32) REFERENCES tag(name) NOT NULL,
     description TEXT NOT NULL,
     herofile    VARCHAR(128) NOT NULL
