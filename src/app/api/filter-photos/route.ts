@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
   const queryAuthor = filteringAuthors && searchParams.get('queryauthor') 
   ? searchParams.get('queryauthor')! 
   : '00000000-0000-0000-0000-000000000000';
-  const queryStart = searchParams.get('querystart') || '1970-01-01T00:00:00';
-  const queryEnd = searchParams.get('queryend') || '2099-12-31T23:59:59';
+  const queryStart = searchParams.get('querystart') || '1970-01-01T00:00:00Z';
+  const queryEnd = searchParams.get('queryend') || '2099-12-31T23:59:59Z';
 
   // Call the filter_photos function
   const { data: filteredPhotos, error } = await client.rpc('filter_photos', {
