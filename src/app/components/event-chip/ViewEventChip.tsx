@@ -55,7 +55,7 @@ export default function ViewEventChip({
                         onClick={() => {
                             const params = new URLSearchParams({
                                 uploadingPhoto: 'true',
-                                selectedTags: eventData.tag
+                                defaultTags: eventData.tag
                             });
                             router.push(`/photo-gallery?${params.toString()}`);
                         }}
