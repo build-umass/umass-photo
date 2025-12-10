@@ -125,7 +125,8 @@ const PhotoGallery = () => {
             {/* Add Photo Button - positioned above filter button */}
             <button 
                 id="add-photo-button" 
-                onClick={() => setUploadingPhoto(true)}
+                onClick={() => setUploadingPhoto(prev => !prev)}
+                className={uploadingPhoto ? 'expanded' : ''}
             >
                 <span>+</span>
             </button>
