@@ -14,11 +14,7 @@ interface DbOperationResult {
   error?: string;
 }
 
-async function wipeTables(): Promise<DbOperationResult> {
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) {
-    return { success: false, error: "No database connection string found!" };
-  }
+async function wipeTables(connectionString: string): Promise<DbOperationResult> {
   const sql = postgres(connectionString)
 
   try {
@@ -39,11 +35,7 @@ async function wipeTables(): Promise<DbOperationResult> {
   }
 }
 
-async function runQueryFile(filePath: string): Promise<DbOperationResult> {
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) {
-    return { success: false, error: "No database connection string found!" };
-  }
+async function runQueryFile(connectionString: string, filePath: string): Promise<DbOperationResult> {
   const sql = postgres(connectionString)
 
   try {
@@ -62,9 +54,14 @@ describe("Database Rule Tests", () => {
   beforeAll(async () => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const databaseUrl = process.env.DATABASE_URL;
     
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error('Supabase URL or service key not found in environment!');
+    }
+
+    if (!databaseUrl) {
+      throw new Error('Database URL not found in environment!');
     }
 
     supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, { 
@@ -77,12 +74,12 @@ describe("Database Rule Tests", () => {
       },
     });
 
-    const wipeResult = await wipeTables();
+    const wipeResult = await wipeTables(databaseUrl);
     if (!wipeResult.success) {
       throw new Error(`Failed to wipe tables: ${wipeResult.error}`);
     }
 
-    const setupResult = await runQueryFile(path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
+    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
     if (!setupResult.success) {
       throw new Error(`Failed to run setup.sql: ${setupResult.error}`);
     }
