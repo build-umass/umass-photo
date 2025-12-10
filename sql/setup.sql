@@ -18,9 +18,12 @@ CREATE TABLE blog (
 );
 
 CREATE TABLE photo (
-    id       PRIMARY KEY DEFAULT (random()*2147483647), 
-    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL ,
-    file     VARCHAR(128) NOT NULL
+    id       INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
+    title    VARCHAR(128) NOT NULL,
+    description TEXT,
+    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
+    file     VARCHAR(128) NOT NULL,
+    postdate TIMESTAMP NOT NULL
 );
 
 CREATE TABLE tag (
@@ -33,9 +36,11 @@ CREATE TABLE phototag (
 );
 
 CREATE TABLE event (
-    id        SERIAL PRIMARY KEY,
-    name      VARCHAR(64) NOT NULL,
-    startdate DATE NOT NULL,
-    enddate   DATE NOT NULL,
-    tag       VARCHAR(32) REFERENCES tag(name) NOT NULL
+    id          INTEGER PRIMARY KEY DEFAULT FLOOR(random()*2147483647),
+    name        VARCHAR(64) NOT NULL,
+    startdate   TIMESTAMP NOT NULL,
+    enddate     TIMESTAMP NOT NULL,
+    tag         VARCHAR(32) REFERENCES tag(name) NOT NULL,
+    description TEXT NOT NULL,
+    herofile    VARCHAR(128) NOT NULL
 );

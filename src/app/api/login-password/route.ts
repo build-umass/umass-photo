@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       ],
       [
         "Set-Cookie",
-        `refresh-token=${data.session.refresh_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
+        `refresh-token=${data.session.refresh_token}; Path=/api/refresh/; SameSite=strict; HttpOnly; Secure`
       ]
     ]
   });
