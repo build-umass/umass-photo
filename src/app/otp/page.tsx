@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import { FormEvent, use } from "react";
 import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
+import { normalizeOtpMode, OtpMode } from "@/app/utils/otpModes";
 
 const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -10,7 +11,7 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
   const email = (form.elements.namedItem("email") as HTMLInputElement).value;
   const token = (form.elements.namedItem("otp") as HTMLInputElement).value;
   const modeInput = form.elements.namedItem("mode") as HTMLInputElement | null;
-  const mode = modeInput?.value ?? "login";
+  const mode = normalizeOtpMode(modeInput?.value);
 
   const response = await fetch("/api/verify-otp", {
     method: "POST",
@@ -28,7 +29,7 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
 
 type SearchParams = {
   email?: string;
-  mode?: string;
+  mode?: OtpMode;
 };
 
 const OtpPage = ({
@@ -37,7 +38,8 @@ const OtpPage = ({
   searchParams: Promise<SearchParams>;
 }) => {
   const { email, mode } = use(searchParams);
-  const isSignup = mode === "signup";
+  const normalizedMode = normalizeOtpMode(mode);
+  const isSignup = normalizedMode === "signup";
 
   const title = isSignup ? "Confirm Your Email" : "Enter One-Time Code";
   const description = isSignup
@@ -86,7 +88,7 @@ const OtpPage = ({
               <input
                 type="text"
                 name="mode"
-                defaultValue={mode ?? "login"}
+                defaultValue={normalizedMode}
                 hidden
                 aria-hidden
               />
