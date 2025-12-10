@@ -171,7 +171,7 @@ export default function UploadChip({
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
                     
                     {/* Custom tag input */}
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center w-lg">
                         <div className="flex flex-row flex-wrap gap-3 align-middle">
                             {tagList}
                             <select value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
@@ -202,7 +202,7 @@ export default function UploadChip({
                             Available tags: {Array.from(tagOptions).join(", ")}
                         </div>
                     )}
-                <div className="flex flex-row gap-3">
+                <div className="flex flex-row gap-3 ">
                     {/* TODO convert to common button style */}
                     <UmassPhotoButton className="bg-gray-400" type="button" onClick={closeCallback}>Close</UmassPhotoButton>
                     <div
