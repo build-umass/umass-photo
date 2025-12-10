@@ -5,15 +5,17 @@ import PreviewPage from "./PreviewPage";
 import Image from "next/image";
 
 export default function UploadChip({
-    closeCallback
+    closeCallback,
+    defaultTags = []
 }: {
-    closeCallback: () => void
+    closeCallback: () => void,
+    defaultTags?: string[]
 }) {
     const [previewMode, setPreviewMode] = useState(false);
     const imageField = useRef<HTMLInputElement | null>(null);
     const [imageDataURL, setImageDataUrl] = useState("");
     const [tagOptions, setTagOptions] = useState<Set<string>>(new Set())
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [selectedTags, setSelectedTags] = useState<string[]>(defaultTags)
     const [newTagInput, setNewTagInput] = useState("")
 
     async function refreshTagList() {

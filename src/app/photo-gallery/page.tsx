@@ -23,6 +23,7 @@ interface PhotoItem {
 const PhotoGallery = () => {
     const searchParams = useSearchParams();
     const [uploadingPhoto, setUploadingPhoto] = useState(false)
+    const [defaultTagsForUpload, setDefaultTagsForUpload] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
@@ -80,8 +81,12 @@ const PhotoGallery = () => {
 
         const selectedAuthor = parseStringParam(searchParams.get('selectedAuthor'), 'selectedAuthor');
         const selectedTags = parseCommaSeparatedListParam(searchParams.get('selectedTags'), 'selectedTags');
+        const defaultTags = parseCommaSeparatedListParam(searchParams.get('defaultTags'), 'defaultTags');
         const startDate = parseDateParam(searchParams.get('startDate'), 'startDate');
         const endDate = parseDateParam(searchParams.get('endDate'), 'endDate');
+
+        // Store default tags for upload
+        setDefaultTagsForUpload(Array.from(defaultTags));
 
         const hasFilters = selectedAuthor !== '' || selectedTags.size > 0 || (startDate !== '' && endDate !== '');
         if (hasFilters) {
@@ -243,6 +248,7 @@ const PhotoGallery = () => {
             {uploadingPhoto ?
                 <UploadChip
                     closeCallback={() => setUploadingPhoto(false)}
+                    defaultTags={defaultTagsForUpload}
                 ></UploadChip> :
                 <></>}
         </div>
