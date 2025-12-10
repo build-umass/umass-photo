@@ -35,7 +35,6 @@
     "@types/react-dom": "^19",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^5.1.2",
-    "chai": "^6.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "jsdom": "^27.3.0",
