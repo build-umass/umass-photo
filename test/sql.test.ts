@@ -9,32 +9,51 @@ import { Database } from "@/app/utils/supabase/database.types";
 
 dotenv.config();
 
-async function wipeTables() {
-  const connectionString = process.env.DATABASE_URL
-  if (!connectionString) throw new Error("No database connection string found!");
-  const sql = postgres(connectionString)
-
-  const res = await sql`
-      SELECT * FROM information_schema.tables WHERE table_schema='public';
-    `;
-
-  for (const tableMetadata of res) {
-    const tableName = tableMetadata.table_name;
-    await sql`
-        DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
-      `;
-  }
-  await sql.end();
+interface DbOperationResult {
+  success: boolean;
+  error?: string;
 }
 
-async function runQueryFile(filePath: string) {
+async function wipeTables(): Promise<DbOperationResult> {
   const connectionString = process.env.DATABASE_URL
-  if (!connectionString) throw new Error("No database connection string found!");
+  if (!connectionString) {
+    return { success: false, error: "No database connection string found!" };
+  }
   const sql = postgres(connectionString)
 
-  const query = await fs.readFile(filePath, 'utf-8');
-  await sql.unsafe(query);
-  await sql.end();
+  try {
+    const res = await sql`
+        SELECT * FROM information_schema.tables WHERE table_schema='public';
+      `;
+
+    for (const tableMetadata of res) {
+      const tableName = tableMetadata.table_name;
+      await sql`
+          DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
+        `;
+    }
+    await sql.end();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+async function runQueryFile(filePath: string): Promise<DbOperationResult> {
+  const connectionString = process.env.DATABASE_URL
+  if (!connectionString) {
+    return { success: false, error: "No database connection string found!" };
+  }
+  const sql = postgres(connectionString)
+
+  try {
+    const query = await fs.readFile(filePath, 'utf-8');
+    await sql.unsafe(query);
+    await sql.end();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
+  }
 }
 
 describe("Database Rule Tests", () => {
@@ -58,9 +77,20 @@ describe("Database Rule Tests", () => {
       },
     });
 
-    await wipeTables();
-    await runQueryFile(path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
-    await seedTestData(supabase);
+    const wipeResult = await wipeTables();
+    if (!wipeResult.success) {
+      throw new Error(`Failed to wipe tables: ${wipeResult.error}`);
+    }
+
+    const setupResult = await runQueryFile(path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
+    if (!setupResult.success) {
+      throw new Error(`Failed to run setup.sql: ${setupResult.error}`);
+    }
+
+    const seedResult = await seedTestData(supabase);
+    if (seedResult.error) {
+      throw new Error(`Failed to seed test data: ${seedResult.error}`);
+    }
   });
 
   afterAll(async () => {

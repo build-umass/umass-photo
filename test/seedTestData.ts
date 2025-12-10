@@ -1,5 +1,5 @@
 import { Database, Tables, TablesInsert } from '@/app/utils/supabase/database.types';
-import { createClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,11 +13,11 @@ interface SeedDataResult {
  * Creates fake users and seeds the database with test data
  * Users are created directly in auth.users and auth.identities tables
  * Replicates the behavior of insert_data.sql
- * @param sql - Supabase client instance to use for database operations
+ * @param client - Supabase client instance to use for database operations
  */
-export async function seedTestData(sql: ReturnType<typeof createClient<Database>>): Promise<SeedDataResult> {
+export async function seedTestData(client: SupabaseClient<Database>): Promise<SeedDataResult> {
   // Insert roles
-  const { error: rolesError } = await sql.from('photoclubrole').insert([
+  const { error: rolesError } = await client.from('photoclubrole').insert([
     { roleid: 'admin', is_admin: true },
     { roleid: 'member', is_admin: false },
     { roleid: 'eboard', is_admin: true },
@@ -42,10 +42,14 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
       id: 'beebdcae-ba00-4c16-9e1c-2103381337bf',
     },
   ];
-  const testUsers = await createTestUsers(sql, testUsersData);
+  const { data: testUsers, error: createUsersError } = await createTestUsers(client, testUsersData);
+  if (createUsersError || !testUsers) {
+    console.error('Error creating test users:', createUsersError);
+    return { users: [], error: createUsersError || 'Failed to create test users' };
+  }
 
   // Insert photos
-  const { error: photosError } = await sql.from('photo').insert([
+  const { error: photosError } = await client.from('photo').insert([
     { id: 1, title: 'title 1', authorid: testUsers[0].id, description: 'description 1', file: '01.png', postdate: '2020-03-15 14:30:00' },
     { id: 2, title: 'title 2', authorid: testUsers[1].id, description: 'description 2', file: '02.png', postdate: '2020-07-22 16:45:00' },
     { id: 3, title: 'title 3', authorid: testUsers[0].id, description: 'description 3', file: '03.png', postdate: '2021-01-10 09:15:00' },
@@ -62,7 +66,7 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
   }
 
   // Insert tags
-  const { error: tagsError } = await sql.from('tag').insert([
+  const { error: tagsError } = await client.from('tag').insert([
     { name: 'nature' },
     { name: 'water' },
     { name: 'sky' },
@@ -75,7 +79,7 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
   }
 
   // Insert photo tags
-  const { error: phototagsError } = await sql.from('phototag').insert([
+  const { error: phototagsError } = await client.from('phototag').insert([
     { photoid: 1, tag: 'nature' },
     { photoid: 1, tag: 'sky' },
     { photoid: 2, tag: 'people' },
@@ -94,7 +98,7 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
   }
 
   // Insert events
-  const { error: eventsError } = await sql.from('event').insert([
+  const { error: eventsError } = await client.from('event').insert([
     { id: 1, name: 'Spring Photo Walk', startdate: '2025-04-12 09:00:00', enddate: '2025-04-12 17:00:00', tag: 'nature', description: 'A community walk to photograph spring blooms.', herofile: '01.png' },
     { id: 2, name: 'Summer Contest', startdate: '2025-07-01 00:00:00', enddate: '2025-07-31 23:59:59', tag: 'Summer Contest', description: 'Monthly summer photo contest; open to all members.', herofile: '05.png' },
     { id: 3, name: 'Night Sky Workshop', startdate: '2025-09-15 20:00:00', enddate: '2025-09-15 23:30:00', tag: 'sky', description: 'Learn long exposure techniques for astrophotography.', herofile: '09.png' },
@@ -113,6 +117,11 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
   };
 }
 
+interface CreateTestUsersResult {
+  data?: Tables<"photoclubuser">[];
+  error?: string;
+}
+
 /**
  * Creates test users using Supabase Admin Auth API
  * Returns an array of created users with their IDs
@@ -120,23 +129,23 @@ export async function seedTestData(sql: ReturnType<typeof createClient<Database>
  * @param testUsers - Array of test user data to create
  */
 async function createTestUsers(
-  client: ReturnType<typeof createClient<Database>>,
+  client: SupabaseClient<Database>,
   testUsers: TablesInsert<"photoclubuser">[]
-): Promise<Tables<"photoclubuser">[]> {
+): Promise<CreateTestUsersResult> {
 
   for (const user of testUsers) {
     // If a user with this email already exists in auth, remove it first
     const { data: existingUsers, error: listError } = await client.auth.admin.listUsers();
     if (listError) {
       console.error(`Error checking for existing user ${user.email}:`, listError);
-      throw listError;
+      return { error: `Failed to list users: ${listError.message}` };
     } else {
       const existing = existingUsers?.users?.find(u => u.email === user.email);
       if (existing) {
         const { error: deleteError } = await client.auth.admin.deleteUser(existing.id);
         if (deleteError) {
           console.error(`Error deleting existing user ${user.email}:`, deleteError);
-          throw deleteError;
+          return { error: `Failed to delete existing user ${user.email}: ${deleteError.message}` };
         } else {
           console.log(`Removed existing auth user for email ${user.email} with id ${existing.id}`);
         }
@@ -155,7 +164,7 @@ async function createTestUsers(
 
     if (error) {
       console.error('Error creating test user via supabase admin:', error);
-      throw error;
+      return { error: `Failed to create test user: ${error.message}` };
     }
 
     // Update the user ID with the actual created ID
@@ -175,12 +184,12 @@ async function createTestUsers(
     ]).select().single();
     if (userError) {
       console.error(`Failed inserting photoclubuser ${user.email}:`, userError);
-      throw userError;
+      return { error: `Failed to insert photoclubuser ${user.email}: ${userError.message}` };
     }
     if (data) {
       createdUsers.push(data);
     }
   }
 
-  return createdUsers;
+  return { data: createdUsers };
 }
