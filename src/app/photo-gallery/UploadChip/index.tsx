@@ -168,33 +168,32 @@ export default function UploadChip({
                 >{fileSelectContent}</label>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
-                    
-                    <div className="flex gap-2 items-center w-lg">
-                        <div className="flex flex-row flex-wrap gap-3 align-middle">
-                            {tagList}
-                            <select value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
-                                <option value="default">+</option>
-                                {tagOptionElements}
-                            </select>
-                        </div>
-                        <input
-                            type="text"
-                            value={newTagInput}
-                            onChange={(e) => setNewTagInput(e.target.value)}
-                            placeholder="Create new tag..."
-                            className="bg-gray-200 p-2 rounded-xl text-lg flex-grow"
-                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); createTag(newTagInput); } }}
-                        />
-                        <button 
-                            type="button" 
-                            onClick={() => createTag(newTagInput)} 
-                            className="bg-umass-red text-white px-4 py-2 rounded-xl text-lg hover:bg-red-700 transition-colors"
-                        >
-                            Add Tag
-                        </button>
-                    </div>
-                    
-                
+                <div className="flex flex-row flex-wrap gap-3 align-middle">
+                    {tagList}
+                    <select value="default" className="bg-gray-300 rounded-xl py-1 px-4 text-2xl appearance-none w-16 text-center" onChange={(e) => { if (e.target.value !== "default") addTag(e.target.value) }}>
+                        <option value="default">+</option>
+                        {tagOptionElements}
+                    </select>
+                </div>
+
+                <div className="flex gap-2 items-center w-lg">
+                    <input
+                        type="text"
+                        value={newTagInput}
+                        onChange={(e) => setNewTagInput(e.target.value)}
+                        placeholder="Create new tag..."
+                        className="bg-gray-200 p-2 rounded-xl text-lg flex-grow"
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); createTag(newTagInput); } }}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => createTag(newTagInput)}
+                        className="bg-umass-red text-white px-4 py-2 rounded-xl text-lg hover:bg-red-700 transition-colors"
+                    >
+                        Add Tag
+                    </button>
+                </div>
+
                 <div className="flex flex-row gap-3 ">
                     <UmassPhotoButton className="bg-gray-400" type="button" onClick={closeCallback}>Close</UmassPhotoButton>
                     <div
