@@ -9,10 +9,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         hostname: SUPABASE_HOST_NAME!
-      },
-      {
-        hostname: "placehold.co"
-      },
+      }
     ]
   }
 };
