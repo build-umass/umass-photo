@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
-import zxcvbn from "zxcvbn";
 
 dotenv.config();
 
@@ -33,78 +32,78 @@ export async function POST(request: Request) {
 
     // Supabase typically reports an "already registered" style error when the
     // email is already in use. In that case, we try to update the existing user.
-    if (message.includes("already") && message.includes("registered")) {
-      const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-      if (!supabaseAnonKey) throw new Error("No Supabase anon key found!");
+    if (!message.includes("already") || !message.includes("registered")) {
+      return new Response(
+        JSON.stringify({ error: error.message }),
+        { status: 400 }
+      );
+    }
 
-      // Look up the existing user by email using the admin API.
-      const {
-        data: usersResult,
-        error: listError
-      } = await adminClient.auth.admin.listUsers({ email });
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+    if (!supabaseAnonKey) throw new Error("No Supabase anon key found!");
 
-      const existingUser = usersResult?.users?.[0];
-      if (listError || !existingUser) {
-        return new Response(
-          JSON.stringify({ error: error.message }),
-          { status: 400 }
-        );
-      }
+    // Look up the existing user by email using the admin API.
+    const {
+      data: usersResult,
+      error: listError
+    } = await adminClient.auth.admin.listUsers({ email });
 
-      const { error: updateError } =
-        await adminClient.auth.admin.updateUserById(existingUser.id, {
-          password
-        });
+    const existingUser = usersResult?.users?.[0];
+    if (listError || !existingUser) {
+      return new Response(
+        JSON.stringify({ error: error.message }),
+        { status: 400 }
+      );
+    }
 
-      if (updateError) {
-        return new Response(
-          JSON.stringify({ error: updateError.message }),
-          { status: 400 }
-        );
-      }
-
-      // After setting the password, sign the user in so we can issue a session.
-      const anonClient = createClient(supabaseUrl, supabaseAnonKey);
-      const {
-        data: signInData,
-        error: signInError
-      } = await anonClient.auth.signInWithPassword({
-        email,
+    const { error: updateError } =
+      await adminClient.auth.admin.updateUserById(existingUser.id, {
         password
       });
 
-      if (signInError || !signInData.session) {
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message:
-              "Your password has been set. Please sign in with your new credentials."
-          }),
-          { status: 200 }
-        );
-      }
-
+    if (updateError) {
       return new Response(
-        JSON.stringify({ success: true }),
-        {
-          status: 200,
-          headers: [
-            [
-              "Set-Cookie",
-              `access-token=${signInData.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
-            ],
-            [
-              "Set-Cookie",
-              `refresh-token=${signInData.session.refresh_token}; Path=/api/refresh/; SameSite=strict; HttpOnly; Secure`
-            ]
-          ]
-        }
+        JSON.stringify({ error: updateError.message }),
+        { status: 400 }
+      );
+    }
+
+    // After setting the password, sign the user in so we can issue a session.
+    const anonClient = createClient(supabaseUrl, supabaseAnonKey);
+    const {
+      data: signInData,
+      error: signInError
+    } = await anonClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (signInError || !signInData.session) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message:
+            "Your password has been set. Please sign in with your new credentials."
+        }),
+        { status: 200 }
       );
     }
 
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 400 }
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: [
+          [
+            "Set-Cookie",
+            `access-token=${signInData.session.access_token}; Path=/api/; SameSite=strict; HttpOnly; Secure`
+          ],
+          [
+            "Set-Cookie",
+            `refresh-token=${signInData.session.refresh_token}; Path=/api/refresh/; SameSite=strict; HttpOnly; Secure`
+          ]
+        ]
+      }
     );
   }
 
