@@ -42,6 +42,10 @@ export default function RegisterPage() {
     });
 
     if (!response.ok) {
+      if (response.status === 409) {
+        setError("An account with this email already exists. To add a password, please log in and update your account settings.");
+        return;
+      }
       try {
         const body = await response.json();
         setError(body.error ?? "Failed to sign up. Please try again.");
