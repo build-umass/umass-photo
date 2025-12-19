@@ -73,8 +73,8 @@ export default function RegisterPage() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <main className="flex-grow bg-gray-50">
-        <section className="bg-[#8E122A] text-white py-16">
+      <main className="grow bg-gray-50">
+        <section className="bg-umass-red text-white py-16">
           <div className="container mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Create an Account</h1>
             <p className="text-xl max-w-2xl mx-auto">
@@ -110,7 +110,7 @@ export default function RegisterPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
                   placeholder="you@example.com"
                   required
                 />
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
                   placeholder="••••••••"
                   required
                 />
@@ -146,7 +146,7 @@ export default function RegisterPage() {
                   id="confirm-password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
                   placeholder="••••••••"
                   required
                 />
@@ -154,7 +154,7 @@ export default function RegisterPage() {
 
               <button
                 type="submit"
-                className="w-full bg-[#8E122A] text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
+                className="w-full bg-umass-red text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
               >
                 Sign Up
               </button>
@@ -164,7 +164,7 @@ export default function RegisterPage() {
                   Already have an account?{" "}
                   <a
                     href="/login"
-                    className="text-[#8E122A] font-semibold hover:underline"
+                    className="text-umass-red font-semibold hover:underline"
                   >
                     Log in
                   </a>
