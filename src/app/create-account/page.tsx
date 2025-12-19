@@ -1,5 +1,7 @@
 'use client'
 
+import { FormEvent } from "react";
+
 const requestAccount = async (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   const username = (

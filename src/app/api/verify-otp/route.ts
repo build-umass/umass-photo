@@ -1,5 +1,9 @@
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import {
+  getSupabaseOtpType,
+  normalizeOtpMode
+} from "@/app/utils/otpModes";
 
 dotenv.config();
 
@@ -12,6 +16,8 @@ export async function POST(request: Request) {
 
   const token = request.headers.get("token");
   const email = request.headers.get("email");
+  const rawMode = request.headers.get("mode");
+  const mode = normalizeOtpMode(rawMode);
   if (token === null) return new Response("No token", {
     status: 400
   });
@@ -20,7 +26,8 @@ export async function POST(request: Request) {
   });
 
   const client = createClient(supabaseUrl, supabaseApiKey);
-  const { data } = await client.auth.verifyOtp({ email, token, type: 'email' })
+  const type = getSupabaseOtpType(mode);
+  const { data } = await client.auth.verifyOtp({ email, token, type });
 
   if (!data.session) return new Response("No Session", {
     status: 400

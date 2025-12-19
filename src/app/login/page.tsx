@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const [error, _setError] = useState("");
+  const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
   const [loginMethod, setLoginMethod] = useState("password"); // 'password', 'magiclink', or 'otp'
@@ -28,8 +28,33 @@ export default function LoginPage() {
   //     setError(error.message);
   //   } else {
   //     router.push("/dashboard");
-  //   }
+  //   } 
   // };
+
+  const handlePasswordLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+
+    const response = await fetch("/api/login-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      try {
+        const body = await response.json();
+        setError(body.error ?? "Failed to sign in. Please try again.");
+      } catch {
+        setError("Failed to sign in. Please try again.");
+      }
+      return;
+    }
+
+    router.push("/");
+  };
 
   // const handleMagicLinkLogin = async (e) => {
   //   e.preventDefault();
@@ -60,7 +85,8 @@ export default function LoginPage() {
     });
     if (response.ok) {
       const params = new URLSearchParams({
-        email
+        email,
+        mode: "login",
       })
       window.location.assign(`/otp?${params.toString()}`)
     }
@@ -149,7 +175,7 @@ export default function LoginPage() {
             <form
               onSubmit={
                 loginMethod === "password"
-                  ? () => {}
+                  ? handlePasswordLogin
                   : loginMethod === "magiclink"
                   ? () => {}
                   : showOtpField
@@ -170,7 +196,7 @@ export default function LoginPage() {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
                   placeholder="your@email.com"
                   required
                 />
@@ -189,7 +215,7 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
                     placeholder="••••••••"
                     required
                   />
@@ -209,7 +235,7 @@ export default function LoginPage() {
                     id="otp"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
                     placeholder="123456"
                     required
                   />
