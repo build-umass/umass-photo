@@ -13,6 +13,18 @@ export async function GET(request: NextRequest) {
   const { data: eventList } = await client.from("event").select("*");
   if (!eventList) return new Response("[]");
 
-  const response = new Response(JSON.stringify(eventList));
+  // Transform the data and get image URLs
+  const eventListWithURLs = eventList.map((event) => {
+    // Get public URL for the image
+    const imageUrl = client.storage
+      .from("photos")
+      .getPublicUrl(event.herofile).data.publicUrl;
+
+    return {
+      ...event,
+      herofileURL: imageUrl,
+    };
+  });
+  const response = new Response(JSON.stringify(eventListWithURLs));
   return attachCookies(client, response);
 }
