@@ -1,8 +1,9 @@
 'use client'
 import UmassPhotoButton from "@/app/components/UmassPhotoButton";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import ImageSelectField from "@/app/components/ImageSelectField";
+import ModalCommon from "@/app/components/ChipLayout";
+import { FormEvent, useEffect, useState } from "react";
 import PreviewPage from "./PreviewPage";
-import Image from "next/image";
 
 export default function UploadChip({
     closeCallback,
@@ -12,7 +13,6 @@ export default function UploadChip({
     defaultTags?: string[]
 }) {
     const [previewMode, setPreviewMode] = useState(false);
-    const imageField = useRef<HTMLInputElement | null>(null);
     const [imageDataURL, setImageDataUrl] = useState("");
     const [tagOptions, setTagOptions] = useState<Set<string>>(new Set())
     const [selectedTags, setSelectedTags] = useState<string[]>(defaultTags)
@@ -119,18 +119,6 @@ export default function UploadChip({
         refreshTagList()
     }, []);
 
-
-    async function processFileLoad() {
-        const selectedImage = imageField.current?.files?.item(0)
-        if (!selectedImage) return;
-        const fr = new FileReader();
-        fr.onload = function () {
-            if (typeof fr.result !== "string") throw new Error("File was not read as a data URL!")
-            setImageDataUrl(fr.result);
-        }
-        fr.readAsDataURL(selectedImage);
-    }
-
     const tagList = selectedTags.map(tag => <div key={tag} className="bg-gray-300 rounded-xl py-1 px-4 text-2xl flex align-middle gap-2">
         <div>{tag}</div>
         <button type="button" onClick={() => { removeTag(tag) }}>X</button>
@@ -138,36 +126,21 @@ export default function UploadChip({
 
     const tagOptionElements = Array.from(tagOptions).map(tag => <option key={tag} value={tag}>{tag}</option>)
 
-    const fileSelectContent = imageDataURL ? <div className="flex flex-col w-full h-full">
-        <div className="relative grow">
-            <Image alt="Image Preview" src={imageDataURL} fill={true} className="object-contain"></Image>
-        </div>
-        <div className="text-center">{imageField.current?.value.substring(12)}</div>
-    </div> : "Select a photo"
-    return <div className="fixed inset-0 flex items-center justify-center bg-black/20">
-        <div className="w-2/3 h-2/3 bg-white p-12">
-            <div className="w-full h-full" hidden={!previewMode}>
+    if (previewMode) {
+        return (
+            <ModalCommon>
                 <PreviewPage previewImageUrl={imageDataURL} setPreviewMode={setPreviewMode}></PreviewPage>
-            </div>
+            </ModalCommon>
+        );
+    }
+
+    return (
+        <ModalCommon>
             <form
                 onSubmit={uploadPhoto}
                 className="flex flex-col gap-4 h-full box-border"
-                hidden={previewMode}
             >
-                <input
-                    type="file"
-                    name="image"
-                    id="file-upload-image"
-                    accept="image/*"
-                    required
-                    ref={imageField}
-                    onChange={processFileLoad}
-                    hidden
-                ></input>
-                <label
-                    htmlFor="file-upload-image"
-                    className="bg-gray-200 p-3 border-2 border-dashed border-gray-600 grow bg-cover bg-center"
-                >{fileSelectContent}</label>
+                <ImageSelectField id="file-upload-image" name="image" onImageChange={setImageDataUrl} className="grow"/>
                 <input type="text" name="title" className="bg-gray-200 p-3 rounded-xl text-3xl font-bold" placeholder="Title" required></input>
                 <textarea name="description" className="bg-gray-200 p-3 rounded-xl grow" placeholder="description" required></textarea>
                 <div className="flex flex-row flex-wrap gap-3 align-middle">
@@ -206,6 +179,6 @@ export default function UploadChip({
                     <UmassPhotoButton className="bg-umass-red" type="submit">Upload</UmassPhotoButton>
                 </div>
             </form>
-        </div>
-    </div>
+        </ModalCommon>
+    );
 }

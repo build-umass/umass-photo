@@ -9,12 +9,10 @@ export async function GET(request: NextRequest) {
   const client = getUserClient(request);
 
   const { data: {user} } = await client.auth.getUser();
-  if (!user) return new Response("{}");
-  const id = user.id;
-  const { data: roleObjectList } = await client.from("photoclubuser").select("photoclubrole(*)").eq("id", id);
-  if (roleObjectList === null || roleObjectList.length === 0) return new Response("{}");
-  const [{ photoclubrole: roleData }] = roleObjectList
+  if (!user) return new Response("[]");
+  const { data: eventList } = await client.from("event").select("*");
+  if (!eventList) return new Response("[]");
 
-  const response = new Response(JSON.stringify(roleData));
+  const response = new Response(JSON.stringify(eventList));
   return attachCookies(client, response);
 }
