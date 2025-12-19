@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION filter_photos(
     filtering_date boolean,
     querytags json,
     queryauthor UUID,
-    querystart TIMESTAMP,
-    queryend TIMESTAMP
+    querystart TIMESTAMPTZ,
+    queryend TIMESTAMPTZ
 ) RETURNS SETOF photo AS $$
 SELECT *
 FROM photo p

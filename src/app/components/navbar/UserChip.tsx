@@ -4,6 +4,7 @@ import { UserResponse } from "@supabase/supabase-js";
 import { useEffect, useState } from "react"
 import NavBarLink from "./NavBarLink";
 import { Tables } from "@/app/utils/supabase/database.types";
+import LogoutButton from "./LogoutButton";
 
 export default function UserChip() {
     const [currentUser, setCurrentUser] = useState("")
@@ -27,11 +28,8 @@ export default function UserChip() {
             })();
     }, [currentUser])
 
-    if (currentUser === "") {
-        return <NavBarLink href="/login">Login</NavBarLink>
-    } else {
-        if (isAdmin) {
-            return <NavBarLink href="/admin-page">Admin</NavBarLink>
-        }
-    }
+    return <>
+        {currentUser === "" ? <NavBarLink href="/login">Login</NavBarLink> : <LogoutButton></LogoutButton>}
+        {isAdmin ? <NavBarLink href="/admin-page">Admin</NavBarLink> : <></>}
+    </>
 }

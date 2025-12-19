@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import BackArrow from '../../../public/back_arrow.svg';
 import ForwardArrow from '../../../public/forward_arrow.svg';
 import CloseIcon from '../../../public/close.svg';
 import Navbar from '../components/navbar/navbar';
+import { parseBooleanParam, parseStringParam, parseCommaSeparatedListParam, parseDateParam } from './queryValidation';
 import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
 import UploadChip from './UploadChip';
@@ -19,7 +21,9 @@ interface PhotoItem {
 }
 
 const PhotoGallery = () => {
+    const searchParams = useSearchParams();
     const [uploadingPhoto, setUploadingPhoto] = useState(false)
+    const [defaultTagsForUpload, setDefaultTagsForUpload] = useState<string[]>([])
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
@@ -70,8 +74,36 @@ const PhotoGallery = () => {
     };
 
     useEffect(() => {
-        fetchPhotos();
-    }, []);
+        const uploading = parseBooleanParam(searchParams.get('uploadingPhoto'), 'uploadingPhoto');
+        if (uploading === true) {
+            setUploadingPhoto(true);
+        }
+
+        const selectedAuthor = parseStringParam(searchParams.get('selectedAuthor'), 'selectedAuthor');
+        const selectedTags = parseCommaSeparatedListParam(searchParams.get('selectedTags'), 'selectedTags');
+        const defaultTags = parseCommaSeparatedListParam(searchParams.get('defaultTags'), 'defaultTags');
+        const startDate = parseDateParam(searchParams.get('startDate'), 'startDate');
+        const endDate = parseDateParam(searchParams.get('endDate'), 'endDate');
+
+        // Store default tags for upload
+        setDefaultTagsForUpload(Array.from(defaultTags));
+
+        const hasFilters = selectedAuthor !== '' || selectedTags.size > 0 || (startDate !== '' && endDate !== '');
+        if (hasFilters) {
+            const filters = {
+                filtering_tags: selectedTags.size > 0,
+                filtering_authors: selectedAuthor !== '',
+                filtering_date: startDate !== '' && endDate !== '',
+                querytags: Array.from(selectedTags) as string[],
+                queryauthor: selectedAuthor,
+                querystart: startDate,
+                queryend: endDate
+            };
+            fetchPhotos(filters);
+        } else {
+            fetchPhotos();
+        }
+    }, [searchParams]);
 
     const handleFilterSubmit = (filters: {
         filtering_tags: boolean;
@@ -117,15 +149,21 @@ const PhotoGallery = () => {
         setModalImageError(true);
     };
 
-    const addPhotoButton = <button onClick={() => setUploadingPhoto(true)}>Add Photo</button>
-
     return (
         <div>
             <Navbar />
             <FilterMenu onFilterSubmit={handleFilterSubmit} />
 
+            {/* Add Photo Button - positioned above filter button */}
+            <button 
+                id="add-photo-button" 
+                onClick={() => setUploadingPhoto(prev => !prev)}
+                className={uploadingPhoto ? 'expanded' : ''}
+            >
+                <span>+</span>
+            </button>
+
             <div id="photo-grid">
-                {addPhotoButton}
                 {loading ? (
                     <div>Loading photos...</div>
                 ) : photos.length === 0 ? (
@@ -210,6 +248,7 @@ const PhotoGallery = () => {
             {uploadingPhoto ?
                 <UploadChip
                     closeCallback={() => setUploadingPhoto(false)}
+                    defaultTags={defaultTagsForUpload}
                 ></UploadChip> :
                 <></>}
         </div>

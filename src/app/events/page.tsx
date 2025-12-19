@@ -2,11 +2,70 @@
 
 import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
+import { useEffect, useState } from "react";
+import { Tables } from "../utils/supabase/database.types";
+import Image from "next/image";
+import ViewEventChip from "../components/event-chip/ViewEventChip";
+import { formatDate } from "../utils/dates";
 
+type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function EventsPage() {
+  const [events, setEvents] = useState<EventWithURL[]>([]);
+  const [currentFocusedEvent, setCurrentFocusedEvent] = useState<EventWithURL | null>(null);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch("/api/get-event-all-with-urls");
+        if (response.ok) {
+          const data = await response.json();
+          setEvents(data);
+        } else {
+          console.error("Failed to fetch events");
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    }
+
+    fetchEvents();
+  }, []);
+
+  function getEventListingElement(event: EventWithURL) {
+    const endDate = new Date(event.enddate);
+    return <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
+      {/* Image Block - Left */}
+      <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0 relative">
+        <Image
+          src={event.herofileURL}
+          alt={`Hero image for ${event.name}`}
+          fill
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
+
+      {/* Text Content - Right */}
+      <div className="p-8 flex flex-col justify-center">
+        <h2 className="text-2xl font-bold mb-3 text-black">
+          {event.name}
+        </h2>
+        <p className="text-gray-600 mb-4 text-lg">
+          {formatDate(endDate)}
+        </p>
+        <p className="mb-6 text-gray-700">
+          {event.description}
+        </p>
+        <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit" onClick={() => setCurrentFocusedEvent(event)}>
+          Learn More
+        </button>
+      </div>
+    </div>
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
+
 
       <main className="flex-grow bg-gray-50">
         {/* Hero Section */}
@@ -23,77 +82,7 @@ export default function EventsPage() {
         {/* Events List */}
         <section className="container mx-auto py-12 px-4">
           <div className="max-w-5xl mx-auto space-y-8">
-            {/* Event Card 1 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden flex">
-              {/* Image Block - Left */}
-              <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0"></div>
-
-              {/* Text Content - Right */}
-              <div className="p-8 flex flex-col justify-center">
-                <h2 className="text-2xl font-bold mb-3 text-black">
-                  Spring Photography Workshop
-                </h2>
-                <p className="text-gray-600 mb-4 text-lg">
-                  April 15, 2023 | 2:00 PM
-                </p>
-                <p className="mb-6 text-gray-700">
-                  Learn advanced techniques from professional photographers in
-                  this hands-on workshop. Perfect for intermediate to advanced
-                  photographers looking to refine their skills.
-                </p>
-                <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit">
-                  Register Now
-                </button>
-              </div>
-            </div>
-
-            {/* Event Card 2 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden flex">
-              {/* Image Block - Left */}
-              <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0"></div>
-
-              {/* Text Content - Right */}
-              <div className="p-8 flex flex-col justify-center">
-                <h2 className="text-2xl font-bold mb-3 text-black">
-                  Annual Photo Exhibition
-                </h2>
-                <p className="text-gray-600 mb-4 text-lg">
-                  May 5-7, 2023 | All Day
-                </p>
-                <p className="mb-6 text-gray-700">
-                  Showcase your work at our biggest exhibition of the year
-                  featuring over 100 photographers. Network with industry
-                  professionals and photography enthusiasts.
-                </p>
-                <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit">
-                  Learn More
-                </button>
-              </div>
-            </div>
-
-            {/* Event Card 3 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden flex">
-              {/* Image Block - Left */}
-              <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0"></div>
-
-              {/* Text Content - Right */}
-              <div className="p-8 flex flex-col justify-center">
-                <h2 className="text-2xl font-bold mb-3 text-black">
-                  Summer Photo Walk
-                </h2>
-                <p className="text-gray-600 mb-4 text-lg">
-                  June 10, 2023 | 9:00 AM
-                </p>
-                <p className="mb-6 text-gray-700">
-                  Explore the city's hidden gems with fellow photography
-                  enthusiasts. Guided tour through scenic locations perfect for
-                  urban and landscape photography.
-                </p>
-                <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit">
-                  Join Event
-                </button>
-              </div>
-            </div>
+            {events.map(getEventListingElement)}
           </div>
         </section>
 
@@ -107,6 +96,7 @@ export default function EventsPage() {
           </div>
         </section>
       </main>
+      {currentFocusedEvent && <ViewEventChip eventData={currentFocusedEvent} onClose={() => setCurrentFocusedEvent(null)} />}
 
       <Footer />
     </div>
