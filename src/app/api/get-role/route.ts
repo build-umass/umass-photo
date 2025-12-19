@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   // If there is no matching photoclubuser row, or the join is empty,
   // return an empty JSON object instead of throwing.
-  if (!roleObjectList || roleObjectList.length === 0) return new Response("{}");
+  if (roleObjectList === null || roleObjectList.length === 0) return new Response("{}");
   const [{ photoclubrole: roleData }] = roleObjectList;
   if (!roleData) return new Response("{}");
 
