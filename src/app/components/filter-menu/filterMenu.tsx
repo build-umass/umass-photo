@@ -37,6 +37,14 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
 
+    const startOfDay = (date: string) => {
+        return `${date}T00:00:00Z`;
+    };
+
+    const endOfDay = (date: string) => {
+        return `${date}T23:59:59Z`;
+    };
+
     // Fetch authors and tags on mount
     useEffect(() => {
         const fetchFilterOptions = async () => {
@@ -63,8 +71,8 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             filtering_date: startDate !== '' && endDate !== '',
             querytags: Array.from(selectedTags),
             queryauthor: selectedAuthor,
-            querystart: startDate || '',
-            queryend: endDate || ''
+            querystart: startDate ? startOfDay(startDate) : '',
+            queryend: endDate ? endOfDay(endDate) : ''
         };
 
         onFilterSubmit(filters);
