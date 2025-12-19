@@ -38,11 +38,11 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
     const [endDate, setEndDate] = useState<string>('');
 
     const startOfDay = (date: string) => {
-        return `${date}T00:00:00`;
+        return `${date}T00:00:00Z`;
     };
 
     const endOfDay = (date: string) => {
-        return `${date}T23:59:59`;
+        return `${date}T23:59:59Z`;
     };
 
     // Fetch authors and tags on mount
