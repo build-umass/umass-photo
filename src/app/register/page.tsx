@@ -4,6 +4,7 @@ import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import zxcvbn from "zxcvbn";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -18,12 +19,11 @@ export default function RegisterPage() {
     setError("");
     setSuccessMessage("");
 
-    const passwordPolicy =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-
-    if (!passwordPolicy.test(password)) {
+    const strength = zxcvbn(password);
+    if (strength.score < 3) {
       setError(
-        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+        strength.feedback.warning ||
+          "Password is too weak. Try using a longer passphrase with a mix of words, numbers, and symbols."
       );
       return;
     }
@@ -36,9 +36,9 @@ export default function RegisterPage() {
     const response = await fetch("/api/register-password", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
@@ -179,5 +179,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
-

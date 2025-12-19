@@ -19,21 +19,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Server-side password strength policy using zxcvbn.
-  // We require a score of at least 3 (out of 4), which corresponds to
-  // a reasonably strong password in practice.
-  const strength = zxcvbn(password);
-  if (strength.score < 3) {
-    return new Response(
-      JSON.stringify({
-        error:
-          strength.feedback.warning ||
-          "Password is too weak. Try using a longer passphrase with a mix of words, numbers, and symbols."
-      }),
-      { status: 400 }
-    );
-  }
-
   const adminClient = createClient(supabaseUrl, supabaseApiKey);
 
   const { data, error } = await adminClient.auth.signUp({
