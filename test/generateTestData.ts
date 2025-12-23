@@ -10,10 +10,9 @@ type SeedDataResult = {
 }
 
 /**
- * Creates fake users and seeds the database with test data
- * Users are created directly in auth.users and auth.identities tables
- * Replicates the behavior of insert_data.sql
- * @param client - Supabase client instance to use for database operations
+ * Insert fake data into the database for testing.
+ * @param client The Supabase client to use for the inserts.
+ * @returns a result object containing either the created users or an error
  */
 export async function insertTestData(client: SupabaseClient<Database>): Promise<SeedDataResult> {
   const { error: rolesError } = await client.from('photoclubrole').insert([
@@ -25,7 +24,7 @@ export async function insertTestData(client: SupabaseClient<Database>): Promise<
     return { data: null, error: rolesError };
   }
 
-  const { data: testUsers, error: createUsersError } = await createTestUsers(client, [
+  const { data: testUsers, error: createUsersError } = await insertTestUsers(client, [
     {
       email: 'amoinus@gmail.com',
       username: 'max 1',
@@ -112,12 +111,12 @@ type CreateTestUsersResult = {
 }
 
 /**
- * Creates test users using Supabase Admin Auth API
- * Returns an array of created users with their IDs
- * @param client - Supabase client instance
- * @param testUsers - Array of test user data to create
+ * Insert test users into the database.
+ * @param client the Supabase client instance used to insert the users
+ * @param testUsers the list of users to create
+ * @returns a result object containing either the created users or an error
  */
-async function createTestUsers(
+async function insertTestUsers(
   client: SupabaseClient<Database>,
   testUsers: TablesInsert<"photoclubuser">[]
 ): Promise<CreateTestUsersResult> {
