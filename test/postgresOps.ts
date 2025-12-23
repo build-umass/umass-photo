@@ -68,6 +68,6 @@ export async function reloadSchema(connectionString: string): Promise<DbOperatio
     }
 
     // wait for the reload notification to be processed
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 500));
     return { success: true, error: null };
 }
