@@ -15,20 +15,17 @@ type SeedDataResult = {
  * Replicates the behavior of insert_data.sql
  * @param client - Supabase client instance to use for database operations
  */
-export async function seedTestData(client: SupabaseClient<Database>): Promise<SeedDataResult> {
-  // Insert roles
+export async function insertTestData(client: SupabaseClient<Database>): Promise<SeedDataResult> {
   const { error: rolesError } = await client.from('photoclubrole').insert([
     { roleid: 'admin', is_admin: true },
     { roleid: 'member', is_admin: false },
     { roleid: 'eboard', is_admin: true },
   ]);
   if (rolesError) {
-    console.error('Error inserting roles:', rolesError);
     return { data: null, error: rolesError };
   }
 
-  // Insert users
-  const testUsersData: TablesInsert<"photoclubuser">[] = [
+  const { data: testUsers, error: createUsersError } = await createTestUsers(client, [
     {
       email: 'amoinus@gmail.com',
       username: 'max 1',
@@ -41,31 +38,26 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
       role: 'member',
       id: 'beebdcae-ba00-4c16-9e1c-2103381337bf',
     },
-  ];
-  const { data: testUsers, error: createUsersError } = await createTestUsers(client, testUsersData);
+  ]);
   if (createUsersError) {
-    console.error('Error creating test users:', createUsersError);
     return { data: null, error: createUsersError };
   }
 
-  // Insert photos
   const { error: photosError } = await client.from('photo').insert([
-    { id: 1, title: 'title 1', authorid: testUsers[0].id, description: 'description 1', file: '01.png', postdate: '2020-03-15 14:30:00' },
-    { id: 2, title: 'title 2', authorid: testUsers[1].id, description: 'description 2', file: '02.png', postdate: '2020-07-22 16:45:00' },
-    { id: 3, title: 'title 3', authorid: testUsers[0].id, description: 'description 3', file: '03.png', postdate: '2021-01-10 09:15:00' },
-    { id: 4, title: 'title 4', authorid: testUsers[1].id, description: 'description 4', file: '04.png', postdate: '2021-05-18 12:20:00' },
-    { id: 5, title: 'title 5', authorid: testUsers[0].id, description: 'description 5', file: '05.png', postdate: '2022-02-28 18:00:00' },
-    { id: 6, title: 'title 6', authorid: testUsers[1].id, description: 'description 6', file: '06.png', postdate: '2022-08-14 11:30:00' },
-    { id: 7, title: 'title 7', authorid: testUsers[0].id, description: 'description 7', file: '07.png', postdate: '2023-04-03 15:45:00' },
-    { id: 8, title: 'title 8', authorid: testUsers[1].id, description: 'description 8', file: '08.png', postdate: '2023-11-12 13:10:00' },
-    { id: 9, title: 'title 9', authorid: testUsers[0].id, description: 'description 9', file: '09.png', postdate: '2024-06-25 17:30:00' },
+    { id: 1, title: 'title 1', authorid: '43188856-13db-410a-b1a2-b006056cd84f', description: 'description 1', file: '01.png', postdate: '2020-03-15 14:30:00' },
+    { id: 2, title: 'title 2', authorid: 'beebdcae-ba00-4c16-9e1c-2103381337bf', description: 'description 2', file: '02.png', postdate: '2020-07-22 16:45:00' },
+    { id: 3, title: 'title 3', authorid: '43188856-13db-410a-b1a2-b006056cd84f', description: 'description 3', file: '03.png', postdate: '2021-01-10 09:15:00' },
+    { id: 4, title: 'title 4', authorid: 'beebdcae-ba00-4c16-9e1c-2103381337bf', description: 'description 4', file: '04.png', postdate: '2021-05-18 12:20:00' },
+    { id: 5, title: 'title 5', authorid: '43188856-13db-410a-b1a2-b006056cd84f', description: 'description 5', file: '05.png', postdate: '2022-02-28 18:00:00' },
+    { id: 6, title: 'title 6', authorid: 'beebdcae-ba00-4c16-9e1c-2103381337bf', description: 'description 6', file: '06.png', postdate: '2022-08-14 11:30:00' },
+    { id: 7, title: 'title 7', authorid: '43188856-13db-410a-b1a2-b006056cd84f', description: 'description 7', file: '07.png', postdate: '2023-04-03 15:45:00' },
+    { id: 8, title: 'title 8', authorid: 'beebdcae-ba00-4c16-9e1c-2103381337bf', description: 'description 8', file: '08.png', postdate: '2023-11-12 13:10:00' },
+    { id: 9, title: 'title 9', authorid: '43188856-13db-410a-b1a2-b006056cd84f', description: 'description 9', file: '09.png', postdate: '2024-06-25 17:30:00' },
   ]);
   if (photosError) {
-    console.error('Failed inserting photos:', photosError);
     return { data: null, error: photosError };
   }
 
-  // Insert tags
   const { error: tagsError } = await client.from('tag').insert([
     { name: 'nature' },
     { name: 'water' },
@@ -74,11 +66,9 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
     { name: 'Summer Contest' },
   ]);
   if (tagsError) {
-    console.error('Failed inserting tags:', tagsError);
     return { data: null, error: tagsError };
   }
 
-  // Insert photo tags
   const { error: phototagsError } = await client.from('phototag').insert([
     { photoid: 1, tag: 'nature' },
     { photoid: 1, tag: 'sky' },
@@ -93,11 +83,9 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
     { photoid: 9, tag: 'sky' },
   ]);
   if (phototagsError) {
-    console.error('Failed inserting phototags:', phototagsError);
     return { data: null, error: phototagsError };
   }
 
-  // Insert events
   const { error: eventsError } = await client.from('event').insert([
     { id: 1, name: 'Spring Photo Walk', startdate: '2025-04-12 09:00:00', enddate: '2025-04-12 17:00:00', tag: 'nature', description: 'A community walk to photograph spring blooms.', herofile: '01.png' },
     { id: 2, name: 'Summer Contest', startdate: '2025-07-01 00:00:00', enddate: '2025-07-31 23:59:59', tag: 'Summer Contest', description: 'Monthly summer photo contest; open to all members.', herofile: '05.png' },
@@ -106,11 +94,8 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
     { id: 5, name: 'Portrait Session', startdate: '2025-11-08 18:00:00', enddate: '2025-11-08 20:00:00', tag: 'people', description: 'Portrait lighting and posing session.', herofile: '07.png' },
   ]);
   if (eventsError) {
-    console.error('Failed inserting events:', eventsError);
     return { data: null, error: eventsError };
   }
-
-  // no connection to close for supabase client
 
   return {
     data: testUsers,

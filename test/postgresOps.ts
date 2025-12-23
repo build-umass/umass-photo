@@ -15,20 +15,21 @@ export async function deleteAllTables(connectionString: string): Promise<DbOpera
     const sql = postgres(connectionString)
 
     try {
-        const res = await sql`
-        SELECT * FROM information_schema.tables WHERE table_schema='public';
-      `;
-
-        for (const tableMetadata of res) {
-            const tableName = tableMetadata.table_name;
-            await sql`
-          DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
+        const tableMetadata = await sql`
+            SELECT * FROM information_schema.tables WHERE table_schema='public';
         `;
+
+        for (const tableMetadataRow of tableMetadata) {
+            const tableName = tableMetadataRow.table_name;
+            await sql`
+                DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
+            `;
         }
-        await sql.end();
         return { success: true };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
+    } finally {
+        await sql.end();
     }
 }
 
@@ -48,5 +49,7 @@ export async function runQueryFile(connectionString: string, filePath: string): 
         return { success: true };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
+    } finally {
+        await sql.end();
     }
 }

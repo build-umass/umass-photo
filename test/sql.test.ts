@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
-import { seedTestData } from "./seedTestData";
+import { insertTestData as insertTestData } from "./generateTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest"
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
@@ -13,16 +13,12 @@ describe("Database Rule Tests", () => {
 
   beforeAll(async () => {
     const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_API_KEY;
     const databaseUrl = process.env.DATABASE_URL;
 
-    if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error('Supabase URL or service key not found in environment!');
-    }
-
-    if (!databaseUrl) {
-      throw new Error('Database URL not found in environment!');
-    }
+    if (!supabaseUrl) throw new Error('Supabase URL not found in environment!');
+    if (!supabaseServiceKey) throw new Error('Supabase service role key not found in environment!');
+    if (!databaseUrl) throw new Error('Database URL not found in environment!');
 
     supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, {
       auth: {
@@ -35,19 +31,13 @@ describe("Database Rule Tests", () => {
     });
 
     const wipeResult = await deleteAllTables(databaseUrl);
-    if (wipeResult.error) {
-      throw new Error(`Failed to wipe tables: ${wipeResult.error}`);
-    }
+    if (wipeResult.error) throw new Error(`Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`);
 
     const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
-    if (setupResult.error) {
-      throw new Error(`Failed to run setup.sql: ${setupResult.error}`);
-    }
+    if (setupResult.error) throw new Error(`Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`);
 
-    const seedResult = await seedTestData(supabase);
-    if (seedResult.error) {
-      throw new Error(`Failed to seed test data: ${seedResult.error}`);
-    }
+    const seedResult = await insertTestData(supabase);
+    if (seedResult.error) throw new Error(`Failed to insert test data: ${JSON.stringify(seedResult.error)}`);
   });
 
   afterAll(async () => {
