@@ -1,9 +1,12 @@
 import postgres from 'postgres'
 import fs from 'fs/promises';
 
-interface DbOperationResult {
-    success: boolean;
-    error?: string;
+type DbOperationResult = {
+    success: true;
+    error: null;
+} | {
+    success: false;
+    error: string;
 }
 
 /**
@@ -25,7 +28,7 @@ export async function deleteAllTables(connectionString: string): Promise<DbOpera
                 DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
             `;
         }
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     } finally {
@@ -40,16 +43,31 @@ export async function deleteAllTables(connectionString: string): Promise<DbOpera
  * @returns Result object with success status and optional error message
  */
 export async function runQueryFile(connectionString: string, filePath: string): Promise<DbOperationResult> {
+    const query = await fs.readFile(filePath, 'utf-8');
     const sql = postgres(connectionString)
 
     try {
-        const query = await fs.readFile(filePath, 'utf-8');
         await sql.unsafe(query);
-        await sql.end();
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     } finally {
         await sql.end();
     }
+}
+
+export async function reloadSchema(connectionString: string): Promise<DbOperationResult> {
+    const sql = postgres(connectionString)
+
+    try {
+        await sql`NOTIFY pgrst, 'reload schema';`;
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+    } finally {
+        await sql.end();
+    }
+
+    // wait for the reload notification to be processed
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return { success: true, error: null };
 }

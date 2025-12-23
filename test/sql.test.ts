@@ -4,7 +4,7 @@ import { insertTestData as insertTestData } from "./generateTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest"
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
-import { runQueryFile, deleteAllTables } from "./postgresOps";
+import { runQueryFile, deleteAllTables, reloadSchema } from "./postgresOps";
 
 dotenv.config();
 
@@ -20,6 +20,15 @@ describe("Database Rule Tests", () => {
     if (!supabaseServiceKey) throw new Error('Supabase service role key not found in environment!');
     if (!databaseUrl) throw new Error('Database URL not found in environment!');
 
+    const wipeResult = await deleteAllTables(databaseUrl);
+    if (wipeResult.error) throw new Error(`Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`);
+
+    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
+    if (setupResult.error) throw new Error(`Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`);
+
+    const refreshResult = await reloadSchema(databaseUrl);
+    if (refreshResult.error) throw new Error(`Failed to reload schema: ${JSON.stringify(refreshResult.error)}`);
+
     supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, {
       auth: {
         persistSession: false,
@@ -29,12 +38,6 @@ describe("Database Rule Tests", () => {
         schema: 'public',
       },
     });
-
-    const wipeResult = await deleteAllTables(databaseUrl);
-    if (wipeResult.error) throw new Error(`Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`);
-
-    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
-    if (setupResult.error) throw new Error(`Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`);
 
     const seedResult = await insertTestData(supabase);
     if (seedResult.error) throw new Error(`Failed to insert test data: ${JSON.stringify(seedResult.error)}`);
