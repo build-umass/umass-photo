@@ -1,9 +1,12 @@
 import { Database, Tables, TablesInsert } from '@/app/utils/supabase/database.types';
 import { SupabaseClient } from '@supabase/supabase-js';
 
-interface SeedDataResult {
-  users: Tables<"photoclubuser">[];
-  error?: string;
+type SeedDataResult = {
+  data: Tables<"photoclubuser">[];
+  error: null;
+} | {
+  data: null;
+  error: object;
 }
 
 /**
@@ -21,7 +24,7 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
   ]);
   if (rolesError) {
     console.error('Error inserting roles:', rolesError);
-    return { users: [], error: rolesError.message };
+    return { data: null, error: rolesError };
   }
 
   // Insert users
@@ -40,9 +43,9 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
     },
   ];
   const { data: testUsers, error: createUsersError } = await createTestUsers(client, testUsersData);
-  if (createUsersError || !testUsers) {
+  if (createUsersError) {
     console.error('Error creating test users:', createUsersError);
-    return { users: [], error: createUsersError || 'Failed to create test users' };
+    return { data: null, error: createUsersError };
   }
 
   // Insert photos
@@ -59,7 +62,7 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
   ]);
   if (photosError) {
     console.error('Failed inserting photos:', photosError);
-    return { users: [], error: photosError.message };
+    return { data: null, error: photosError };
   }
 
   // Insert tags
@@ -72,7 +75,7 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
   ]);
   if (tagsError) {
     console.error('Failed inserting tags:', tagsError);
-    return { users: [], error: tagsError.message };
+    return { data: null, error: tagsError };
   }
 
   // Insert photo tags
@@ -91,7 +94,7 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
   ]);
   if (phototagsError) {
     console.error('Failed inserting phototags:', phototagsError);
-    return { users: [], error: phototagsError.message };
+    return { data: null, error: phototagsError };
   }
 
   // Insert events
@@ -104,19 +107,23 @@ export async function seedTestData(client: SupabaseClient<Database>): Promise<Se
   ]);
   if (eventsError) {
     console.error('Failed inserting events:', eventsError);
-    return { users: [], error: eventsError.message };
+    return { data: null, error: eventsError };
   }
 
   // no connection to close for supabase client
 
   return {
-    users: testUsers,
+    data: testUsers,
+    error: null,
   };
 }
 
-interface CreateTestUsersResult {
-  data?: Tables<"photoclubuser">[];
-  error?: string;
+type CreateTestUsersResult = {
+  data: Tables<"photoclubuser">[];
+  error: null;
+} | {
+  data: null;
+  error: object;
 }
 
 /**
@@ -135,14 +142,14 @@ async function createTestUsers(
     const { data: existingUsers, error: listError } = await client.auth.admin.listUsers();
     if (listError) {
       console.error(`Error checking for existing user ${user.email}:`, listError);
-      return { error: `Failed to list users: ${listError.message}` };
+      return { data: null, error: listError };
     } else {
       const existing = existingUsers?.users?.find(u => u.email === user.email);
       if (existing) {
         const { error: deleteError } = await client.auth.admin.deleteUser(existing.id);
         if (deleteError) {
           console.error(`Error deleting existing user ${user.email}:`, deleteError);
-          return { error: `Failed to delete existing user ${user.email}: ${deleteError.message}` };
+          return { data: null, error: deleteError };
         } else {
           console.log(`Removed existing auth user for email ${user.email} with id ${existing.id}`);
         }
@@ -161,7 +168,7 @@ async function createTestUsers(
 
     if (error) {
       console.error('Error creating test user via supabase admin:', error);
-      return { error: `Failed to create test user: ${error.message}` };
+      return { data: null, error };
     }
 
     // Update the user ID with the actual created ID
@@ -181,12 +188,12 @@ async function createTestUsers(
     ]).select().single();
     if (userError) {
       console.error(`Failed inserting photoclubuser ${user.email}:`, userError);
-      return { error: `Failed to insert photoclubuser ${user.email}: ${userError.message}` };
+      return { data: null, error: userError };
     }
     if (data) {
       createdUsers.push(data);
     }
   }
 
-  return { data: createdUsers };
+  return { data: createdUsers, error: null };
 }

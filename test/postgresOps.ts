@@ -11,7 +11,7 @@ interface DbOperationResult {
  * @param connectionString - PostgreSQL connection string
  * @returns Result object with success status and optional error message
  */
-export async function wipeTables(connectionString: string): Promise<DbOperationResult> {
+export async function deleteAllTables(connectionString: string): Promise<DbOperationResult> {
     const sql = postgres(connectionString)
 
     try {

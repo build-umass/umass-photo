@@ -4,7 +4,7 @@ import { seedTestData } from "./seedTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest"
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
-import { runQueryFile, wipeTables } from "./postgresOps";
+import { runQueryFile, deleteAllTables } from "./postgresOps";
 
 dotenv.config();
 
@@ -34,13 +34,13 @@ describe("Database Rule Tests", () => {
       },
     });
 
-    const wipeResult = await wipeTables(databaseUrl);
-    if (!wipeResult.success) {
+    const wipeResult = await deleteAllTables(databaseUrl);
+    if (wipeResult.error) {
       throw new Error(`Failed to wipe tables: ${wipeResult.error}`);
     }
 
     const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
-    if (!setupResult.success) {
+    if (setupResult.error) {
       throw new Error(`Failed to run setup.sql: ${setupResult.error}`);
     }
 
@@ -53,50 +53,25 @@ describe("Database Rule Tests", () => {
   afterAll(async () => {
   });
 
-  it("should have the correct number of records in each table", async () => {
-    // Check photoclubrole table - should have 3 roles
-    const { data: roles, error: rolesError } = await supabase
-      .from('photoclubrole')
-      .select('*');
-    expect(rolesError, 'Error fetching photoclubrole records').toBeNull();
-    expect(roles).to.have.lengthOf(3);
+  type DbTableName = keyof Database['public']['Tables'];
 
-    // Check photoclubuser table - should have 2 users
-    const { data: users, error: usersError } = await supabase
-      .from('photoclubuser')
-      .select('*');
-    if (usersError) {
-      console.error('Error fetching users:', usersError);
-    }
-    expect(usersError, 'Error fetching photoclubuser records').toBeNull();
-    expect(users).to.have.lengthOf(2);
+  const expectedRowCounts: Partial<Record<DbTableName, number>> = {
+    photoclubrole: 3,
+    photoclubuser: 2,
+    photo: 9,
+    tag: 5,
+    phototag: 11,
+    event: 5,
+  };
 
-    // Check photo table - should have 9 photos
-    const { data: photos, error: photosError } = await supabase
-      .from('photo')
-      .select('*');
-    expect(photosError, 'Error fetching photo records').toBeNull();
-    expect(photos).to.have.lengthOf(9);
+  for (const [tableName, expectedCount] of Object.entries(expectedRowCounts) as [DbTableName, number][]) {
+    it(`should have ${expectedCount} records in ${tableName} table`, async () => {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*');
 
-    // Check tag table - should have 5 tags
-    const { data: tags, error: tagsError } = await supabase
-      .from('tag')
-      .select('*');
-    expect(tagsError, 'Error fetching tag records').toBeNull();
-    expect(tags).to.have.lengthOf(5);
-
-    // Check phototag table - should have 11 photo-tag relationships
-    const { data: phototags, error: phototagsError } = await supabase
-      .from('phototag')
-      .select('*');
-    expect(phototagsError, 'Error fetching phototag records').toBeNull();
-    expect(phototags).to.have.lengthOf(11);
-
-    // Check event table - should have 5 events
-    const { data: events, error: eventsError } = await supabase
-      .from('event')
-      .select('*');
-    expect(eventsError, 'Error fetching event records').toBeNull();
-    expect(events).to.have.lengthOf(5);
-  });
+      expect(error, `Error fetching records from ${tableName}`).toBeNull();
+      expect(data).toHaveLength(expectedCount);
+    });
+  }
 });
