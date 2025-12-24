@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 
 dotenv.config()
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function GET(request: Request) {
   ((await request.formData()).keys())
   const supabaseApiKey = process.env.SUPABASE_API_KEY;

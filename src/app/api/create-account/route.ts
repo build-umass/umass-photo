@@ -1,4 +1,3 @@
-import { randomBytes } from "crypto";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 
@@ -6,7 +5,6 @@ dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: Request) {
-  console.log;(request.url); 
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
   if (!supabaseApiKey) throw new Error("No API key found!");
@@ -14,12 +12,15 @@ export async function GET(request: Request) {
 
   const client = createClient(supabaseUrl, supabaseApiKey);
 
-  const { data, error } = await client.auth.signInWithOtp({
+  const { error } = await client.auth.signInWithOtp({
     email: "suegurung6@gmail.com",
     options: {
       shouldCreateUser: false,
     },
   });
+  if (error) {
+    console.error("Error creating account:", error.message);
+    return new Response(JSON.stringify({ error }), { status: 500 });
+  }
   return new Response("Test");
 }
-
