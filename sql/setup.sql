@@ -4,7 +4,7 @@ CREATE TABLE photoclubrole (
 );
 
 CREATE TABLE photoclubuser (
-    id       UUID PRIMARY KEY REFERENCES auth.users(id),
+    id       UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     username VARCHAR(64) NOT NULL,
     email    VARCHAR(128) NOT NULL,
     bio      TEXT,
