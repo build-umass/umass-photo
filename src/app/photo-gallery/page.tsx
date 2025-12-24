@@ -179,6 +179,8 @@ const PhotoGallery = () => {
                                 onError={() => handleImageError(photo.id)}
                                 onClick={() => openModal(index)}
                                 style={{ cursor: 'pointer' }}
+                                width={1024}
+                                height={1024}
                             />
                             <div id="details-container">
                                 <div id="title-author-flex">
@@ -206,7 +208,7 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === 0 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <Image src={BackArrow.src} alt="Previous photo" />
+                            <Image src={BackArrow.src} alt="Previous photo" width={128} height={128}/>
                         </button>
                         
                         <button
@@ -218,12 +220,12 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === photos.length - 1 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <Image src={ForwardArrow.src} alt="Next photo" />
+                            <Image src={ForwardArrow.src} alt="Next photo"  width={128} height={128}/>
                         </button>
                         
                         {/* Close Button */}
                         <button id="modal-close" onClick={closeModal}>
-                            <Image src={CloseIcon.src} alt="Close modal" />
+                            <Image src={CloseIcon.src} alt="Close modal"  width={128} height={128}/>
                         </button>
                         
                         {/* Photo */}
@@ -235,6 +237,9 @@ const PhotoGallery = () => {
                             alt={photos[selectedPhotoIndex].title || "Photo"}
                             id="modal-photo"
                             onError={handleModalImageError}
+                            width={0}
+                            height={0}
+                            unoptimized
                         />
                         
                         {/* Photo Details */}
