@@ -145,7 +145,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                 }} 
                 className={showMenu ? 'expanded' : ''}
             >
-                <Image src={menu.src} alt="Menu" id="menu-icon" width={128} height={128} />
+                <Image src={menu.src} alt="Menu" id="menu-icon" width={128} height={128} unoptimized/>
             </button> 
 
 

@@ -208,7 +208,7 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === 0 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <Image src={BackArrow.src} alt="Previous photo" width={128} height={128}/>
+                            <Image src={BackArrow.src} alt="Previous photo" width={128} height={128} unoptimized/>
                         </button>
                         
                         <button
@@ -220,12 +220,12 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === photos.length - 1 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <Image src={ForwardArrow.src} alt="Next photo"  width={128} height={128}/>
+                            <Image src={ForwardArrow.src} alt="Next photo"  width={128} height={128} unoptimized/>
                         </button>
                         
                         {/* Close Button */}
                         <button id="modal-close" onClick={closeModal}>
-                            <Image src={CloseIcon.src} alt="Close modal"  width={128} height={128}/>
+                            <Image src={CloseIcon.src} alt="Close modal"  width={128} height={128} unoptimized/>
                         </button>
                         
                         {/* Photo */}
