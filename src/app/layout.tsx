@@ -6,7 +6,8 @@ import RefreshHandler from "./components/RefreshHandler";
 // Next.js seems to require this to be assigned even though it is never used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const jaldi = Jaldi({
-  weight: ["400", "700"]
+  weight: ["400", "700"],
+  subsets: ["devanagari", "latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
@@ -22,11 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <RefreshHandler></RefreshHandler>
-      <body
-        className={`font-jaldi antialiased`}
-      >
-        {children}
-      </body>
+      <body className="font-jaldi antialiased">{children}</body>
     </html>
   );
 }
