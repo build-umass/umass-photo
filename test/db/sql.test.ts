@@ -23,7 +23,7 @@ describe("Database Rule Tests", () => {
     const wipeResult = await deleteAllTables(databaseUrl);
     if (wipeResult.error) throw new Error(`Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`);
 
-    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', 'sql', 'setup.sql'));
+    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', '..', 'sql', 'setup.sql'));
     if (setupResult.error) throw new Error(`Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`);
 
     const refreshResult = await reloadSchema(databaseUrl);

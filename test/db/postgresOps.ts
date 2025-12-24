@@ -1,4 +1,4 @@
-import postgres from 'postgres'
+import {Client} from 'pg'
 import fs from 'fs/promises';
 
 type DbOperationResult = {
@@ -15,18 +15,15 @@ type DbOperationResult = {
  * @returns Result object with success status and optional error message
  */
 export async function deleteAllTables(connectionString: string): Promise<DbOperationResult> {
-    const sql = postgres(connectionString)
+    const sql = new Client(connectionString)
 
     try {
-        const tableMetadata = await sql`
-            SELECT * FROM information_schema.tables WHERE table_schema='public';
-        `;
+        await sql.connect()
+        const tableMetadata = await sql.query(`SELECT * FROM information_schema.tables WHERE table_schema='public';`);
 
-        for (const tableMetadataRow of tableMetadata) {
+        for (const tableMetadataRow of tableMetadata.rows) {
             const tableName = tableMetadataRow.table_name;
-            await sql`
-                DROP TABLE IF EXISTS ${sql(tableName)} CASCADE;
-            `;
+            await sql.query(`DROP TABLE IF EXISTS ${tableName} CASCADE;`);
         }
         return { success: true, error: null };
     } catch (error) {
@@ -44,10 +41,11 @@ export async function deleteAllTables(connectionString: string): Promise<DbOpera
  */
 export async function runQueryFile(connectionString: string, filePath: string): Promise<DbOperationResult> {
     const query = await fs.readFile(filePath, 'utf-8');
-    const sql = postgres(connectionString)
+    const sql = new Client(connectionString)
 
     try {
-        await sql.unsafe(query);
+        await sql.connect()
+        await sql.query(query);
         return { success: true, error: null };
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
@@ -57,10 +55,11 @@ export async function runQueryFile(connectionString: string, filePath: string): 
 }
 
 export async function reloadSchema(connectionString: string): Promise<DbOperationResult> {
-    const sql = postgres(connectionString)
+    const sql = new Client(connectionString)
 
     try {
-        await sql`NOTIFY pgrst, 'reload schema';`;
+        await sql.connect();
+        await sql.query(`NOTIFY pgrst, 'reload schema';`);
     } catch (error) {
         return { success: false, error: error instanceof Error ? error.message : String(error) };
     } finally {

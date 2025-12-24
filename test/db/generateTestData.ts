@@ -125,22 +125,16 @@ async function insertTestUsers(
     // If a user with this email already exists in auth, remove it first
     const { data: existingUsers, error: listError } = await client.auth.admin.listUsers();
     if (listError) {
-      console.error(`Error checking for existing user ${user.email}:`, listError);
       return { data: null, error: listError };
     } else {
       const existing = existingUsers?.users?.find(u => u.email === user.email);
       if (existing) {
         const { error: deleteError } = await client.auth.admin.deleteUser(existing.id);
         if (deleteError) {
-          console.error(`Error deleting existing user ${user.email}:`, deleteError);
           return { data: null, error: deleteError };
-        } else {
-          console.log(`Removed existing auth user for email ${user.email} with id ${existing.id}`);
         }
       }
     }
-
-    console.log(`Creating test user: ${user.email} with ID: ${user.id}`);
 
     // Use admin API to create user (service role key required)
     const { data, error } = await client.auth.admin.createUser({
@@ -151,7 +145,6 @@ async function insertTestUsers(
     });
 
     if (error) {
-      console.error('Error creating test user via supabase admin:', error);
       return { data: null, error };
     }
 
@@ -159,19 +152,15 @@ async function insertTestUsers(
     if (data?.user?.id) {
       user.id = data.user.id;
     }
-
-    console.log(`Created test user: ${user.email} with ID: ${user.id}`);
   }
 
   // Insert all users into photoclubuser table and return the created records
   const createdUsers: Tables<"photoclubuser">[] = [];
   for (const user of testUsers) {
-    console.log(`Inserting photoclubuser: ${user.email}`);
     const { data, error: userError } = await client.from('photoclubuser').insert([
       { id: user.id, username: user.username, email: user.email, bio: 'hi', role: user.role }
     ]).select().single();
     if (userError) {
-      console.error(`Failed inserting photoclubuser ${user.email}:`, userError);
       return { data: null, error: userError };
     }
     if (data) {
