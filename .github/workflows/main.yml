@@ -8,6 +8,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment: testing
+
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
@@ -20,6 +22,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Create `.env` file
+      run: echo ${{ secrets.ENV_FILE_CONTENT }} >> .env
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
