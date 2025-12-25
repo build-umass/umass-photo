@@ -8,13 +8,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment:
-      name: testing
-
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    environment: testing
 
     env:
       SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
