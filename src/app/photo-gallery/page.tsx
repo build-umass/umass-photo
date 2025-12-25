@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import BackArrow from '../../../public/back_arrow.svg';
@@ -261,4 +261,10 @@ const PhotoGallery = () => {
     );
 };
 
-export default PhotoGallery;
+function PhotoGalleryWrapper() {
+  return <Suspense fallback={<div>Loading Photo Gallery...</div>}>
+    <PhotoGallery />
+  </Suspense>;
+}
+
+export default PhotoGalleryWrapper;
