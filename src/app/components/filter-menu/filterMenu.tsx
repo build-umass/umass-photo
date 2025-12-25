@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import menu from '../../../../public/menu.svg';
 import './filterMenu.css';
+import Image from 'next/image';
 
 interface Author {
     id: string;
@@ -144,7 +145,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                 }} 
                 className={showMenu ? 'expanded' : ''}
             >
-                <img src={menu.src} alt="Menu" id="menu-icon" />
+                <Image src={menu.src} alt="Menu" id="menu-icon" width={128} height={128} unoptimized/>
             </button> 
 
 

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { Tables } from "@/app/utils/supabase/database.types";
 
 dotenv.config();
 
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Get unique author IDs from filtered photos
-  const authorIds = [...new Set(filteredPhotos?.map((p: any) => p.authorid) || [])];
+  const authorIds = [...new Set(filteredPhotos?.map((p: Tables<"photo">) => p.authorid) || [])];
   
   // Fetch author information
   const { data: authors, error: authorsError } = await client
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
   );
 
   // Transform the data and get image URLs
-  const photosWithUrls = filteredPhotos?.map((photo: any) => {
+  const photosWithUrls = filteredPhotos?.map((photo: Tables<"photo">) => {
     const imageUrl = client.storage
       .from("photos")
       .getPublicUrl(photo.file).data.publicUrl;

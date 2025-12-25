@@ -4,32 +4,14 @@ import Navbar from "../components/navbar/navbar";
 import Footer from "../components/footer/footer";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [showOtpField, setShowOtpField] = useState(false);
   const [loginMethod, setLoginMethod] = useState("password"); // 'password', 'magiclink', or 'otp'
   const router = useRouter();
-
-  // const handlePasswordLogin = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   const { error } = await supabase.auth.signInWithPassword({
-  //     email,
-  //     password,
-  //   });
-
-  //   if (error) {
-  //     setError(error.message);
-  //   } else {
-  //     router.push("/dashboard");
-  //   } 
-  // };
 
   const handlePasswordLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,65 +38,32 @@ export default function LoginPage() {
     router.push("/");
   };
 
-  // const handleMagicLinkLogin = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   const { error } = await supabase.auth.signInWithOtp({
-  //     email,
-  //     options: {
-  //       emailRedirectTo: `${window.location.origin}/dashboard`,
-  //     },
-  //   });
-
-  //   if (error) {
-  //     setError(error.message);
-  //   } else {
-  //     setSuccessMessage("Check your email for the login link!");
-  //   }
-  // };
-
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+    e.preventDefault();
+    const email = (
+      e.currentTarget.elements.namedItem("email") as HTMLInputElement
+    ).value;
     const response = await fetch("/api/request-otp", {
       method: "POST",
       headers: {
-        email
-      }
+        email,
+      },
     });
     if (response.ok) {
       const params = new URLSearchParams({
         email,
         mode: "login",
-      })
-      window.location.assign(`/otp?${params.toString()}`)
+      });
+      window.location.assign(`/otp?${params.toString()}`);
     }
   };
-
-  // const handleVerifyOtp = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   const { error } = await supabase.auth.verifyOtp({
-  //     email,
-  //     token: otp,
-  //     type: "email",
-  //   });
-
-  //   if (error) {
-  //     setError(error.message);
-  //   } else {
-  //     router.push("/dashboard");
-  //   }
-  // };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <main className="flex-grow bg-gray-50">
-        <section className="bg-[#8E122A] text-white py-16">
+      <main className="grow bg-gray-50">
+        <section className="bg-umass-red text-white py-16">
           <div className="container mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
             <p className="text-xl max-w-2xl mx-auto">
@@ -133,17 +82,11 @@ export default function LoginPage() {
               </div>
             )}
 
-            {successMessage && (
-              <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-md">
-                {successMessage}
-              </div>
-            )}
-
             <div className="flex mb-6 border-b">
               <button
                 className={`flex-1 py-2 font-medium ${
                   loginMethod === "password"
-                    ? "text-[#8E122A] border-b-2 border-[#8E122A]"
+                    ? "text-umass-red border-b-2 border-umass-red"
                     : "text-gray-500"
                 }`}
                 onClick={() => setLoginMethod("password")}
@@ -153,7 +96,7 @@ export default function LoginPage() {
               <button
                 className={`flex-1 py-2 font-medium ${
                   loginMethod === "magiclink"
-                    ? "text-[#8E122A] border-b-2 border-[#8E122A]"
+                    ? "text-umass-red border-b-2 border-umass-red"
                     : "text-gray-500"
                 }`}
                 onClick={() => setLoginMethod("magiclink")}
@@ -163,7 +106,7 @@ export default function LoginPage() {
               <button
                 className={`flex-1 py-2 font-medium ${
                   loginMethod === "otp"
-                    ? "text-[#8E122A] border-b-2 border-[#8E122A]"
+                    ? "text-umass-red border-b-2 border-umass-red"
                     : "text-gray-500"
                 }`}
                 onClick={() => setLoginMethod("otp")}
@@ -178,9 +121,7 @@ export default function LoginPage() {
                   ? handlePasswordLogin
                   : loginMethod === "magiclink"
                   ? () => {}
-                  : showOtpField
-                  ? () => {} :
-                  handleSendOtp
+                  : handleSendOtp
               }
             >
               <div className="mb-6">
@@ -196,7 +137,7 @@ export default function LoginPage() {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
                   placeholder="your@email.com"
                   required
                 />
@@ -215,28 +156,8 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
                     placeholder="••••••••"
-                    required
-                  />
-                </div>
-              )}
-
-              {loginMethod === "otp" && showOtpField && (
-                <div className="mb-8">
-                  <label
-                    htmlFor="otp"
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                  >
-                    One-Time Code
-                  </label>
-                  <input
-                    type="text"
-                    id="otp"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
-                    placeholder="123456"
                     required
                   />
                 </div>
@@ -244,14 +165,12 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full bg-[#8E122A] text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
+                className="w-full bg-umass-red text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
               >
                 {loginMethod === "password"
                   ? "Sign In"
                   : loginMethod === "magiclink"
                   ? "Send Magic Link"
-                  : showOtpField
-                  ? "Verify Code"
                   : "Send One-Time Code"}
               </button>
             </form>
@@ -260,7 +179,7 @@ export default function LoginPage() {
               <div className="mt-6 text-center">
                 <a
                   href="/forgot-password"
-                  className="text-[#8E122A] hover:underline"
+                  className="text-umass-red hover:underline"
                 >
                   Forgot password?
                 </a>
@@ -269,13 +188,13 @@ export default function LoginPage() {
 
             <div className="mt-8 pt-6 border-t border-gray-200 text-center">
               <p className="text-gray-600">
-                Don't have an account?{" "}
-                <a
+                Don&apos;t have an account?{" "}
+                <Link
                   href="/register"
-                  className="text-[#8E122A] font-semibold hover:underline"
+                  className="text-umass-red font-semibold hover:underline"
                 >
                   Sign up
-                </a>
+                </Link>
               </p>
             </div>
           </div>

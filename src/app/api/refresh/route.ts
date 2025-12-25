@@ -8,7 +8,7 @@ dotenv.config();
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function POST(request: NextRequest) {
   let access_token = request.cookies.get("access-token")?.value;
   let refresh_token = request.cookies.get("refresh-token")?.value;

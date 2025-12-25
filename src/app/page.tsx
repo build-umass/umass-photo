@@ -1,35 +1,37 @@
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import Navbar from './components/navbar/navbar';
 import Footer from './components/footer/footer';
+import Image from 'next/image';
 
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <link
-        href="https://fonts.googleapis.com/css2?family=Jaldi:wght@400;700&display=swap"
-        rel="stylesheet"
-      />
-
       <Navbar></Navbar>
 
-      <main className="flex-grow bg-white">
-        <div className="relative overflow-x-auto whitespace-nowrap w-full h-[375px] bg-white shadow-xl mb-6">
+      <main className="grow bg-white">
+        <div className="relative overflow-x-auto whitespace-nowrap w-full h-93.75 bg-white shadow-xl mb-6">
           <div className="flex h-full">
-            <img
+            <Image
               src="/herter.png"
               alt="image_1"
               className="inline-block h-full w-auto object-cover"
+              width={400}
+              height={400}
             />
-            <img
+            <Image
               src="/fine_arts.png"
               alt="image_3"
               className="inline-block h-full w-auto object-cover"
+              width={400}
+              height={400}
             />
-            <img
-              src="Umass_photo.png"
+            <Image
+              src="/Umass_photo.png"
               alt="image_4"
               className="inline-block h-full w-auto object-cover"
+              width={400}
+              height={400}
             />
           </div>
         </div>
@@ -37,7 +39,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8 mb-4">
           <p className="font-Jaldi font-bold text-[#971B2F] text-3xl mb-4">About Us:</p>
           <div className="flex flex-col md:flex-row items-start">
-            <img
+            <Image
               src="/photographer.png"
               alt="image_5"
               className="mb-10 md:mr-8"
@@ -55,7 +57,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8 mb-4">
           <p className="font-Jaldi font-bold text-[#971B2F] text-3xl mb-4">Our E-Board</p>
           <div className="flex flex-col md:flex-row items-start">
-            <img
+            <Image
               src="/E-Board.png"
               alt="image_6"
               className="mb-10 md:mr-8"

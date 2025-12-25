@@ -1,9 +1,11 @@
 import dotenv from "dotenv";
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { Tables } from "@/app/utils/supabase/database.types";
 
 dotenv.config();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -47,7 +49,7 @@ export async function GET(request: NextRequest) {
   );
 
   // Transform the data and get image URLs
-  const photosWithUrls = photos?.map((photo: any) => {
+  const photosWithUrls = photos?.map((photo: Tables<"photo">) => {
     // Get public URL for the image
     const imageUrl = client.storage
       .from("photos")

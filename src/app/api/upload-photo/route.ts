@@ -5,7 +5,7 @@ import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
 
 dotenv.config();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function POST(request: NextRequest) {
   const client = getUserClient(request);
 
@@ -30,15 +30,21 @@ export async function POST(request: NextRequest) {
   }
 
   const title = formData.get("title")
+  if (title === null) {
+    return new Response(JSON.stringify({error: "Title is required"}), { status: 400 });
+  }
   const description = formData.get("description")
+  if (description === null) {
+    return new Response(JSON.stringify({error: "Description is required"}), { status: 400 });
+  }
   const tags: string[] = JSON.parse(formData.get("tags")!.toString())
-  const { data: photoData, error: databaseUploadError } = await client.from("photo").insert({
+  const { data: photoData, error: databaseUploadError } = await client.from("photo").insert([{
     authorid: userId,
     file: fileName,
     postdate: new Date(Date.now()).toISOString(),
-    title,
-    description
-  }).select()
+    title: title.toString(),
+    description: description.toString()
+  }]).select()
   if (databaseUploadError) {
     throw databaseUploadError
   }

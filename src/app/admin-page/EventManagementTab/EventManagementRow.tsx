@@ -65,18 +65,6 @@ export default function EventManagementRow({
 
     const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
 
-    const formatForInput = (iso?: string) => {
-        if (!iso) return "";
-        try {
-            const d = new Date(iso);
-            const tzOffset = d.getTimezoneOffset() * 60000;
-            const localISO = new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
-            return localISO;
-        } catch {
-            return "";
-        }
-    }
-
     const currentStartDate = new Date(event.startdate);
     const currentEndDate = new Date(event.enddate);
 

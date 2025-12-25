@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import stockPhoto from '../../../public/stock-photo.jpg';
 import BackArrow from '../../../public/back_arrow.svg';
@@ -11,6 +11,7 @@ import { parseBooleanParam, parseStringParam, parseCommaSeparatedListParam, pars
 import FilterMenu from '../components/filter-menu/filterMenu';
 import './photoGallery.css';
 import UploadChip from './UploadChip';
+import Image from 'next/image';
 
 interface PhotoItem {
     id: number;
@@ -171,13 +172,15 @@ const PhotoGallery = () => {
                 ) : (
                     photos.map((photo, index) => (
                         <div key={photo.id}>
-                            <img
+                            <Image
                                 src={imageErrors.has(photo.id) || !photo.imageUrl ? stockPhoto.src : photo.imageUrl}
                                 alt={photo.title || "Photo"}
                                 id="photo-item"
                                 onError={() => handleImageError(photo.id)}
                                 onClick={() => openModal(index)}
                                 style={{ cursor: 'pointer' }}
+                                width={1024}
+                                height={1024}
                             />
                             <div id="details-container">
                                 <div id="title-author-flex">
@@ -205,7 +208,7 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === 0 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <img src={BackArrow.src} alt="Previous photo" />
+                            <Image src={BackArrow.src} alt="Previous photo" width={128} height={128} unoptimized/>
                         </button>
                         
                         <button
@@ -217,16 +220,16 @@ const PhotoGallery = () => {
                                 cursor: selectedPhotoIndex === photos.length - 1 ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            <img src={ForwardArrow.src} alt="Next photo" />
+                            <Image src={ForwardArrow.src} alt="Next photo"  width={128} height={128} unoptimized/>
                         </button>
                         
                         {/* Close Button */}
                         <button id="modal-close" onClick={closeModal}>
-                            <img src={CloseIcon.src} alt="Close modal" />
+                            <Image src={CloseIcon.src} alt="Close modal"  width={128} height={128} unoptimized/>
                         </button>
                         
                         {/* Photo */}
-                        <img
+                        <Image
                             src={modalImageError || imageErrors.has(photos[selectedPhotoIndex].id) || !photos[selectedPhotoIndex].imageUrl 
                                 ? stockPhoto.src 
                                 : photos[selectedPhotoIndex].imageUrl
@@ -234,6 +237,9 @@ const PhotoGallery = () => {
                             alt={photos[selectedPhotoIndex].title || "Photo"}
                             id="modal-photo"
                             onError={handleModalImageError}
+                            width={0}
+                            height={0}
+                            unoptimized
                         />
                         
                         {/* Photo Details */}
@@ -255,4 +261,10 @@ const PhotoGallery = () => {
     );
 };
 
-export default PhotoGallery;
+function PhotoGalleryWrapper() {
+  return <Suspense fallback={<div>Loading Photo Gallery...</div>}>
+    <PhotoGallery />
+  </Suspense>;
+}
+
+export default PhotoGalleryWrapper;
