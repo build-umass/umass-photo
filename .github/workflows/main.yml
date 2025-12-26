@@ -10,22 +10,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 22
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22
         cache: 'npm'
     - uses: supabase/setup-cli@v1
       with:
         version: latest
-    - run: supabase init
-    - run: supabase db start
+    - run: supabase start
+    - run: supabase status --output=env > .env
     - run: npm ci
+    - run: npx playwright install --with-deps
+    - run: npx playwright install chrome
+    - run: npx playwright install msedge
     - run: npm run build
     - run: npm test
