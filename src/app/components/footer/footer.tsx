@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Footer() {
   return (
     <footer className="bg-gray-200">
-      <div className="mx-auto max-w-screen-xl px-3 py-15">
+      <div className="mx-auto max-w-7xl px-3 py-15">
         <div className="flex flex-wrap justify-between">
           <div className="">
             <h3 className="font-Jaldi mb-4 text-3xl font-bold text-[#971B2F]">

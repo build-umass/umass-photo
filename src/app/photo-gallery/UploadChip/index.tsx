@@ -198,7 +198,7 @@ export default function UploadChip({
             value={newTagInput}
             onChange={(e) => setNewTagInput(e.target.value)}
             placeholder="Create new tag..."
-            className="flex-grow rounded-xl bg-gray-200 p-2 text-lg"
+            className="grow rounded-xl bg-gray-200 p-2 text-lg"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();

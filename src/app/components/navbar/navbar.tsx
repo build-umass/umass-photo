@@ -33,7 +33,7 @@ export default function Navbar() {
         </div>
 
         {/* Spacer */}
-        <div className="flex-grow"></div>
+        <div className="grow"></div>
 
         {/* Navigation links - no visible separators */}
         <div className={`flex ${teachers.className}`}>

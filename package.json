@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
@@ -30,7 +30,6 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
