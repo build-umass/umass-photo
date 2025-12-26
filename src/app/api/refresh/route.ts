@@ -5,8 +5,6 @@ import { Database } from "@/app/utils/supabase/database.types";
 
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 
  
 export async function POST(request: NextRequest) {
@@ -14,6 +12,11 @@ export async function POST(request: NextRequest) {
   let refresh_token = request.cookies.get("refresh-token")?.value;
 
   if (!access_token || !refresh_token) return new Response("", { status: 401 });
+
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  if (!supabaseUrl) throw new Error("No Supabase URL found!");
+  if (!supabaseAnonKey) throw new Error("No Supabase Anon Key found!");
 
   const client = createClient<Database>(supabaseUrl, supabaseAnonKey);
   client.auth.setSession({ access_token, refresh_token });

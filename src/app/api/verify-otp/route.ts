@@ -1,19 +1,11 @@
-import dotenv from "dotenv";
-import { createClient } from "@supabase/supabase-js";
 import {
   getSupabaseOtpType,
   normalizeOtpMode
 } from "@/app/utils/otpModes";
-
-dotenv.config();
+import { getAdminClient } from "@/app/utils/supabase/client";
 
  
 export async function POST(request: Request) {
-  const supabaseApiKey = process.env.SUPABASE_API_KEY;
-  const supabaseUrl = process.env.SUPABASE_URL;
-  if (!supabaseApiKey) throw new Error("No API key found!");
-  if (!supabaseUrl) throw new Error("No Supabase URL found!");
-
   const token = request.headers.get("token");
   const email = request.headers.get("email");
   const rawMode = request.headers.get("mode");
@@ -25,7 +17,7 @@ export async function POST(request: Request) {
     status: 400
   });
 
-  const client = createClient(supabaseUrl, supabaseApiKey);
+  const client = getAdminClient();
   const type = getSupabaseOtpType(mode);
   const { data } = await client.auth.verifyOtp({ email, token, type });
 

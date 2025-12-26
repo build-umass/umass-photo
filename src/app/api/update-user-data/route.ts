@@ -1,9 +1,6 @@
-import dotenv from "dotenv";
 import { NextRequest } from "next/server";
 import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
 import { Tables } from "@/app/utils/supabase/database.types";
-
-dotenv.config();
 
  
 export async function POST(request: NextRequest) {
