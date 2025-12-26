@@ -11,7 +11,8 @@
     "lint": "eslint . && prettier --check ./**/*.ts ./**/*.tsx",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
-    "test": "npm run stop:supabase && npm run start:supabase && npm run test:vitest && npm run test:playwright",
+    "test": "npm run test:vitest && npm run test:playwright",
+    "test:clean": "npm run stop:supabase && npm run start:supabase && npm run test",
     "test:ci": "npm run stop:supabase && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
