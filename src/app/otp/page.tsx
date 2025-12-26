@@ -53,7 +53,7 @@ const OtpPage = ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
     <div className="flex min-h-screen flex-col">
       <Navbar />
 
-      <main className="flex-grow bg-gray-50">
+      <main className="grow bg-gray-50">
         <section className="bg-[#8E122A] py-16 text-white">
           <div className="container mx-auto text-center">
             <h1 className="mb-4 text-4xl font-bold">{title}</h1>

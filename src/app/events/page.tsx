@@ -40,7 +40,7 @@ export default function EventsPage() {
         className="flex overflow-hidden rounded-lg bg-white shadow-md"
       >
         {/* Image Block - Left */}
-        <div className="relative h-64 w-2/5 flex-shrink-0 bg-gray-200">
+        <div className="relative h-64 w-2/5 shrink-0 bg-gray-200">
           <Image
             src={event.herofileURL}
             alt={`Hero image for ${event.name}`}
@@ -69,7 +69,7 @@ export default function EventsPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
 
-      <main className="flex-grow bg-gray-50">
+      <main className="grow bg-gray-50">
         {/* Hero Section */}
         <section className="bg-[#8E122A] py-16 text-white">
           <div className="container mx-auto text-center">
