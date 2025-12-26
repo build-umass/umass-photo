@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
-    "test": "concurrently \"npm run test:vitest\" \"npm run test:playwright\" --group-output"
+    "test": "npm run test:vitest && npm run test:playwright",
+    "test:ci": "supabase stop --all && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
