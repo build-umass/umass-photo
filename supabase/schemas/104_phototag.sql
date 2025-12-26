@@ -5,12 +5,7 @@ CREATE TABLE phototag (
 ALTER TABLE public.phototag enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT "public"."photoclubrole"."is_admin"
-        FROM "public"."photoclubuser"
-            JOIN "public"."photoclubrole" ON "public"."photoclubuser"."role" = "public"."photoclubrole"."roleid"
-        WHERE (
-                SELECT auth.uid()
-            ) = "public"."photoclubuser"."id"
+        SELECT private.has_good_role()
     )
 );
 CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS PERMISSIVE FOR
