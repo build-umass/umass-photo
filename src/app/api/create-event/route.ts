@@ -1,11 +1,11 @@
-import { randomBytes } from 'crypto';
+import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
 import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
 
 export async function POST(request: NextRequest) {
   const client = getUserClient(request);
 
-  const userId = (await client.auth.getUser()).data?.user?.id
+  const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {
     const response = new Response("", { status: 401 });
     return attachCookies(client, response);
@@ -20,42 +20,46 @@ export async function POST(request: NextRequest) {
   }
 
   // Convert data URL to File
-  const base64Data = imageDataURL.split(',')[1];
-  const binaryString = Buffer.from(base64Data, 'base64').toString('binary');
+  const base64Data = imageDataURL.split(",")[1];
+  const binaryString = Buffer.from(base64Data, "base64").toString("binary");
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
-  
-  const extension = imageDataURL.split(';')[0].split('/')[1] || 'png';
-  const fileName = `${randomBytes(20).toString('base64url')}.${extension}`;
+
+  const extension = imageDataURL.split(";")[0].split("/")[1] || "png";
+  const fileName = `${randomBytes(20).toString("base64url")}.${extension}`;
   const imageFile = new File([bytes], fileName, { type: `image/${extension}` });
 
-  const { error: storageUploadError } = await client.storage.from("photos").upload(fileName, imageFile);
+  const { error: storageUploadError } = await client.storage
+    .from("photos")
+    .upload(fileName, imageFile);
   if (storageUploadError) {
-    throw storageUploadError
+    throw storageUploadError;
   }
 
   const tag = title;
-  
-  const { error: tagUploadError } = await client.from("tag").insert({
-    name: tag
-  })
-  if (tagUploadError) {
-    throw tagUploadError
-  }
-  
 
-  const { error: databaseUploadError } = await client.from("event").insert({
-    name: title,
-    herofile: fileName,
-    startdate: new Date(startTime).toISOString(),
-    enddate: new Date(endTime).toISOString(),
-    description,
-    tag
-  }).select()
+  const { error: tagUploadError } = await client.from("tag").insert({
+    name: tag,
+  });
+  if (tagUploadError) {
+    throw tagUploadError;
+  }
+
+  const { error: databaseUploadError } = await client
+    .from("event")
+    .insert({
+      name: title,
+      herofile: fileName,
+      startdate: new Date(startTime).toISOString(),
+      enddate: new Date(endTime).toISOString(),
+      description,
+      tag,
+    })
+    .select();
   if (databaseUploadError) {
-    throw databaseUploadError
+    throw databaseUploadError;
   }
 
   const response = new Response("", { status: 201 });

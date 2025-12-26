@@ -23,7 +23,7 @@ export default function RegisterPage() {
     if (strength.score < 3) {
       setError(
         strength.feedback.warning ||
-          "Password is too weak. Try using a longer passphrase with a mix of words, numbers, and symbols."
+          "Password is too weak. Try using a longer passphrase with a mix of words, numbers, and symbols.",
       );
       return;
     }
@@ -43,7 +43,9 @@ export default function RegisterPage() {
 
     if (!response.ok) {
       if (response.status === 409) {
-        setError("An account with this email already exists. To add a password, please log in and update your account settings.");
+        setError(
+          "An account with this email already exists. To add a password, please log in and update your account settings.",
+        );
         return;
       }
       try {
@@ -74,29 +76,29 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
 
       <main className="grow bg-gray-50">
-        <section className="bg-umass-red text-white py-16">
+        <section className="bg-umass-red py-16 text-white">
           <div className="container mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">Create an Account</h1>
-            <p className="text-xl max-w-2xl mx-auto">
+            <h1 className="mb-4 text-4xl font-bold">Create an Account</h1>
+            <p className="mx-auto max-w-2xl text-xl">
               Sign up to join the UMass Photo community and share your work.
             </p>
           </div>
         </section>
 
-        <section className="container mx-auto py-12 px-4">
-          <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-8">
+        <section className="container mx-auto px-4 py-12">
+          <div className="mx-auto max-w-md overflow-hidden rounded-lg bg-white p-8 shadow-md">
             {error && (
-              <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-md">
+              <div className="mb-6 rounded-md bg-red-100 p-4 text-red-700">
                 {error}
               </div>
             )}
 
             {successMessage && (
-              <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-md">
+              <div className="mb-6 rounded-md bg-green-100 p-4 text-green-700">
                 {successMessage}
               </div>
             )}
@@ -105,7 +107,7 @@ export default function RegisterPage() {
               <div className="mb-6">
                 <label
                   htmlFor="email"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="mb-2 block text-sm font-bold text-gray-700"
                 >
                   Email Address
                 </label>
@@ -114,7 +116,7 @@ export default function RegisterPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
+                  className="focus:ring-umass-red w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:ring-2 focus:outline-none"
                   placeholder="you@example.com"
                   required
                 />
@@ -123,7 +125,7 @@ export default function RegisterPage() {
               <div className="mb-6">
                 <label
                   htmlFor="password"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="mb-2 block text-sm font-bold text-gray-700"
                 >
                   Password
                 </label>
@@ -132,7 +134,7 @@ export default function RegisterPage() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
+                  className="focus:ring-umass-red w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:ring-2 focus:outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -141,7 +143,7 @@ export default function RegisterPage() {
               <div className="mb-8">
                 <label
                   htmlFor="confirm-password"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="mb-2 block text-sm font-bold text-gray-700"
                 >
                   Confirm Password
                 </label>
@@ -150,7 +152,7 @@ export default function RegisterPage() {
                   id="confirm-password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-umass-red"
+                  className="focus:ring-umass-red w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:ring-2 focus:outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -158,7 +160,7 @@ export default function RegisterPage() {
 
               <button
                 type="submit"
-                className="w-full bg-umass-red text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
+                className="bg-umass-red w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20]"
               >
                 Sign Up
               </button>

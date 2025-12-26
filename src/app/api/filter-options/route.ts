@@ -10,24 +10,24 @@ export async function GET(request: NextRequest) {
     .from("photo")
     .select("authorid");
 
-  if(photosError) {
+  if (photosError) {
     console.error("Error fetching photos for authors:", photosError);
     return new Response(JSON.stringify({ error: photosError.message }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 
   // Get unique author IDs
-  const authorIds = [...new Set(photos?.map(p => p.authorid) || [])];
-  
+  const authorIds = [...new Set(photos?.map((p) => p.authorid) || [])];
+
   // Fetch author information
   const { data: authors, error: authorsError } = await client
     .from("photoclubuser")
     .select("id, username")
     .in("id", authorIds);
 
-  if(authorsError) {
+  if (authorsError) {
     console.error("Error fetching authors:", authorsError);
   }
 
@@ -36,22 +36,25 @@ export async function GET(request: NextRequest) {
     .from("tag")
     .select("name");
 
-  if(tagsError) {
+  if (tagsError) {
     console.error("Error fetching tags:", tagsError);
     return new Response(JSON.stringify({ error: tagsError.message }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 
-  return new Response(JSON.stringify({ 
-    data: {
-      authors: authors?.map(a => ({ id: a.id, username: a.username })) || [],
-      tags: tags?.map(t => t.name) || []
-    }
-  }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" }
-  });
+  return new Response(
+    JSON.stringify({
+      data: {
+        authors:
+          authors?.map((a) => ({ id: a.id, username: a.username })) || [],
+        tags: tags?.map((t) => t.name) || [],
+      },
+    }),
+    {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    },
+  );
 }
-

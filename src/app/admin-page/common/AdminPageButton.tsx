@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
 export default function AdminPageButton({
   children,
@@ -6,11 +6,18 @@ export default function AdminPageButton({
   className,
   ...props
 }: {
-  children: ReactNode,
-  highlighted?: boolean,
-  className?: string,
-  [key: string]: unknown
+  children: ReactNode;
+  highlighted?: boolean;
+  className?: string;
+  [key: string]: unknown;
 }) {
-  const color = highlighted ? "bg-white/20": ""
-  return <button className={`${className ?? ""} p-5 ${color} font-bold text-3xl`} {...props}>{children}</button>
+  const color = highlighted ? "bg-white/20" : "";
+  return (
+    <button
+      className={`${className ?? ""} p-5 ${color} text-3xl font-bold`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
 }

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 import { insertTestData as insertTestData } from "./generateTestData";
-import { afterAll, beforeAll, describe, it, expect } from "vitest"
+import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
 import { runQueryFile, deleteAllTables, reloadSchema } from "./postgresOps";
@@ -16,18 +16,31 @@ describe("Database Rule Tests", () => {
     const supabaseServiceKey = process.env.SERVICE_ROLE_KEY;
     const databaseUrl = process.env.DB_URL;
 
-    if (!apiUrl) throw new Error('Supabase URL not found in environment!');
-    if (!supabaseServiceKey) throw new Error('Supabase service role key not found in environment!');
-    if (!databaseUrl) throw new Error('Database URL not found in environment!');
+    if (!apiUrl) throw new Error("Supabase URL not found in environment!");
+    if (!supabaseServiceKey)
+      throw new Error("Supabase service role key not found in environment!");
+    if (!databaseUrl) throw new Error("Database URL not found in environment!");
 
     const wipeResult = await deleteAllTables(databaseUrl);
-    if (wipeResult.error) throw new Error(`Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`);
+    if (wipeResult.error)
+      throw new Error(
+        `Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`,
+      );
 
-    const setupResult = await runQueryFile(databaseUrl, path.join(import.meta.dirname, '..', '..', 'sql', 'setup.sql'));
-    if (setupResult.error) throw new Error(`Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`);
+    const setupResult = await runQueryFile(
+      databaseUrl,
+      path.join(import.meta.dirname, "..", "..", "sql", "setup.sql"),
+    );
+    if (setupResult.error)
+      throw new Error(
+        `Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`,
+      );
 
     const refreshResult = await reloadSchema(databaseUrl);
-    if (refreshResult.error) throw new Error(`Failed to reload schema: ${JSON.stringify(refreshResult.error)}`);
+    if (refreshResult.error)
+      throw new Error(
+        `Failed to reload schema: ${JSON.stringify(refreshResult.error)}`,
+      );
 
     supabase = createClient<Database>(apiUrl, supabaseServiceKey, {
       auth: {
@@ -35,18 +48,20 @@ describe("Database Rule Tests", () => {
         autoRefreshToken: false,
       },
       db: {
-        schema: 'public',
+        schema: "public",
       },
     });
 
     const seedResult = await insertTestData(supabase);
-    if (seedResult.error) throw new Error(`Failed to insert test data: ${JSON.stringify(seedResult.error)}`);
+    if (seedResult.error)
+      throw new Error(
+        `Failed to insert test data: ${JSON.stringify(seedResult.error)}`,
+      );
   });
 
-  afterAll(async () => {
-  });
+  afterAll(async () => {});
 
-  type DbTableName = keyof Database['public']['Tables'];
+  type DbTableName = keyof Database["public"]["Tables"];
 
   const expectedRowCounts: Partial<Record<DbTableName, number>> = {
     photoclubrole: 3,
@@ -57,11 +72,11 @@ describe("Database Rule Tests", () => {
     event: 5,
   };
 
-  for (const [tableName, expectedCount] of Object.entries(expectedRowCounts) as [DbTableName, number][]) {
+  for (const [tableName, expectedCount] of Object.entries(
+    expectedRowCounts,
+  ) as [DbTableName, number][]) {
     it(`should have ${expectedCount} records in ${tableName} table`, async () => {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select('*');
+      const { data, error } = await supabase.from(tableName).select("*");
 
       expect(error, `Error fetching records from ${tableName}`).toBeNull();
       expect(data).toHaveLength(expectedCount);

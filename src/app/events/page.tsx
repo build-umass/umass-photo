@@ -11,7 +11,8 @@ import { formatDate } from "../utils/dates";
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function EventsPage() {
   const [events, setEvents] = useState<EventWithURL[]>([]);
-  const [currentFocusedEvent, setCurrentFocusedEvent] = useState<EventWithURL | null>(null);
+  const [currentFocusedEvent, setCurrentFocusedEvent] =
+    useState<EventWithURL | null>(null);
 
   useEffect(() => {
     async function fetchEvents() {
@@ -33,46 +34,47 @@ export default function EventsPage() {
 
   function getEventListingElement(event: EventWithURL) {
     const endDate = new Date(event.enddate);
-    return <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
-      {/* Image Block - Left */}
-      <div className="w-2/5 h-64 bg-gray-200 flex-shrink-0 relative">
-        <Image
-          src={event.herofileURL}
-          alt={`Hero image for ${event.name}`}
-          fill
-          style={{ objectFit: 'cover' }}
-        />
-      </div>
+    return (
+      <div
+        key={event.id}
+        className="flex overflow-hidden rounded-lg bg-white shadow-md"
+      >
+        {/* Image Block - Left */}
+        <div className="relative h-64 w-2/5 flex-shrink-0 bg-gray-200">
+          <Image
+            src={event.herofileURL}
+            alt={`Hero image for ${event.name}`}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
 
-      {/* Text Content - Right */}
-      <div className="p-8 flex flex-col justify-center">
-        <h2 className="text-2xl font-bold mb-3 text-black">
-          {event.name}
-        </h2>
-        <p className="text-gray-600 mb-4 text-lg">
-          {formatDate(endDate)}
-        </p>
-        <p className="mb-6 text-gray-700">
-          {event.description}
-        </p>
-        <button className="bg-[#8E122A] text-white px-6 py-2 rounded-md hover:bg-[#6A0D20] transition w-fit" onClick={() => setCurrentFocusedEvent(event)}>
-          Learn More
-        </button>
+        {/* Text Content - Right */}
+        <div className="flex flex-col justify-center p-8">
+          <h2 className="mb-3 text-2xl font-bold text-black">{event.name}</h2>
+          <p className="mb-4 text-lg text-gray-600">{formatDate(endDate)}</p>
+          <p className="mb-6 text-gray-700">{event.description}</p>
+          <button
+            className="w-fit rounded-md bg-[#8E122A] px-6 py-2 text-white transition hover:bg-[#6A0D20]"
+            onClick={() => setCurrentFocusedEvent(event)}
+          >
+            Learn More
+          </button>
+        </div>
       </div>
-    </div>
+    );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-
 
       <main className="flex-grow bg-gray-50">
         {/* Hero Section */}
-        <section className="bg-[#8E122A] text-white py-16">
+        <section className="bg-[#8E122A] py-16 text-white">
           <div className="container mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">Upcoming Events</h1>
-            <p className="text-xl max-w-2xl mx-auto">
+            <h1 className="mb-4 text-4xl font-bold">Upcoming Events</h1>
+            <p className="mx-auto max-w-2xl text-xl">
               Join us for exciting photography events, workshops, and
               exhibitions
             </p>
@@ -80,23 +82,28 @@ export default function EventsPage() {
         </section>
 
         {/* Events List */}
-        <section className="container mx-auto py-12 px-4">
-          <div className="max-w-5xl mx-auto space-y-8">
+        <section className="container mx-auto px-4 py-12">
+          <div className="mx-auto max-w-5xl space-y-8">
             {events.map(getEventListingElement)}
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="bg-[#8E122A] text-white py-12">
+        <section className="bg-[#8E122A] py-12 text-white">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Have an event idea?</h2>
-            <button className="bg-white text-[#8E122A] px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition text-lg">
+            <h2 className="mb-6 text-3xl font-bold">Have an event idea?</h2>
+            <button className="rounded-lg bg-white px-8 py-3 text-lg font-bold text-[#8E122A] transition hover:bg-gray-100">
               Suggest an Event
             </button>
           </div>
         </section>
       </main>
-      {currentFocusedEvent && <ViewEventChip eventData={currentFocusedEvent} onClose={() => setCurrentFocusedEvent(null)} />}
+      {currentFocusedEvent && (
+        <ViewEventChip
+          eventData={currentFocusedEvent}
+          onClose={() => setCurrentFocusedEvent(null)}
+        />
+      )}
 
       <Footer />
     </div>

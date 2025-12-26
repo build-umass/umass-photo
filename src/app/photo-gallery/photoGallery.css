@@ -1,296 +1,301 @@
 #photo-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 5rem;
-    grid-auto-rows: 1fr;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    padding: 0;
-    list-style: none;
-    margin-top: 5rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5rem;
+  grid-auto-rows: 1fr;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  margin-top: 5rem;
+  margin-left: 5rem;
+  margin-right: 5rem;
 }
 
 /* Responsive grid layout - only grid structure changes, not content */
 @media (max-width: 1400px) {
-    #photo-grid {
-        grid-template-columns: repeat(3, 1fr);
-        margin-left: 3rem;
-        margin-right: 3rem;
-    }
+  #photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
 }
 
 @media (max-width: 1000px) {
-    #photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 3rem;
-        margin-left: 2rem;
-        margin-right: 2rem;
-    }
+  #photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 3rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
 }
 
 @media (max-width: 600px) {
-    #photo-grid {
-        grid-template-columns: 1fr;
-        grid-gap: 2rem;
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
+  #photo-grid {
+    grid-template-columns: 1fr;
+    grid-gap: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }
 
 #photo-item {
-    border-radius:.5rem;
+  border-radius: 0.5rem;
 }
 
 /* Add Photo Button */
 #add-photo-button {
-    position: fixed;
-    bottom: 6.5rem;
-    right: 1rem;
-    width: 5rem;
-    height: 5rem;
-    background-color: #881C1C;
-    border-radius: 50%;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1001;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
+  position: fixed;
+  bottom: 6.5rem;
+  right: 1rem;
+  width: 5rem;
+  height: 5rem;
+  background-color: #881c1c;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
 }
 
 #add-photo-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #add-photo-button.expanded {
-    transform: scale(1.2);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #add-photo-button span {
-    color: white;
-    font-size: 1.875rem;
-    font-weight: bold;
+  color: white;
+  font-size: 1.875rem;
+  font-weight: bold;
 }
 
 #details-container {
-    font-family: "Gilda Display", serif;
+  font-family: "Gilda Display", serif;
 }
 
 #title-author-flex {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.25rem;
 }
 
 #title {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 #author {
-    color: #6C6C6C;
-    font-size: 12px;
+  color: #6c6c6c;
+  font-size: 12px;
 }
 
 #upload-date {
-    color:#881C1C;
+  color: #881c1c;
 }
 
 /* Photo Modal Styles */
 #photo-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    animation: fadeIn 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
 }
 
 #modal-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5rem 8rem 8rem 8rem; /* Reserve space for UI elements */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 8rem 8rem 8rem; /* Reserve space for UI elements */
 }
 
 #modal-photo {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 0.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 #modal-details {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    color: white;
-    font-family: var(--font-jaldi);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    z-index: 2002;
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  color: white;
+  font-family: var(--font-jaldi);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  z-index: 2002;
 }
 
 #modal-details h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 #modal-details p {
-    margin: 0.25rem 0 0 0;
-    font-size: 1rem;
-    opacity: 0.9;
+  margin: 0.25rem 0 0 0;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
-#prev-arrow, #next-arrow {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.8);
-    border: none;
-    font-size: 3rem;
-    color: #333;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    z-index: 2001;
+#prev-arrow,
+#next-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  font-size: 3rem;
+  color: #333;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  z-index: 2001;
 }
 
 #prev-arrow {
-    left: 2rem;
+  left: 2rem;
 }
 
 #next-arrow {
-    right: 2rem;
+  right: 2rem;
 }
 
-#prev-arrow:hover:not(:disabled), #next-arrow:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.1);
+#prev-arrow:hover:not(:disabled),
+#next-arrow:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
 }
 
-#prev-arrow:disabled, #next-arrow:disabled {
-    background-color: rgba(255, 255, 255, 0.3);
-    color: #999;
+#prev-arrow:disabled,
+#next-arrow:disabled {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #999;
 }
 
 #modal-close {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: none;
-    font-size: 2rem;
-    color: #333;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    z-index: 2001;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  z-index: 2001;
 }
 
 #modal-close:hover {
-    background-color: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
 }
 
 /* Modal responsive design */
 @media (max-width: 768px) {
-    #modal-content {
-        padding: 4rem 1rem 6rem 1rem; /* Less padding on mobile */
-    }
-    
-    #prev-arrow, #next-arrow {
-        font-size: 2rem;
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-    
-    #prev-arrow {
-        left: 1rem;
-    }
-    
-    #next-arrow {
-        right: 1rem;
-    }
-    
-    #modal-close {
-        top: 1rem;
-        right: 1rem;
-        font-size: 1.5rem;
-        width: 2rem;
-        height: 2rem;
-    }
-    
-    #modal-details {
-        bottom: 1rem;
-        left: 1rem;
-    }
-    
-    #modal-details h2 {
-        font-size: 1.2rem;
-    }
-    
-    #modal-details p {
-        font-size: 0.9rem;
-    }
+  #modal-content {
+    padding: 4rem 1rem 6rem 1rem; /* Less padding on mobile */
+  }
+
+  #prev-arrow,
+  #next-arrow {
+    font-size: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  #prev-arrow {
+    left: 1rem;
+  }
+
+  #next-arrow {
+    right: 1rem;
+  }
+
+  #modal-close {
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  #modal-details {
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  #modal-details h2 {
+    font-size: 1.2rem;
+  }
+
+  #modal-details p {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
-    #modal-content {
-        padding: 3rem 0.5rem 5rem 0.5rem; /* Even less padding on very small screens */
-    }
-    
-    #prev-arrow, #next-arrow {
-        font-size: 1.5rem;
-        width: 2rem;
-        height: 2rem;
-    }
-    
-    #prev-arrow {
-        left: 0.5rem;
-    }
-    
-    #next-arrow {
-        right: 0.5rem;
-    }
-    
-    #modal-close {
-        top: 0.5rem;
-        right: 0.5rem;
-    }
-    
-    #modal-details {
-        bottom: 0.5rem;
-        left: 0.5rem;
-    }
+  #modal-content {
+    padding: 3rem 0.5rem 5rem 0.5rem; /* Even less padding on very small screens */
+  }
+
+  #prev-arrow,
+  #next-arrow {
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  #prev-arrow {
+    left: 0.5rem;
+  }
+
+  #next-arrow {
+    right: 0.5rem;
+  }
+
+  #modal-close {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  #modal-details {
+    bottom: 0.5rem;
+    left: 0.5rem;
+  }
 }

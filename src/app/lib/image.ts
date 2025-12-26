@@ -3,34 +3,35 @@ import { randomBytes } from "crypto";
 
 /**
  * Retrieve a list of URIs of relevant images.
- * 
+ *
  * This is a server-only function.
- * 
+ *
  * This pulls from the `/photos/raw` bucket in SupaBase.
  * @param limit the maximum number of URIs to return. Defaults to 10
  * @returns a list of URIs.
  */
-export async function getRandomImageUrls(limit: number = 10): Promise<string[]> {
-  "use server"
+export async function getRandomImageUrls(
+  limit: number = 10,
+): Promise<string[]> {
+  "use server";
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
-  if(!supabaseApiKey) throw new Error("No API key found!");
-  if(!supabaseUrl) throw new Error("No Supabase URL found!");
+  if (!supabaseApiKey) throw new Error("No API key found!");
+  if (!supabaseUrl) throw new Error("No Supabase URL found!");
 
   const client = createClient(supabaseUrl, supabaseApiKey);
 
   const imageQueryResult = await client.storage
     .from("photos")
-    .list("raw", {limit});
+    .list("raw", { limit });
 
-  if(!imageQueryResult.data) throw new Error("Image Query Failed!")
+  if (!imageQueryResult.data) throw new Error("Image Query Failed!");
 
-  const imagePaths = imageQueryResult.data
-    .map(file => file.name);
+  const imagePaths = imageQueryResult.data.map((file) => file.name);
 
   const imageUrls = imagePaths.map(
-    path =>
-      client.storage.from("photos").getPublicUrl(`raw/${path}`).data.publicUrl
+    (path) =>
+      client.storage.from("photos").getPublicUrl(`raw/${path}`).data.publicUrl,
   );
 
   return imageUrls;
@@ -40,13 +41,13 @@ export async function getRandomImageUrls(limit: number = 10): Promise<string[]> 
  * The additional data we want every image to have.
  */
 export type ImageMetadata = {
-  userId: string,
-  eventId: string | null,
+  userId: string;
+  eventId: string | null;
 };
 
 /**
  * Looks up certain MIME types based on [this reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types).
- * 
+ *
  * @param mimeType the mime type that we should look up.
  * @returns the file extension.
  * @example
@@ -54,12 +55,12 @@ export type ImageMetadata = {
  * @example
  * mimeToExtension("this/isnotimplemented"); // Throws RangeError: MIME type this/isnotimplemented is not implemented.)
  */
-function mimeToExtenstion(mimeType: string): string{
-  switch(mimeType){
+function mimeToExtenstion(mimeType: string): string {
+  switch (mimeType) {
     case "image/jpeg":
-      return ".jpg"
+      return ".jpg";
     default:
-      throw new RangeError(`MIME type ${mimeType} is not implemented.`)
+      throw new RangeError(`MIME type ${mimeType} is not implemented.`);
   }
 }
 
@@ -78,48 +79,60 @@ function mimeToExtenstion(mimeType: string): string{
  * //   yourobject: {}
  * // }
  */
-function keyToLower(row: Record<string, unknown>): Record<string, unknown>{
-  return Object.fromEntries(Object.entries(row).map(([columnName, value]) => [columnName.toLowerCase(), value]));
+function keyToLower(row: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(row).map(([columnName, value]) => [
+      columnName.toLowerCase(),
+      value,
+    ]),
+  );
 }
 
 /**
  * Upload an image to the database.
- * 
+ *
  * @param imageData a Blob that contains the data and file type that is to be added.
  * @example
  * // myImage is a Blob object that contains a image/jpeg file
  * await addImage(myImage); // Returns "6GpSNGbesNfU-t8KHMQXGjkIFmU.jpg"
- * 
+ *
  * @todo Convert this into a transaction so that everything is rolled back if this fails.
  */
-export async function addImage(imageData: Blob, metadata: ImageMetadata): Promise<string> {
-  "use server"
+export async function addImage(
+  imageData: Blob,
+  metadata: ImageMetadata,
+): Promise<string> {
+  "use server";
   // Verify Supabase credentials exist
   const supabaseApiKey = process.env.SUPABASE_API_KEY;
   const supabaseUrl = process.env.SUPABASE_URL;
-  if(!supabaseApiKey) throw new Error("No API key found!");
-  if(!supabaseUrl) throw new Error("No Supabase URL found!");
+  if (!supabaseApiKey) throw new Error("No API key found!");
+  if (!supabaseUrl) throw new Error("No Supabase URL found!");
 
   const extension = mimeToExtenstion(imageData.type);
 
   const client = createClient(supabaseUrl, supabaseApiKey);
 
-  const imageId = randomBytes(20).toString('base64url');
+  const imageId = randomBytes(20).toString("base64url");
   const targetUrl = `raw/${imageId}${extension}`;
   const imageQueryResult = await client.storage
     .from("photos")
-    .upload(targetUrl, imageData)
+    .upload(targetUrl, imageData);
 
-  if(imageQueryResult.error) {
+  if (imageQueryResult.error) {
     throw imageQueryResult.error;
   }
 
-  const supabaseInsertResult = await client.from("photo").insert([{
-    imageId,
-    ...metadata
-  }].map(keyToLower));
+  const supabaseInsertResult = await client.from("photo").insert(
+    [
+      {
+        imageId,
+        ...metadata,
+      },
+    ].map(keyToLower),
+  );
 
-  if(supabaseInsertResult.error) {
+  if (supabaseInsertResult.error) {
     throw supabaseInsertResult.error;
   }
 

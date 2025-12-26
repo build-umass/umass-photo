@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   if (!email || !password) {
     return new Response(
       JSON.stringify({ error: "Email and password are required." }),
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -61,6 +61,6 @@ export async function POST(request: Request) {
       needsEmailConfirmation: true,
       message: "Check your email to confirm your account before logging in.",
     }),
-    { status: 200 }
+    { status: 200 },
   );
 }

@@ -248,11 +248,11 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 ::: warning
 *here be dragons*
 :::
-`.trim()
+`.trim();
 
 export default function ComponentsPreview() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
       <MarkdownElement content={sampleText}></MarkdownElement>
       <Footer />

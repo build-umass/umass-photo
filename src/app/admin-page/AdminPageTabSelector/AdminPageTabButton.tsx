@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
-import AdminPageButton from "../common/AdminPageButton"
+import { ReactNode } from "react";
+import AdminPageButton from "../common/AdminPageButton";
 
 export default function AdminPageTabButton({
   children,
@@ -7,11 +7,18 @@ export default function AdminPageTabButton({
   className,
   ...props
 }: {
-  children: ReactNode,
-  highlighted?: boolean,
-  className?: string,
-  [key: string]: unknown
+  children: ReactNode;
+  highlighted?: boolean;
+  className?: string;
+  [key: string]: unknown;
 }) {
-  const color = highlighted ? "bg-white/20": ""
-  return <AdminPageButton className={`${className ?? ""} ${color} text-white`} {...props}>{children}</AdminPageButton>
+  const color = highlighted ? "bg-white/20" : "";
+  return (
+    <AdminPageButton
+      className={`${className ?? ""} ${color} text-white`}
+      {...props}
+    >
+      {children}
+    </AdminPageButton>
+  );
 }
