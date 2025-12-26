@@ -1,10 +1,8 @@
 import dotenv from "dotenv";
-import path from "path";
 import { insertTestData as insertTestData } from "./generateTestData";
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/app/utils/supabase/database.types";
-import { runQueryFile, deleteAllTables, reloadSchema } from "./postgresOps";
 
 dotenv.config();
 
@@ -14,33 +12,10 @@ describe("Database Rule Tests", () => {
   beforeAll(async () => {
     const apiUrl = process.env.API_URL;
     const supabaseServiceKey = process.env.SERVICE_ROLE_KEY;
-    const databaseUrl = process.env.DB_URL;
 
     if (!apiUrl) throw new Error("Supabase URL not found in environment!");
     if (!supabaseServiceKey)
       throw new Error("Supabase service role key not found in environment!");
-    if (!databaseUrl) throw new Error("Database URL not found in environment!");
-
-    const wipeResult = await deleteAllTables(databaseUrl);
-    if (wipeResult.error)
-      throw new Error(
-        `Failed to wipe tables: ${JSON.stringify(wipeResult.error)}`,
-      );
-
-    const setupResult = await runQueryFile(
-      databaseUrl,
-      path.join(import.meta.dirname, "..", "..", "sql", "setup.sql"),
-    );
-    if (setupResult.error)
-      throw new Error(
-        `Failed to run setup.sql: ${JSON.stringify(setupResult.error)}`,
-      );
-
-    const refreshResult = await reloadSchema(databaseUrl);
-    if (refreshResult.error)
-      throw new Error(
-        `Failed to reload schema: ${JSON.stringify(refreshResult.error)}`,
-      );
 
     supabase = createClient<Database>(apiUrl, supabaseServiceKey, {
       auth: {
@@ -64,7 +39,7 @@ describe("Database Rule Tests", () => {
   type DbTableName = keyof Database["public"]["Tables"];
 
   const expectedRowCounts: Partial<Record<DbTableName, number>> = {
-    photoclubrole: 3,
+    photoclubrole: 2,
     photoclubuser: 2,
     photo: 9,
     tag: 5,

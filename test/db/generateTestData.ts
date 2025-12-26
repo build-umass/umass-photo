@@ -4,6 +4,8 @@ import {
   TablesInsert,
 } from "@/app/utils/supabase/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
+import * as fs from "fs/promises";
+import * as path from "path";
 
 type SeedDataResult =
   | {
@@ -23,22 +25,13 @@ type SeedDataResult =
 export async function insertTestData(
   client: SupabaseClient<Database>,
 ): Promise<SeedDataResult> {
-  const { error: rolesError } = await client.from("photoclubrole").insert([
-    { roleid: "admin", is_admin: true },
-    { roleid: "member", is_admin: false },
-    { roleid: "eboard", is_admin: true },
-  ]);
-  if (rolesError) {
-    return { data: null, error: rolesError };
-  }
-
   const { data: testUsers, error: createUsersError } = await insertTestUsers(
     client,
     [
       {
         email: "amoinus@gmail.com",
         username: "max 1",
-        role: "eboard",
+        role: "admin",
         id: "43188856-13db-410a-b1a2-b006056cd84f",
       },
       {
@@ -52,6 +45,16 @@ export async function insertTestData(
   if (createUsersError) {
     return { data: null, error: createUsersError };
   }
+
+  await Promise.all(
+    [...Array(9).keys()].map(async (i) => {
+      const fileName = `${(i + 1).toString().padStart(2, "0")}.png`;
+      const file = await fs.readFile(
+        path.resolve(import.meta.dirname, "photos", fileName),
+      );
+      await client.storage.from("photos").upload(fileName, file);
+    }),
+  );
 
   const { error: photosError } = await client.from("photo").insert([
     {
