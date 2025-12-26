@@ -12,11 +12,11 @@ describe("Database Rule Tests", () => {
   let supabase: SupabaseClient<Database>;
 
   beforeAll(async () => {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_API_KEY;
-    const databaseUrl = process.env.DATABASE_URL;
+    const apiUrl = process.env.API_URL;
+    const supabaseServiceKey = process.env.SERVICE_ROLE_KEY;
+    const databaseUrl = process.env.DB_URL;
 
-    if (!supabaseUrl) throw new Error('Supabase URL not found in environment!');
+    if (!apiUrl) throw new Error('Supabase URL not found in environment!');
     if (!supabaseServiceKey) throw new Error('Supabase service role key not found in environment!');
     if (!databaseUrl) throw new Error('Database URL not found in environment!');
 
@@ -29,7 +29,7 @@ describe("Database Rule Tests", () => {
     const refreshResult = await reloadSchema(databaseUrl);
     if (refreshResult.error) throw new Error(`Failed to reload schema: ${JSON.stringify(refreshResult.error)}`);
 
-    supabase = createClient<Database>(supabaseUrl, supabaseServiceKey, {
+    supabase = createClient<Database>(apiUrl, supabaseServiceKey, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
