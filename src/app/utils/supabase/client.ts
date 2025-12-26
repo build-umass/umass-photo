@@ -14,17 +14,22 @@ if (!supabaseServiceRoleKey)
 
 export const getUserClient = (request: NextRequest) => {
   const access_token = request.cookies.get("access-token")?.value;
-  const client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-    global: {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
+  if (access_token) {
+    const client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       },
-    },
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+    return client;
+  }
+  const client = createClient<Database>(supabaseUrl, supabaseAnonKey);
+  client.auth.signInAnonymously();
   return client;
 };
 
