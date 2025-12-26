@@ -6,10 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "start:supabase": "supabase start",
+    "stop:supabase": "supabase stop --project-id=UMassPhoto --no-backup ; supabase stop --all",
+    "lint": "eslint . && prettier --check ./**/*.ts ./**/*.tsx",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
-    "test": "concurrently \"npm run test:vitest\" \"npm run test:playwright\" --group-output"
+    "test": "npm run test:vitest && npm run test:playwright",
+    "test:clean": "npm run stop:supabase && npm run start:supabase && npm run test",
+    "test:ci": "npm run stop:supabase && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -29,13 +33,14 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.1",
+    "@types/eslint": "^9.6.1",
     "@types/node": "^20",
     "@types/pg": "^8.16.0",
+    "@types/prettier": "^2.7.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
@@ -46,6 +51,8 @@
     "eslint-config-next": "15.2.0",
     "jsdom": "^27.3.0",
     "pg": "^8.16.3",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "supabase": "^2.45.5",
     "tailwindcss": "^4",
     "typescript": "^5",

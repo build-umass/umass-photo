@@ -1,9 +1,19 @@
-import Link from "next/link"
-import { ReactNode } from "react"
+import Link from "next/link";
+import { ReactNode } from "react";
 
-export default function NavBarLink({ children, href }: { children: ReactNode, href: string }) {
-    return <Link
-        href={href}
-        className="flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors duration-200 h-full px-6"
-    >{children}</Link>
+export default function NavBarLink({
+  children,
+  href,
+}: {
+  children: ReactNode;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex h-full items-center justify-center px-6 text-lg font-bold transition-colors duration-200 hover:bg-white/20"
+    >
+      {children}
+    </Link>
+  );
 }

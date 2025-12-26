@@ -1,34 +1,31 @@
 name: Build and Test
 
 on:
-  pull_request_target:
+  pull_request:
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-
-    environment: testing
-
-    env:
-      SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
+      - uses: actions/checkout@v4
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase start
+      - run: supabase status --output=env > .env
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npx playwright install chrome
+      - run: npx playwright install msedge
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test

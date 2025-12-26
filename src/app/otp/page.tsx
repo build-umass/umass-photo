@@ -26,9 +26,9 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
     if (!response.ok) {
       throw new Error("Failed to verify OTP");
     }
-    const {expires_at: atExpiryTime} = await response.json();
-    localStorage.setItem("loginExpiryTime", (atExpiryTime * 1000).toString())
-    window.location.assign("/")
+    const { expires_at: atExpiryTime } = await response.json();
+    localStorage.setItem("loginExpiryTime", (atExpiryTime * 1000).toString());
+    window.location.assign("/");
   } catch (error) {
     console.error(error);
   }
@@ -39,11 +39,7 @@ type SearchParams = {
   mode?: OtpMode;
 };
 
-const OtpPage = ({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) => {
+const OtpPage = ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
   const { email, mode } = use(searchParams);
   const normalizedMode = normalizeOtpMode(mode);
   const isSignup = normalizedMode === "signup";
@@ -54,24 +50,24 @@ const OtpPage = ({
     : "Enter the one-time code we sent to your email to sign in to your account.";
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
 
-      <main className="flex-grow bg-gray-50">
-        <section className="bg-[#8E122A] text-white py-16">
+      <main className="grow bg-gray-50">
+        <section className="bg-[#8E122A] py-16 text-white">
           <div className="container mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">{title}</h1>
-            <p className="text-xl max-w-2xl mx-auto">{description}</p>
+            <h1 className="mb-4 text-4xl font-bold">{title}</h1>
+            <p className="mx-auto max-w-2xl text-xl">{description}</p>
           </div>
         </section>
 
-        <section className="container mx-auto py-12 px-4">
-          <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-8">
+        <section className="container mx-auto px-4 py-12">
+          <div className="mx-auto max-w-md overflow-hidden rounded-lg bg-white p-8 shadow-md">
             <form onSubmit={handleVerifyOtp}>
               <div className="mb-8">
                 <label
                   htmlFor="otp"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="mb-2 block text-sm font-bold text-gray-700"
                 >
                   One-Time Code
                 </label>
@@ -80,7 +76,7 @@ const OtpPage = ({
                   id="otp"
                   name="otp"
                   placeholder="123456"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8E122A]"
+                  className="focus:ring-umass-red w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:ring-2 focus:outline-none"
                   required
                 />
               </div>
@@ -102,7 +98,7 @@ const OtpPage = ({
 
               <button
                 type="submit"
-                className="w-full bg-[#8E122A] text-white py-3 px-4 rounded-md hover:bg-[#6A0D20] transition font-bold text-lg"
+                className="bg-umass-red w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20]"
               >
                 Verify Code
               </button>

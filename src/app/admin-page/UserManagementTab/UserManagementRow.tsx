@@ -3,52 +3,69 @@ import AdminPageTableCell from "../common/AdminPageTableCell";
 import AdminPageButton from "../common/AdminPageButton";
 
 export enum RowFlag {
-    MODIFIED,
-    DELETED,
-    NONE
+  MODIFIED,
+  DELETED,
+  NONE,
 }
 
 export default function UserManagementRow({
-    rowFlag,
-    setRowFlag,
-    user,
-    setUser,
-    index,
-    roles,
+  rowFlag,
+  setRowFlag,
+  user,
+  setUser,
+  index,
+  roles,
 }: {
-    rowFlag: RowFlag;
-    setRowFlag: (rowFlag: RowFlag) => void;
-    user: Tables<"photoclubuser">;
-    setUser: (isDeleted: Tables<"photoclubuser">) => void;
-    index: number;
-    roles: ReadonlyArray<string>;
+  rowFlag: RowFlag;
+  setRowFlag: (rowFlag: RowFlag) => void;
+  user: Tables<"photoclubuser">;
+  setUser: (isDeleted: Tables<"photoclubuser">) => void;
+  index: number;
+  roles: ReadonlyArray<string>;
 }) {
-    const role = user.role;
-    const setRole = (role: string) => {
-        const newUser: Tables<"photoclubuser"> = { ...user };
-        newUser.role = role
-        setUser(newUser);
-        setRowFlag(RowFlag.MODIFIED)
-    }
+  const role = user.role;
+  const setRole = (role: string) => {
+    const newUser: Tables<"photoclubuser"> = { ...user };
+    newUser.role = role;
+    setUser(newUser);
+    setRowFlag(RowFlag.MODIFIED);
+  };
 
-    const indicatorColor = rowFlag === RowFlag.MODIFIED ? "bg-yellow-500" :
-        rowFlag === RowFlag.DELETED ? "bg-red-500" : "";
+  const indicatorColor =
+    rowFlag === RowFlag.MODIFIED
+      ? "bg-yellow-500"
+      : rowFlag === RowFlag.DELETED
+        ? "bg-red-500"
+        : "";
 
-    const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
+  const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
 
-    return <tr className={rowBackgroundColor}>
-        <AdminPageTableCell className={`w-2 ${indicatorColor}`}></AdminPageTableCell>
-        <AdminPageTableCell>{user.id}</AdminPageTableCell>
-        <AdminPageTableCell>{user.username}</AdminPageTableCell>
-        <AdminPageTableCell>{user.email}</AdminPageTableCell>
-        <AdminPageTableCell>{user.bio}</AdminPageTableCell>
-        <AdminPageTableCell>
-            <select defaultValue={role} onChange={(e) => setRole(e.target.value)}>
-                {roles.map(role => <option value={role} key={role}>{role}</option>)}
-            </select>
-        </AdminPageTableCell>
-        <AdminPageTableCell>
-            <AdminPageButton className="bg-umass-red text-white" onClick={() => setRowFlag(RowFlag.DELETED)}>X</AdminPageButton>
-        </AdminPageTableCell>
+  return (
+    <tr className={rowBackgroundColor}>
+      <AdminPageTableCell
+        className={`w-2 ${indicatorColor}`}
+      ></AdminPageTableCell>
+      <AdminPageTableCell>{user.id}</AdminPageTableCell>
+      <AdminPageTableCell>{user.username}</AdminPageTableCell>
+      <AdminPageTableCell>{user.email}</AdminPageTableCell>
+      <AdminPageTableCell>{user.bio}</AdminPageTableCell>
+      <AdminPageTableCell>
+        <select defaultValue={role} onChange={(e) => setRole(e.target.value)}>
+          {roles.map((role) => (
+            <option value={role} key={role}>
+              {role}
+            </option>
+          ))}
+        </select>
+      </AdminPageTableCell>
+      <AdminPageTableCell>
+        <AdminPageButton
+          className="bg-umass-red text-white"
+          onClick={() => setRowFlag(RowFlag.DELETED)}
+        >
+          X
+        </AdminPageButton>
+      </AdminPageTableCell>
     </tr>
+  );
 }

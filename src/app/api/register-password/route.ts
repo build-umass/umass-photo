@@ -1,24 +1,16 @@
-import dotenv from "dotenv";
-import { createClient } from "@supabase/supabase-js";
-
-dotenv.config();
+import { getAdminClient } from "@/app/utils/supabase/client";
 
 export async function POST(request: Request) {
-  const supabaseApiKey = process.env.SUPABASE_API_KEY;
-  const supabaseUrl = process.env.SUPABASE_URL;
-  if (!supabaseApiKey) throw new Error("No API key found!");
-  if (!supabaseUrl) throw new Error("No Supabase URL found!");
-
   const { email, password }: { email?: string; password?: string } =
     await request.json();
   if (!email || !password) {
     return new Response(
       JSON.stringify({ error: "Email and password are required." }),
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  const adminClient = createClient(supabaseUrl, supabaseApiKey);
+  const adminClient = getAdminClient();
 
   const { data: usersResult, error: listError } =
     await adminClient.auth.admin.listUsers();
@@ -69,6 +61,6 @@ export async function POST(request: Request) {
       needsEmailConfirmation: true,
       message: "Check your email to confirm your account before logging in.",
     }),
-    { status: 200 }
+    { status: 200 },
   );
 }

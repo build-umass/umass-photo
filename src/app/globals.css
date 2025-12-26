@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-umass-red: #8E122A;
+  --color-umass-red: #8e122a;
 }
 
 body {
