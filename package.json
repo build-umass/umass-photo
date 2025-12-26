@@ -10,7 +10,7 @@
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
-    "test:ci": "supabase stop --all && act --use-gitignore=false --env-file none"
+    "test:ci": "npx supabase stop --project-id=UMassPhoto --no-backup && supabase stop --all && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
