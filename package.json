@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . && prettier --check ./**/*.ts ./**/*.tsx",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
