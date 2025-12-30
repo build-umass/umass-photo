@@ -9,7 +9,21 @@ export async function POST(request: NextRequest) {
   let access_token = request.cookies.get("access-token")?.value;
   let refresh_token = request.cookies.get("refresh-token")?.value;
 
-  if (!access_token || !refresh_token) return new Response("", { status: 401 });
+  if (!access_token)
+    return new Response(
+      JSON.stringify({
+        message: "No access token provided",
+      }),
+      { status: 401 },
+    );
+
+  if (!refresh_token)
+    return new Response(
+      JSON.stringify({
+        message: "No refresh token provided",
+      }),
+      { status: 401 },
+    );
 
   const supabaseUrl = process.env.API_URL;
   const supabaseAnonKey = process.env.ANON_KEY;
@@ -17,19 +31,40 @@ export async function POST(request: NextRequest) {
   if (!supabaseAnonKey) throw new Error("No Supabase Anon Key found!");
 
   const client = createClient<Database>(supabaseUrl, supabaseAnonKey);
-  client.auth.setSession({ access_token, refresh_token });
+
+  const { error: setSessionError } = await client.auth.setSession({
+    access_token,
+    refresh_token,
+  });
+  if (setSessionError) {
+    return new Response(
+      JSON.stringify({
+        message: "Failed to set session before refresh",
+        error: setSessionError,
+      }),
+      { status: 500 },
+    );
+  }
 
   const {
     data: { session },
     error: refreshError,
   } = await client.auth.refreshSession();
   if (refreshError) {
-    throw refreshError;
+    return new Response(
+      JSON.stringify({
+        message: "Failed to refresh session",
+        error: refreshError,
+      }),
+      { status: 500 },
+    );
   }
+
   if (session === null) {
     return new Response(
       JSON.stringify({
         message: "refresh token rotation returned null session",
+        error: refreshError,
       }),
       { status: 500 },
     );
