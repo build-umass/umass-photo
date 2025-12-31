@@ -71,7 +71,7 @@ export default function ImageSelectField({
       />
       <label
         htmlFor={id}
-        className="flex h-full w-full cursor-pointer items-center justify-center border-2 border-dashed border-gray-600 bg-gray-300 p-2"
+        className="cursor-camera flex h-full w-full items-center justify-center border-2 border-dashed border-gray-600 bg-gray-300 p-2"
       >
         {labelContents}
       </label>

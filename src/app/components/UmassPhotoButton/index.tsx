@@ -11,7 +11,7 @@ export default function UmassPhotoButton({
 }) {
   return (
     <button
-      className={`${className ?? ""} rounded-2xl px-5 py-2 text-3xl font-bold text-white`}
+      className={`${className ?? ""} rounded-2xl px-5 py-2 text-3xl font-bold text-white cursor-camera`}
       {...props}
     >
       {children}

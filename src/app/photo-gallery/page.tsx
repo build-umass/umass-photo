@@ -209,7 +209,7 @@ const PhotoGallery = () => {
                 id="photo-item"
                 onError={() => handleImageError(photo.id)}
                 onClick={() => openModal(index)}
-                style={{ cursor: "pointer" }}
+                className="cursor-camera"
                 width={1024}
                 height={1024}
               />
