@@ -84,7 +84,7 @@ export default function LoginPage() {
 
             <div className="mb-6 flex border-b">
               <button
-                className={`flex-1 py-2 font-medium ${
+                className={`cursor-camera flex-1 py-2 font-medium ${
                   loginMethod === "password"
                     ? "text-umass-red border-umass-red border-b-2"
                     : "text-gray-500"
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 Password
               </button>
               <button
-                className={`flex-1 py-2 font-medium ${
+                className={`cursor-camera flex-1 py-2 font-medium ${
                   loginMethod === "magiclink"
                     ? "text-umass-red border-umass-red border-b-2"
                     : "text-gray-500"
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 Magic Link
               </button>
               <button
-                className={`flex-1 py-2 font-medium ${
+                className={`cursor-camera flex-1 py-2 font-medium ${
                   loginMethod === "otp"
                     ? "text-umass-red border-umass-red border-b-2"
                     : "text-gray-500"
@@ -165,7 +165,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="bg-umass-red w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20]"
+                className="bg-umass-red cursor-camera w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20]"
               >
                 {loginMethod === "password"
                   ? "Sign In"
@@ -179,7 +179,7 @@ export default function LoginPage() {
               <div className="mt-6 text-center">
                 <a
                   href="/forgot-password"
-                  className="text-umass-red hover:underline"
+                  className="text-umass-red cursor-camera hover:underline"
                 >
                   Forgot password?
                 </a>
@@ -191,7 +191,7 @@ export default function LoginPage() {
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/register"
-                  className="text-umass-red font-semibold hover:underline"
+                  className="text-umass-red cursor-camera font-semibold hover:underline"
                 >
                   Sign up
                 </Link>

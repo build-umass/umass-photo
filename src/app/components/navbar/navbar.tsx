@@ -18,13 +18,13 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 items-stretch">
         {/* Logo without hover */}
         <div className="flex h-full items-center px-6">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="cursor-camera flex items-center">
             <Image
               src="/photo.jpg"
               alt="Photo Club Logo"
               width={40}
               height={40}
-              className="mr-2"
+              className="cursor-camera mr-2"
             />
             <h1 className={`text-xl font-bold ${teachers.className}`}>
               UMass Photo

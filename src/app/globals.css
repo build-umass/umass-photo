@@ -4,6 +4,12 @@
   --color-umass-red: #8e122a;
 }
 
+@utility cursor-camera {
+  cursor:
+    url("/camera-cursor.png") 16 16,
+    auto;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

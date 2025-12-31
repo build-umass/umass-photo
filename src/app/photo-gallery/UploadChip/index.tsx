@@ -130,6 +130,7 @@ export default function UploadChip({
         onClick={() => {
           removeTag(tag);
         }}
+        className="cursor-camera"
       >
         X
       </button>
@@ -182,7 +183,7 @@ export default function UploadChip({
           {tagList}
           <select
             value="default"
-            className="w-16 appearance-none rounded-xl bg-gray-300 px-4 py-1 text-center text-2xl"
+            className="cursor-camera w-16 appearance-none rounded-xl bg-gray-300 px-4 py-1 text-center text-2xl"
             onChange={(e) => {
               if (e.target.value !== "default") addTag(e.target.value);
             }}
@@ -209,7 +210,7 @@ export default function UploadChip({
           <button
             type="button"
             onClick={() => createTag(newTagInput)}
-            className="bg-umass-red rounded-xl px-4 py-2 text-lg text-white transition-colors hover:bg-red-700"
+            className="bg-umass-red cursor-camera cursor-camera rounded-xl px-4 py-2 text-lg text-white transition-colors hover:bg-red-700"
           >
             Add Tag
           </button>

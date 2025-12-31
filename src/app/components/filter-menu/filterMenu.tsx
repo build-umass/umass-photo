@@ -149,7 +149,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             setShowMenu(true);
           }
         }}
-        className={showMenu ? "expanded" : ""}
+        className={`${showMenu ? "expanded" : ""} cursor-camera`}
       >
         <Image
           src={menu.src}
@@ -177,12 +177,8 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             <div>
               <h2
                 id="popup-subheader"
-                className={showUploadDate ? "active" : ""}
+                className={`${showUploadDate ? "active font-bold" : "font-normal"} cursor-camera`}
                 onClick={() => handleSectionToggle("uploadDate")}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: showUploadDate ? "bold" : "normal",
-                }}
               >
                 <span>Upload Date</span>
                 <span>▶</span>
@@ -199,6 +195,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                       id="start-date"
                       name="start-date"
                       aria-label="Start date"
+                      className="cursor-camera"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
@@ -208,6 +205,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                       id="end-date"
                       name="end-date"
                       aria-label="End date"
+                      className="cursor-camera"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
@@ -221,12 +219,8 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             <div>
               <h2
                 id="popup-subheader"
-                className={showPhotographer ? "active" : ""}
+                className={`${showPhotographer ? "active font-bold" : "font-normal"} cursor-camera`}
                 onClick={() => handleSectionToggle("photographer")}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: showPhotographer ? "bold" : "normal",
-                }}
               >
                 <span>Photographer</span>
                 <span>▶</span>
@@ -241,11 +235,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                       key={author.id}
                       id="photographer-button"
                       onClick={() => selectAuthor(author.id)}
-                      style={{
-                        backgroundColor:
-                          selectedAuthor === author.id ? "#881C1C" : "white",
-                        color: selectedAuthor === author.id ? "white" : "#333",
-                      }}
+                      className={`${selectedAuthor === author.id ? "bg-umass-red text-white" : "bg-white text-gray-900 hover:bg-gray-100"} cursor-camera`}
                     >
                       {author.username}
                     </button>
@@ -259,12 +249,8 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             <div>
               <h2
                 id="popup-subheader"
-                className={showTags ? "active" : ""}
                 onClick={() => handleSectionToggle("tags")}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: showTags ? "bold" : "normal",
-                }}
+                className={`${showTags ? "active font-bold" : "font-normal"} cursor-camera`}
               >
                 <span>Tags</span>
                 <span>▶</span>
@@ -279,12 +265,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
                       key={tag}
                       id="photographer-button"
                       onClick={() => toggleTag(tag)}
-                      style={{
-                        backgroundColor: selectedTags.has(tag)
-                          ? "#881C1C"
-                          : "white",
-                        color: selectedTags.has(tag) ? "white" : "#333",
-                      }}
+                      className={`${selectedTags.has(tag) ? "bg-umass-red text-white" : "bg-white text-gray-900 hover:bg-gray-100"} cursor-camera`}
                     >
                       {tag}
                     </button>
@@ -294,7 +275,11 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             </div>
             <hr id="menu-line" />
 
-            <button id="submit-button" onClick={handleSubmit}>
+            <button
+              id="submit-button"
+              onClick={handleSubmit}
+              className="cursor-camera"
+            >
               Submit
             </button>
           </div>

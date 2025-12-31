@@ -45,7 +45,7 @@ export default function EventsPage() {
             src={event.herofileURL}
             alt={`Hero image for ${event.name}`}
             fill
-            style={{ objectFit: "cover" }}
+            className="object-cover"
           />
         </div>
 
@@ -55,7 +55,7 @@ export default function EventsPage() {
           <p className="mb-4 text-lg text-gray-600">{formatDate(endDate)}</p>
           <p className="mb-6 text-gray-700">{event.description}</p>
           <button
-            className="w-fit rounded-md bg-[#8E122A] px-6 py-2 text-white transition hover:bg-[#6A0D20]"
+            className="cursor-camera w-fit rounded-md bg-[#8E122A] px-6 py-2 text-white transition hover:bg-[#6A0D20]"
             onClick={() => setCurrentFocusedEvent(event)}
           >
             Learn More

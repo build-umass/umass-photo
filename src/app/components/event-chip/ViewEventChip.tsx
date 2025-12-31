@@ -29,8 +29,7 @@ export default function ViewEventChip({
               src={eventData.herofileURL}
               alt={`Hero image for ${eventData.name}`}
               fill
-              style={{ objectFit: "cover" }}
-              className="rounded-xl"
+              className="rounded-xl object-cover"
             ></Image>
           </div>
         </div>
