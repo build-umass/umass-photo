@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "../components/navbar/navbar";
-import Footer from "../components/footer/footer";
 import { useEffect, useState } from "react";
 import { Tables } from "../utils/supabase/database.types";
 import Image from "next/image";
@@ -66,46 +64,39 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <main className="grow bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-[#8E122A] py-16 text-white">
+        <div className="container mx-auto text-center">
+          <h1 className="mb-4 text-4xl font-bold">Upcoming Events</h1>
+          <p className="mx-auto max-w-2xl text-xl">
+            Join us for exciting photography events, workshops, and exhibitions
+          </p>
+        </div>
+      </section>
 
-      <main className="grow bg-gray-50">
-        {/* Hero Section */}
-        <section className="bg-[#8E122A] py-16 text-white">
-          <div className="container mx-auto text-center">
-            <h1 className="mb-4 text-4xl font-bold">Upcoming Events</h1>
-            <p className="mx-auto max-w-2xl text-xl">
-              Join us for exciting photography events, workshops, and
-              exhibitions
-            </p>
-          </div>
-        </section>
+      {/* Events List */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="mx-auto max-w-5xl space-y-8">
+          {events.map(getEventListingElement)}
+        </div>
+      </section>
 
-        {/* Events List */}
-        <section className="container mx-auto px-4 py-12">
-          <div className="mx-auto max-w-5xl space-y-8">
-            {events.map(getEventListingElement)}
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="bg-[#8E122A] py-12 text-white">
-          <div className="container mx-auto text-center">
-            <h2 className="mb-6 text-3xl font-bold">Have an event idea?</h2>
-            <button className="rounded-lg bg-white px-8 py-3 text-lg font-bold text-[#8E122A] transition hover:bg-gray-100">
-              Suggest an Event
-            </button>
-          </div>
-        </section>
-      </main>
+      {/* CTA Section */}
+      <section className="bg-[#8E122A] py-12 text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="mb-6 text-3xl font-bold">Have an event idea?</h2>
+          <button className="rounded-lg bg-white px-8 py-3 text-lg font-bold text-[#8E122A] transition hover:bg-gray-100">
+            Suggest an Event
+          </button>
+        </div>
+      </section>
       {currentFocusedEvent && (
         <ViewEventChip
           eventData={currentFocusedEvent}
           onClose={() => setCurrentFocusedEvent(null)}
         />
       )}
-
-      <Footer />
-    </div>
+    </main>
   );
 }

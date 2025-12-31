@@ -6,7 +6,6 @@ import stockPhoto from "../../../public/stock-photo.jpg";
 import BackArrow from "../../../public/back_arrow.svg";
 import ForwardArrow from "../../../public/forward_arrow.svg";
 import CloseIcon from "../../../public/close.svg";
-import Navbar from "../components/navbar/navbar";
 import {
   parseBooleanParam,
   parseStringParam,
@@ -182,7 +181,6 @@ const PhotoGallery = () => {
 
   return (
     <div>
-      <Navbar />
       <FilterMenu onFilterSubmit={handleFilterSubmit} />
 
       {/* Add Photo Button - positioned above filter button */}
