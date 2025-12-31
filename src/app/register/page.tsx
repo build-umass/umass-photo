@@ -160,7 +160,7 @@ export default function RegisterPage() {
 
               <button
                 type="submit"
-                className="bg-umass-red w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20] cursor-camera"
+                className="bg-umass-red cursor-camera w-full rounded-md px-4 py-3 text-lg font-bold text-white transition hover:bg-[#6A0D20]"
               >
                 Sign Up
               </button>
@@ -170,7 +170,7 @@ export default function RegisterPage() {
                   Already have an account?{" "}
                   <a
                     href="/login"
-                    className="text-umass-red font-semibold hover:underline cursor-camera"
+                    className="text-umass-red cursor-camera font-semibold hover:underline"
                   >
                     Log in
                   </a>
