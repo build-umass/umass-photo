@@ -18,16 +18,28 @@ export default function Footer() {
               Umass Photo
             </h3>
             <div className="mb-4 flex space-x-6 hover:underline">
-              <a className="text-gray-500 hover:text-gray-700" href="#">
+              <a
+                className="cursor-camera text-gray-500 hover:text-gray-700"
+                href="#"
+              >
                 <FontAwesomeIcon icon={faFacebook} />
               </a>
-              <a className="text-gray-500 hover:text-gray-700" href="#">
+              <a
+                className="cursor-camera text-gray-500 hover:text-gray-700"
+                href="#"
+              >
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
-              <a className="text-gray-500 hover:text-gray-700" href="#">
+              <a
+                className="cursor-camera text-gray-500 hover:text-gray-700"
+                href="#"
+              >
                 <FontAwesomeIcon icon={faYoutube} />
               </a>
-              <a className="text-gray-500 hover:text-gray-700" href="#">
+              <a
+                className="cursor-camera text-gray-500 hover:text-gray-700"
+                href="#"
+              >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
             </div>
@@ -42,13 +54,13 @@ export default function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <a
-                  className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                  className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                   href="/photo-gallery"
                 >
                   All Photos
                 </a>
                 <a
-                  className="font-Jaldi block text-gray-700 hover:underline"
+                  className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                   href="#"
                 >
                   Submit Your photos
@@ -62,19 +74,19 @@ export default function Footer() {
               <div className="flex flex-col space-y-2">
                 <div className="font-Jaldi flex flex-col space-y-2">
                   <a
-                    className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Spring contest
                   </a>
                   <a
-                    className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Fall Foliage Contest
                   </a>
                   <a
-                    className="font-Jaldi block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     Summer Contest
@@ -89,13 +101,13 @@ export default function Footer() {
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
                   <a
-                    className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Our Story
                   </a>
                   <a
-                    className="font-Jaldi block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     E-Board
@@ -110,19 +122,19 @@ export default function Footer() {
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
                   <a
-                    className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Instagram
                   </a>
                   <a
-                    className="font-Jaldi mb-4 block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Email
                   </a>
                   <a
-                    className="font-Jaldi block text-gray-700 hover:underline"
+                    className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     Page

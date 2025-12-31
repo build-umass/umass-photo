@@ -45,7 +45,7 @@ export default function EventsPage() {
             src={event.herofileURL}
             alt={`Hero image for ${event.name}`}
             fill
-            style={{ objectFit: "cover" }}
+            className="object-cover"
           />
         </div>
 

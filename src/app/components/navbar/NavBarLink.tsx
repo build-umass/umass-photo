@@ -11,7 +11,7 @@ export default function NavBarLink({
   return (
     <Link
       href={href}
-      className="flex h-full items-center justify-center px-6 text-lg font-bold transition-colors duration-200 hover:bg-white/20"
+      className="cursor-camera flex h-full items-center justify-center px-6 text-lg font-bold transition-colors duration-200 hover:bg-white/20"
     >
       {children}
     </Link>

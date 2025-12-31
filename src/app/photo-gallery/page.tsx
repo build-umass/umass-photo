@@ -177,6 +177,9 @@ const PhotoGallery = () => {
     setModalImageError(true);
   };
 
+  const onLastPhoto = selectedPhotoIndex === photos.length - 1;
+  const onFirstPhoto = selectedPhotoIndex === 0;
+
   return (
     <div>
       <Navbar />
@@ -186,7 +189,7 @@ const PhotoGallery = () => {
       <button
         id="add-photo-button"
         onClick={() => setUploadingPhoto((prev) => !prev)}
-        className={uploadingPhoto ? "expanded" : ""}
+        className={`${uploadingPhoto ? "expanded" : ""} cursor-camera`}
       >
         <span>+</span>
       </button>
@@ -233,11 +236,12 @@ const PhotoGallery = () => {
             <button
               id="prev-arrow"
               onClick={goToPreviousPhoto}
-              disabled={selectedPhotoIndex === 0}
-              style={{
-                opacity: selectedPhotoIndex === 0 ? 0.3 : 1,
-                cursor: selectedPhotoIndex === 0 ? "not-allowed" : "pointer",
-              }}
+              disabled={onFirstPhoto}
+              className={
+                onFirstPhoto
+                  ? "cursor-not-allowed opacity-30"
+                  : "cursor-camera opacity-100"
+              }
             >
               <Image
                 src={BackArrow.src}
@@ -251,14 +255,12 @@ const PhotoGallery = () => {
             <button
               id="next-arrow"
               onClick={goToNextPhoto}
-              disabled={selectedPhotoIndex === photos.length - 1}
-              style={{
-                opacity: selectedPhotoIndex === photos.length - 1 ? 0.3 : 1,
-                cursor:
-                  selectedPhotoIndex === photos.length - 1
-                    ? "not-allowed"
-                    : "pointer",
-              }}
+              disabled={onLastPhoto}
+              className={
+                onLastPhoto
+                  ? "cursor-not-allowed opacity-30"
+                  : "cursor-camera opacity-100"
+              }
             >
               <Image
                 src={ForwardArrow.src}

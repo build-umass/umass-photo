@@ -49,7 +49,7 @@ export default function ImageSelectField({
           src={imageDataURL}
           alt="selected image preview"
           fill
-          style={{ objectFit: "cover" }}
+          className="object-cover"
         />
       </div>
       {filename && <div className="mt-2 text-center text-sm">{filename}</div>}

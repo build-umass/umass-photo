@@ -65,7 +65,7 @@ export default function Home() {
                 fermentum amet eget primis convallis dis cursus?
               </p>
               <a
-                className="font-Jaldi text-2xl font-bold text-[#971B2F] hover:underline"
+                className="font-Jaldi cursor-camera text-2xl font-bold text-[#971B2F] hover:underline"
                 href="#"
               >
                 Learn More &gt;
@@ -104,7 +104,7 @@ export default function Home() {
                 fermentum amet eget primis convallis dis cursus?
               </p>
               <a
-                className="font-Jaldi text-2xl font-bold text-[#971B2F] hover:underline"
+                className="font-Jaldi cursor-camera text-2xl font-bold text-[#971B2F] hover:underline"
                 href="#"
               >
                 Learn More &gt;

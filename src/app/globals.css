@@ -5,7 +5,9 @@
 }
 
 @utility cursor-camera {
-  cursor: url('/camera-cursor.png') 16 16, auto;
+  cursor:
+    url("/camera-cursor.png") 16 16,
+    auto;
 }
 
 body {
