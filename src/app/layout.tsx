@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <RefreshHandler></RefreshHandler>
-      <body className="font-jaldi antialiased">
+      <body className="font-jaldi flex min-h-dvh flex-col antialiased">
         <Navbar></Navbar>
         {children}
         <Footer></Footer>

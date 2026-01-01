@@ -64,7 +64,7 @@ export default function EventsPage() {
   }
 
   return (
-    <main className="grow bg-gray-50">
+    <main className="flex grow flex-col bg-gray-50">
       {/* Hero Section */}
       <section className="bg-[#8E122A] py-16 text-white">
         <div className="container mx-auto text-center">
@@ -76,7 +76,7 @@ export default function EventsPage() {
       </section>
 
       {/* Events List */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto grow px-4 py-12">
         <div className="mx-auto max-w-5xl space-y-8">
           {events.map(getEventListingElement)}
         </div>
