@@ -10,8 +10,9 @@ describe("Database Rule Tests", () => {
   let supabase: SupabaseClient<Database>;
 
   beforeAll(async () => {
-    const apiUrl = process.env.API_URL;
-    const supabaseServiceKey = process.env.SERVICE_ROLE_KEY;
+    const apiUrl = process.env.API_URL || process.env.SUPABASE_URL;
+    const supabaseServiceKey =
+      process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!apiUrl) throw new Error("Supabase URL not found in environment!");
     if (!supabaseServiceKey)

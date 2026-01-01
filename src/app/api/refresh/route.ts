@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
 
-  const supabaseUrl = process.env.API_URL;
-  const supabaseAnonKey = process.env.ANON_KEY;
+  const supabaseUrl = process.env.API_URL || process.env.SUPABASE_URL;
+  const supabaseAnonKey = process.env.ANON_KEY || process.env.SUPABASE_ANON_KEY;
   if (!supabaseUrl) throw new Error("No Supabase URL found!");
   if (!supabaseAnonKey) throw new Error("No Supabase Anon Key found!");
 
