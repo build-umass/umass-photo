@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Jaldi } from "next/font/google";
 import "./globals.css";
 import RefreshHandler from "./components/RefreshHandler";
+import Navbar from "./components/navbar/navbar";
+import Footer from "./components/footer/footer";
 
 // Next.js seems to require this to be assigned even though it is never used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,7 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <RefreshHandler></RefreshHandler>
-      <body className="font-jaldi antialiased">{children}</body>
+      <body className="font-jaldi flex min-h-dvh flex-col antialiased">
+        <Navbar></Navbar>
+        {children}
+        <Footer></Footer>
+      </body>
     </html>
   );
 }
