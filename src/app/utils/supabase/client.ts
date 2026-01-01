@@ -8,7 +8,8 @@ if (!supabaseUrl)
 const supabaseAnonKey = process.env.ANON_KEY || process.env.SUPABASE_ANON_KEY;
 if (!supabaseAnonKey)
   throw new Error("ANON_KEY is not defined in environment variables");
-const supabaseServiceRoleKey = process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceRoleKey =
+  process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!supabaseServiceRoleKey)
   throw new Error("SERVICE_ROLE_KEY is not defined in environment variables");
 
