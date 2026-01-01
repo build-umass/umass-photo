@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { RemotePattern } from "next/dist/shared/lib/image-config";
 dotenv.config();
 
-const apiUrlString = process.env.API_URL;
+const apiUrlString = process.env.API_URL || process.env.SUPABASE_URL;
 if (!apiUrlString)
   throw new Error("API_URL is not defined in environment variables");
 const apiUrl = new URL(apiUrlString);
