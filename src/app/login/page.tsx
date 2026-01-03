@@ -57,7 +57,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="grow bg-gray-50">
+    <>
       <section className="bg-umass-red py-16 text-white">
         <div className="container mx-auto text-center">
           <h1 className="mb-4 text-4xl font-bold">Welcome Back</h1>
@@ -193,6 +193,6 @@ export default function LoginPage() {
           </div>
         </div>
       </section>
-    </main>
+    </>
   );
 }

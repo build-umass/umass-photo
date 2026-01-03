@@ -48,7 +48,7 @@ const OtpPage = ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
     : "Enter the one-time code we sent to your email to sign in to your account.";
 
   return (
-    <main className="grow bg-gray-50">
+    <>
       <section className="bg-[#8E122A] py-16 text-white">
         <div className="container mx-auto text-center">
           <h1 className="mb-4 text-4xl font-bold">{title}</h1>
@@ -100,7 +100,7 @@ const OtpPage = ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
           </form>
         </div>
       </section>
-    </main>
+    </>
   );
 };
 

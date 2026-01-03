@@ -64,7 +64,7 @@ export default function EventsPage() {
   }
 
   return (
-    <main className="flex grow flex-col bg-gray-50">
+    <>
       {/* Hero Section */}
       <section className="bg-[#8E122A] py-16 text-white">
         <div className="container mx-auto text-center">
@@ -97,6 +97,6 @@ export default function EventsPage() {
           onClose={() => setCurrentFocusedEvent(null)}
         />
       )}
-    </main>
+    </>
   );
 }

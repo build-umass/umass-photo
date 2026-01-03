@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="grow bg-white">
+    <>
       <div className="relative mb-6 h-93.75 w-full overflow-x-auto bg-white whitespace-nowrap shadow-xl">
         <div className="flex h-full">
           <Image
@@ -105,6 +105,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </main>
+    </>
   );
 }
