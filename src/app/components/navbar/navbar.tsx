@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Teachers } from "next/font/google";
+import NavBarLink from "./NavBarLink";
+import UserChip from "./UserChip";
 
 const teachers = Teachers({
   subsets: ["latin"],
@@ -12,17 +14,17 @@ const teachers = Teachers({
 
 export default function Navbar() {
   return (
-    <nav className="bg-[#8E122A] text-white">
-      <div className="container mx-auto flex items-stretch h-16">
+    <nav className="sticky top-0 right-0 left-0 z-50 bg-[#8E122A] text-white">
+      <div className="container mx-auto flex h-16 items-stretch">
         {/* Logo without hover */}
-        <div className="flex items-center px-6 h-full">
-          <Link href="/" className="flex items-center">
+        <div className="flex h-full items-center px-6">
+          <Link href="/" className="cursor-camera flex items-center">
             <Image
               src="/photo.jpg"
               alt="Photo Club Logo"
               width={40}
               height={40}
-              className="mr-2"
+              className="cursor-camera mr-2"
             />
             <h1 className={`text-xl font-bold ${teachers.className}`}>
               UMass Photo
@@ -31,19 +33,16 @@ export default function Navbar() {
         </div>
 
         {/* Spacer */}
-        <div className="flex-grow"></div>
+        <div className="grow"></div>
 
         {/* Navigation links - no visible separators */}
         <div className={`flex ${teachers.className}`}>
-          {["Home", "Gallery", "Events", "About", "Contact"].map((page) => (
-            <Link
-              key={page}
-              href={`/${page.toLowerCase()}`}
-              className="flex items-center justify-center text-lg font-bold hover:bg-white/20 transition-colors duration-200 h-full px-6"
-            >
-              {page}
-            </Link>
-          ))}
+          <NavBarLink href={"/"}>Home</NavBarLink>
+          <NavBarLink href={"/photo-gallery"}>Gallery</NavBarLink>
+          <NavBarLink href={"/events"}>Events</NavBarLink>
+          <NavBarLink href={"/about"}>About</NavBarLink>
+          <NavBarLink href={"/contact"}>Contact</NavBarLink>
+          <UserChip></UserChip>
         </div>
       </div>
     </nav>

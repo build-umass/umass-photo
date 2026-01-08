@@ -1,22 +1,47 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest } from "next/server";
+import { Database } from "./database.types";
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.API_URL || process.env.SUPABASE_URL;
+if (!supabaseUrl)
+  throw new Error("API_URL is not defined in environment variables");
+const supabaseAnonKey = process.env.ANON_KEY || process.env.SUPABASE_ANON_KEY;
+if (!supabaseAnonKey)
+  throw new Error("ANON_KEY is not defined in environment variables");
+const supabaseServiceRoleKey =
+  process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!supabaseServiceRoleKey)
+  throw new Error("SERVICE_ROLE_KEY is not defined in environment variables");
 
 export const getUserClient = (request: NextRequest) => {
   const access_token = request.cookies.get("access-token")?.value;
-  const refresh_token = request.cookies.get("refresh-token")?.value;
-  const client = createClient(supabaseUrl, supabaseAnonKey);
-  if (!access_token) return client;
-  if (!refresh_token) return client;
-  client.auth.setSession({ access_token, refresh_token });
+  if (access_token) {
+    const client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+    return client;
+  }
+  const client = createClient<Database>(supabaseUrl, supabaseAnonKey);
+  client.auth.signInAnonymously();
   return client;
-}
+};
 
-export const attachCookies = async (client: SupabaseClient, response: Response) => {
-  const { data: { session } } = await client.auth.getSession();
-  response.headers.append("Set-Cookie", `access-token=${session?.access_token ?? ''}; SameSite=strict; HttpOnly; Secure`)
-  response.headers.append("Set-Cookie", `refresh-token=${session?.refresh_token ?? ''}; SameSite=strict; HttpOnly; Secure`)
+export const getAdminClient = () => {
+  const client = createClient<Database>(supabaseUrl, supabaseServiceRoleKey);
+  return client;
+};
+
+export const attachCookies = async (
+  client: SupabaseClient,
+  response: Response,
+) => {
   return response;
-}
+};

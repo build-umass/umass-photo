@@ -1,4 +1,6 @@
-'use client'
+"use client";
+
+import { FormEvent } from "react";
 
 const requestAccount = async (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -52,6 +54,7 @@ const CreateAccount = () => {
         />
         <button
           type="submit"
+          className="cursor-camera"
           style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
         >
           Submit

@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
+@theme {
+  --color-umass-red: #8e122a;
+}
+
+@utility cursor-camera {
+  cursor:
+    url("/camera-cursor.png") 16 16,
+    auto;
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Jaldi, Arial, Helvetica, sans-serif;
+  font-family: var(--font-jaldi), Arial, Helvetica, sans-serif;
 }
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }

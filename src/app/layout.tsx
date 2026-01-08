@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Jaldi } from "next/font/google";
 import "./globals.css";
+import RefreshHandler from "./components/RefreshHandler";
+import Navbar from "./components/navbar/navbar";
+import Footer from "./components/footer/footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Next.js seems to require this to be assigned even though it is never used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const jaldi = Jaldi({
+  weight: ["400", "700"],
+  subsets: ["devanagari", "latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
@@ -24,10 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <RefreshHandler></RefreshHandler>
+      <body className="font-jaldi flex min-h-dvh flex-col antialiased">
+        <Navbar></Navbar>
+        <main className="flex grow flex-col bg-gray-50">{children}</main>
+        <Footer></Footer>
       </body>
     </html>
   );
