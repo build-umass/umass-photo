@@ -10,17 +10,41 @@ export default function UserDataInterface() {
   const [bio, setBio] = useState("");
   const [deleteMenuOpen, setDeleteMenuOpen] = useState(false);
 
+  async function loadProfile() {
+    setProfileData(undefined);
+    const response = await fetch("/api/get-user-self");
+    if (!response.ok) {
+      console.error("Failed to fetch user profile data");
+      return;
+    }
+    const responseBody = await response.json();
+    setProfileData(responseBody);
+    setBio(responseBody.bio ?? "");
+  }
+
+  async function saveProfile() {
+    if (!profileData) throw new Error("No profile data to save");
+
+    const response = await fetch("/api/update-account-self", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: profileData.id,
+        bio: bio,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to save profile data");
+    }
+
+    await loadProfile();
+  }
+
   useEffect(() => {
-    (async () => {
-      const response = await fetch("/api/get-user-self");
-      if (!response.ok) {
-        console.error("Failed to fetch user profile data");
-        return;
-      }
-      const responseBody = await response.json();
-      setProfileData(responseBody);
-      setBio(responseBody.bio ?? "");
-    })();
+    loadProfile();
   }, []);
 
   if (profileData === undefined) {
@@ -44,7 +68,7 @@ export default function UserDataInterface() {
         </p>
         <UmassPhotoButton
           className="bg-umass-red mx-auto block text-white"
-          onClick={() => setDeleteMenuOpen(true)}
+          onClick={() => saveProfile()}
         >
           Save
         </UmassPhotoButton>
