@@ -1,48 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UMass Photography Club Website
 
-## Getting Started
+This repository contains the code for the UMass Photography Club Website.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Install [Node.js 24](https://nodejs.org/en/download), [Docker](https://www.docker.com/), and [Act](https://nektosact.com/installation/index.html).
+Verify that everything is correctly installed using the following commands:
+
+```sh
+node --version # v24.12.0
+docker --version # Docker version 28.5.1, build e180ab8
+docker compose --help # Usage:  docker compose [OPTIONS] COMMAND ...
+act --version # act version 0.2.83
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Note that I listed the versions that I installed.
+As long as all of your installed versions are compatible with these, you should be good to go.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+First, install dependencies with the following command:
 
-## Learn More
+```sh
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Then, start a local Supabase instance with the following command:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run start:supabase
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Then, populate `.env` with the following command:
 
-## Deploy on Vercel
+```sh
+npx supabase status --output env > .env
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Running
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Development
 
-## Reset database to clean slate
+To run the development build of the website, make sure that Supabase is running.
+Then, run the following command:
 
-This will explain how to reset the database to a "clean state" using the supabase console.
+```sh
+npm run dev
+```
 
-- First, go to the project dashboard.
-- Next, go to the storage tab on the left, and create a bucket called `photos`.
-- Next, upload all of the files in `/sql/photos` into the bucket.
-- Next, go to the SQL console and run the following files in order:
-  - `\sql\teardown.sql`
-  - `\sql\setup.sql`
-  - `\sql\insert_data.sql`
+This version of the website will automatically reload when you make changes to the code.
+Email confirmations will be mocked with Mailpit, whose URL is available at `MAILPIT_URL` in `.env`.
+
+### Production
+
+To run the production build of the website, make sure that Supabase is running.
+Then, run the following commands:
+
+```sh
+npm run build
+npm start
+```
+
+## Testing
+
+See [test/README.md](test/README.md) for more information about testing.
+
+## Contents
+
+- `.github` contains the workflows for CI/CD testing.
+- `public` contains static files that are hosted by the website.
+- `src` contains the application code for the project, formatted according to https://nextjs.org/docs/app/api-reference/file-conventions/src-folder.
+- `supabase` contains a [local development configuration](https://supabase.com/docs/guides/local-development/cli/config) and a [declarative database schema](https://supabase.com/docs/guides/local-development/declarative-database-schemas) for Supabase.
+- `test` contains unit tests.
