@@ -1,25 +1,27 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
-const requestAccount = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const username = (
-    e.currentTarget.elements.namedItem("username") as HTMLInputElement
-  ).value;
-  const bio = (e.currentTarget.elements.namedItem("bio") as HTMLInputElement)
-    .value;
-  const response = await fetch("/api/create-account", {
-    method: "POST",
-    headers: {
-      username,
-      bio,
-    },
-  });
-  if (response.ok) window.location.assign("/");
-};
+const CreateAccountPage = () => {
+  const router = useRouter();
 
-const CreateAccount = () => {
+  async function requestAccount(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const username = (
+      e.currentTarget.elements.namedItem("username") as HTMLInputElement
+    ).value;
+    const bio = (e.currentTarget.elements.namedItem("bio") as HTMLInputElement)
+      .value;
+    const response = await fetch("/api/create-account-self", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        bio,
+      }),
+    });
+    if (response.ok) router.push("/");
+  }
   return (
     <div
       style={{
@@ -31,8 +33,6 @@ const CreateAccount = () => {
     >
       <h1>Enter Username</h1>
       <form
-        action="/api/create-account"
-        method="get"
         onSubmit={requestAccount}
         style={{
           display: "flex",
@@ -64,4 +64,4 @@ const CreateAccount = () => {
   );
 };
 
-export default CreateAccount;
+export default CreateAccountPage;

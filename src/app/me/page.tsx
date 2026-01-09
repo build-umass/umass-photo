@@ -48,7 +48,12 @@ export default function MePage() {
           Delete Account
         </UmassPhotoButton>
       </section>
-      {deleteMenuOpen && profileData && <DeletionModal closeCallback={() => setDeleteMenuOpen(false)} user={profileData} />}
+      {deleteMenuOpen && profileData && (
+        <DeletionModal
+          closeCallback={() => setDeleteMenuOpen(false)}
+          user={profileData}
+        />
+      )}
     </>
   );
 }
