@@ -1,15 +1,20 @@
+"use client";
+import { useRouter } from "next/navigation";
+import UmassPhotoButton from "../components/UmassPhotoButton";
+
 export default function LogoutButton() {
+  const router = useRouter();
   async function logout() {
     await fetch("/api/logout", { method: "POST" });
     localStorage.removeItem("loginExpiryTime");
-    window.location.href = "/";
+    router.push("/");
   }
   return (
-    <button
-      className="cursor-camera flex h-full items-center justify-center px-6 text-lg font-bold transition-colors duration-200 hover:bg-white/20"
+    <UmassPhotoButton
+      className="mx-auto block bg-none text-white"
       onClick={logout}
     >
       Logout
-    </button>
+    </UmassPhotoButton>
   );
 }

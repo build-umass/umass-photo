@@ -1,61 +1,29 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Tables } from "../utils/supabase/database.types";
-import DeletionModal from "./DeletionModal";
-import UmassPhotoButton from "../components/UmassPhotoButton";
-import LogoutButton from "./LogoutButton";
+import Image from "next/image";
+import UserDataInterface from "./UserDataInterface";
 
+const BACKGROUND_SRC =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Old_Chapel_6.JPG/2048px-Old_Chapel_6.JPG?20131108195343";
 export default function MePage() {
-  const [profileData, setProfileData] = useState<Tables<"photoclubuser">>();
-  const [deleteMenuOpen, setDeleteMenuOpen] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("/api/get-user-self");
-      if (!response.ok) {
-        console.error("Failed to fetch user profile data");
-        return;
-      }
-      const responseBody = await response.json();
-      setProfileData(responseBody);
-    })();
-  }, []);
-
-  if (profileData === undefined) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
-      <section>
-        <h1>My Profile</h1>
-        <p>
-          <strong>ID:</strong> {profileData.id}
-        </p>
-        <p>
-          <strong>Username:</strong> {profileData.username}
-        </p>
-        <p>
-          <strong>Email:</strong> {profileData.email}
-        </p>
-        <p>
-          <strong>Role:</strong> {profileData.role}
-        </p>
-        {profileData.bio && <p>{profileData.bio}</p>}
-        <LogoutButton></LogoutButton>
-        <UmassPhotoButton
-          className="bg-umass-red text-white"
-          onClick={() => setDeleteMenuOpen(true)}
+      <section className="relative flex grow items-center justify-center">
+        <Image
+          fill
+          src={BACKGROUND_SRC}
+          alt="Old Chapel at UMass Amherst"
+          className="object-cover"
+        ></Image>
+        <div className="aria-hidden absolute inset-0 bg-black/25"></div>
+        <UserDataInterface></UserDataInterface>
+        <a
+          className="absolute right-0 bottom-0 text-xs text-white"
+          href="https://commons.wikimedia.org/wiki/File:Old_Chapel_6.JPG"
         >
-          Delete Account
-        </UmassPhotoButton>
+          Background image by Jon Platek, CC BY-SA 3.0
+          &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia
+          Commons
+        </a>
       </section>
-      {deleteMenuOpen && profileData && (
-        <DeletionModal
-          closeCallback={() => setDeleteMenuOpen(false)}
-          user={profileData}
-        />
-      )}
     </>
   );
 }
