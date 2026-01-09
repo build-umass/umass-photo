@@ -2,6 +2,7 @@ import { useState } from "react";
 import ModalCommon from "../components/ChipLayout";
 import UmassPhotoButton from "../components/UmassPhotoButton";
 import { Tables } from "../utils/supabase/database.types";
+import { useRouter } from "next/navigation";
 
 export default function DeletionModal({
   closeCallback,
@@ -11,6 +12,24 @@ export default function DeletionModal({
   user: Tables<"photoclubuser">;
 }) {
   const [confirmationInputValue, setConfirmationInputValue] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+
+  async function handleDelete() {
+    setIsDeleting(true);
+
+    const response = await fetch("/api/delete-account", {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      console.error("Error deleting account:", data.error);
+    }
+
+    router.push("/");
+  }
+
   return (
     <ModalCommon>
       <div className="flex h-full flex-col items-center justify-center">
@@ -27,23 +46,22 @@ export default function DeletionModal({
           value={confirmationInputValue}
           onChange={(e) => setConfirmationInputValue(e.target.value)}
           className="mb-6 w-1/2 rounded border border-gray-300 px-4 py-2 text-center text-2xl"
+          disabled={isDeleting}
         />
         <div className="flex gap-4">
           <UmassPhotoButton
             className="bg-gray-400 text-white"
             onClick={closeCallback}
+            disabled={isDeleting}
           >
             Cancel
           </UmassPhotoButton>
           <UmassPhotoButton
-            className={`${confirmationInputValue === user.username ? "bg-umass-red" : "bg-gray-400 cursor-not-allowed"} text-white`}
-            disabled={confirmationInputValue !== user.username}
-            onClick={async () => {
-                console.log("Delete account clicked");
-              // Add account deletion logic here
-            }}
+            className={`${confirmationInputValue === user.username && !isDeleting ? "bg-umass-red" : "cursor-not-allowed bg-gray-400"} text-white`}
+            disabled={confirmationInputValue !== user.username || isDeleting}
+            onClick={handleDelete}
           >
-            Delete Account
+            {isDeleting ? "Deleting..." : "Delete Account"}
           </UmassPhotoButton>
         </div>
       </div>
