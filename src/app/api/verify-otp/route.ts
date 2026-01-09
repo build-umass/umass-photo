@@ -34,14 +34,17 @@ export async function POST(request: Request) {
 
   let userExists = false;
   if (user) {
-    const {data: photoclubuser, error: photoclubuserError} = await client
+    const { data: photoclubuser, error: photoclubuserError } = await client
       .from("photoclubuser")
       .select("*")
-      .eq("id", user.id)
+      .eq("id", user.id);
 
     if (photoclubuserError) {
       return new Response(
-        JSON.stringify({ message: "Database error", error: photoclubuserError }),
+        JSON.stringify({
+          message: "Database error",
+          error: photoclubuserError,
+        }),
         {
           status: 500,
         },

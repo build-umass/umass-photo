@@ -18,9 +18,12 @@ export async function DELETE(request: NextRequest) {
   }
 
   if (authError) {
-    return new Response(JSON.stringify({ message: "Authentication error", error: authError }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ message: "Authentication error", error: authError }),
+      {
+        status: 500,
+      },
+    );
   }
 
   const { error: deleteError } = await adminClient.auth.admin.deleteUser(
@@ -29,9 +32,15 @@ export async function DELETE(request: NextRequest) {
 
   if (deleteError) {
     console.error("Error deleting user:", deleteError);
-    return new Response(JSON.stringify({ message: "Failed to delete account", error: deleteError }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({
+        message: "Failed to delete account",
+        error: deleteError,
+      }),
+      {
+        status: 500,
+      },
+    );
   }
 
   // Clear the authentication cookies
