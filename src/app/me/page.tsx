@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Tables } from "../utils/supabase/database.types";
 import DeletionModal from "./DeletionModal";
 import UmassPhotoButton from "../components/UmassPhotoButton";
+import LogoutButton from "./LogoutButton";
 
 export default function MePage() {
   const [profileData, setProfileData] = useState<Tables<"photoclubuser">>();
@@ -41,6 +42,7 @@ export default function MePage() {
           <strong>Role:</strong> {profileData.role}
         </p>
         {profileData.bio && <p>{profileData.bio}</p>}
+        <LogoutButton></LogoutButton>
         <UmassPhotoButton
           className="bg-umass-red text-white"
           onClick={() => setDeleteMenuOpen(true)}
