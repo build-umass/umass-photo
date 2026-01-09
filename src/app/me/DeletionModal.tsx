@@ -18,7 +18,7 @@ export default function DeletionModal({
   async function handleDelete() {
     setIsDeleting(true);
 
-    const response = await fetch("/api/delete-account", {
+    const response = await fetch("/api/delete-account-self", {
       method: "DELETE",
     });
 
