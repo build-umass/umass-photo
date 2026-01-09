@@ -28,7 +28,7 @@ export default function UserDataInterface() {
   }
   return (
     <>
-      <div className="relative z-10 bg-black/50 p-10 text-white">
+      <div className="relative z-10 min-w-1/2 bg-black/50 p-10 text-white">
         <h1 className="text-center text-2xl">Edit Account</h1>
         <p className="text-center text-xl">{profileData.username}</p>
         <textarea
@@ -50,7 +50,7 @@ export default function UserDataInterface() {
         </UmassPhotoButton>
         <LogoutButton></LogoutButton>
         <UmassPhotoButton
-          className="bg-umass-red text-white"
+          className="bg-umass-red mx-auto block text-white"
           onClick={() => setDeleteMenuOpen(true)}
         >
           Delete Account
