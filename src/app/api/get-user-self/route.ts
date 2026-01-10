@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
 
   const profilePictureURL = userProfile.profilepicture
     ? client.storage.from("photos").getPublicUrl(userProfile.profilepicture)
+        .data.publicUrl
     : DEFAULT_PROFILE_URL;
   return new Response(JSON.stringify({ ...userProfile, profilePictureURL }));
 }

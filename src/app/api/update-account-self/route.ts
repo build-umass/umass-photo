@@ -1,6 +1,11 @@
 import { NextRequest } from "next/server";
 import { getAdminClient, getUserClient } from "@/app/utils/supabase/client";
 import { TablesUpdate } from "@/app/utils/supabase/database.types";
+import { randomBytes } from "crypto";
+
+type PhotoClubUserUpdateWithProfilePicture = TablesUpdate<"photoclubuser"> & {
+  profilePicture?: string;
+};
 
 export async function PUT(request: NextRequest) {
   const client = getUserClient(request);
@@ -32,7 +37,8 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  const requestBody: TablesUpdate<"photoclubuser"> = await request.json();
+  const requestBody: PhotoClubUserUpdateWithProfilePicture =
+    await request.json();
   if (!requestBody.id || requestBody.id !== user.id) {
     return new Response(
       JSON.stringify({ message: "Cannot update another user's data" }),
@@ -56,6 +62,43 @@ export async function PUT(request: NextRequest) {
         status: 403,
       },
     );
+  if (requestBody.profilePicture) {
+    const imageType = requestBody.profilePicture.match(
+      /^data:image\/([a-zA-Z]+);base64,/,
+    );
+    if (!imageType) {
+      return new Response(
+        JSON.stringify({ message: "Invalid profile picture format" }),
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // convert data URL to File object
+    const file = await fetch(requestBody.profilePicture).then((res) =>
+      res.blob(),
+    );
+
+    const fileName = `${randomBytes(20).toString("base64url")}.${imageType[1]}`;
+    const adminClient = getAdminClient();
+    const { error: uploadError } = await adminClient.storage
+      .from("photos")
+      .upload(fileName, file);
+    if (uploadError) {
+      return new Response(
+        JSON.stringify({
+          message: "Failed to upload profile picture",
+          error: uploadError,
+        }),
+        {
+          status: 500,
+        },
+      );
+    }
+    delete requestBody.profilePicture;
+    requestBody.profilepicture = fileName;
+  }
 
   const adminClient = getAdminClient();
 
