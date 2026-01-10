@@ -4,9 +4,13 @@ import UmassPhotoButton from "../components/UmassPhotoButton";
 import DeletionModal from "./DeletionModal";
 import LogoutButton from "./LogoutButton";
 import { Tables } from "../utils/supabase/database.types";
+import Image from "next/image";
 
+type PhotoClubUserWithURL = Tables<"photoclubuser"> & {
+  profilePictureURL: string;
+};
 export default function UserDataInterface() {
-  const [profileData, setProfileData] = useState<Tables<"photoclubuser">>();
+  const [profileData, setProfileData] = useState<PhotoClubUserWithURL>();
   const [bio, setBio] = useState("");
   const [deleteMenuOpen, setDeleteMenuOpen] = useState(false);
 
@@ -50,10 +54,18 @@ export default function UserDataInterface() {
   if (profileData === undefined) {
     return <div>Loading...</div>;
   }
+
   return (
     <>
       <div className="relative z-10 min-w-1/2 bg-black/50 p-10 text-white">
         <h1 className="text-center text-2xl">Edit Account</h1>
+        <Image
+          src={profileData.profilePictureURL}
+          alt="Profile Picture"
+          width={100}
+          height={100}
+          className="mx-auto rounded-full"
+        />
         <p className="text-center text-xl">{profileData.username}</p>
         <textarea
           className="min-w-full text-white"

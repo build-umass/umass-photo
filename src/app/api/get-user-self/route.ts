@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { getUserClient } from "@/app/utils/supabase/client";
 
+const DEFAULT_PROFILE_URL = "/blank_profile.png";
 export async function GET(request: NextRequest) {
   const client = getUserClient(request);
 
@@ -29,5 +30,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  return new Response(JSON.stringify(userProfile));
+  const profilePictureURL = userProfile.profilepicture
+    ? client.storage.from("photos").getPublicUrl(userProfile.profilepicture)
+    : DEFAULT_PROFILE_URL;
+  return new Response(JSON.stringify({ ...userProfile, profilePictureURL }));
 }
