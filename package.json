@@ -2,19 +2,25 @@
   "name": "umass-photo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:clean": "npm run stop:supabase && npm run start:supabase && next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "genmigration:supabase": "supabase db diff -f auto",
+    "gentypes:supabase": "supabase gen types typescript --local > src/app/utils/supabase/database.types.ts",
     "start:supabase": "supabase start",
     "stop:supabase": "supabase stop --project-id=UMassPhoto --no-backup ; supabase stop --all",
+    "restart:supabase": "npm run stop:supabase && npm run genmigration:supabase && npm run start:supabase && npm run gentypes:supabase",
     "lint": "eslint . && prettier --check ./**/*.ts ./**/*.tsx",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
-    "test:clean": "npm run stop:supabase && npm run start:supabase && npm run test",
-    "test:ci": "npm run stop:supabase && act --use-gitignore=false --env-file none"
+    "test:clean": "npm run restart:supabase && npm run test",
+    "test:ci": "npm run build && npm run stop:supabase && npm run restart:supabase && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
