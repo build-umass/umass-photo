@@ -18,7 +18,13 @@ const apiUrlPattern: RemotePattern = {
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [apiUrlPattern],
+    remotePatterns: [
+      apiUrlPattern,
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
+    ],
   },
 };
 

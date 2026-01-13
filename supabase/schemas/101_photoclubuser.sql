@@ -3,7 +3,8 @@ CREATE TABLE photoclubuser (
     username VARCHAR(64) NOT NULL,
     email VARCHAR(128) NOT NULL,
     bio TEXT,
-    role VARCHAR(16) REFERENCES photoclubrole(roleid) NOT NULL
+    role VARCHAR(16) REFERENCES photoclubrole(roleid) NOT NULL,
+    profilepicture varchar(128)
 );
 ALTER TABLE public.photoclubuser enable ROW LEVEL SECURITY;
 CREATE FUNCTION private.has_good_role() RETURNS BOOLEAN SECURITY DEFINER AS $$

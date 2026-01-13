@@ -17,28 +17,61 @@ export async function POST(request: Request) {
 
   const client = getAdminClient();
   const type = getSupabaseOtpType(mode);
-  const { data } = await client.auth.verifyOtp({ email, token, type });
+  const {
+    data: { user, session },
+    error,
+  } = await client.auth.verifyOtp({ email, token, type });
 
-  if (!data.session)
+  if (error)
+    return new Response(JSON.stringify(error), {
+      status: 500,
+    });
+
+  if (!session)
     return new Response("No Session", {
       status: 400,
     });
 
+  let userExists = false;
+  if (user) {
+    const { data: photoclubuser, error: photoclubuserError } = await client
+      .from("photoclubuser")
+      .select("*")
+      .eq("id", user.id);
+
+    if (photoclubuserError) {
+      return new Response(
+        JSON.stringify({
+          message: "Database error",
+          error: photoclubuserError,
+        }),
+        {
+          status: 500,
+        },
+      );
+    }
+
+    if (photoclubuser && photoclubuser.length > 0) {
+      userExists = true;
+    }
+  }
+
   return new Response(
     JSON.stringify({
-      session: data.session,
-      expires_at: data.session.expires_at,
+      session: session,
+      expires_at: session.expires_at,
+      userExists,
     }),
     {
       status: 200,
       headers: [
         [
           "Set-Cookie",
-          `access-token=${data.session.access_token}; SameSite=strict; HttpOnly; Secure; Path=/api`,
+          `access-token=${session.access_token}; SameSite=strict; HttpOnly; Secure; Path=/api`,
         ],
         [
           "Set-Cookie",
-          `refresh-token=${data.session.refresh_token}; SameSite=strict; HttpOnly; Secure; Path=/api/refresh`,
+          `refresh-token=${session.refresh_token}; SameSite=strict; HttpOnly; Secure; Path=/api/refresh`,
         ],
       ],
     },
