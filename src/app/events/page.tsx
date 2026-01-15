@@ -53,7 +53,7 @@ export default function EventsPage() {
           <p className="mb-4 text-lg text-gray-600">{formatDate(endDate)}</p>
           <p className="mb-6 text-gray-700">{event.description}</p>
           <button
-            className="cursor-camera w-fit rounded-md bg-umass-red px-6 py-2 text-white transition hover:bg-[#6A0D20]"
+            className="cursor-camera bg-umass-red w-fit rounded-md px-6 py-2 text-white transition hover:bg-[#6A0D20]"
             onClick={() => setCurrentFocusedEvent(event)}
           >
             Learn More
@@ -86,7 +86,7 @@ export default function EventsPage() {
       <section className="bg-umass-red py-12 text-white">
         <div className="container mx-auto text-center">
           <h2 className="mb-6 text-3xl font-bold">Have an event idea?</h2>
-          <button className="rounded-lg bg-white px-8 py-3 text-lg font-bold text-umass-red transition hover:bg-gray-100">
+          <button className="text-umass-red rounded-lg bg-white px-8 py-3 text-lg font-bold transition hover:bg-gray-100">
             Suggest an Event
           </button>
         </div>

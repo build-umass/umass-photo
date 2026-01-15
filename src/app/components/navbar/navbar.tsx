@@ -14,7 +14,7 @@ const teachers = Teachers({
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 right-0 left-0 z-50 bg-umass-red text-white">
+    <nav className="bg-umass-red sticky top-0 right-0 left-0 z-50 text-white">
       <div className="container mx-auto flex h-16 items-stretch">
         {/* Logo without hover */}
         <div className="flex h-full items-center px-6">
