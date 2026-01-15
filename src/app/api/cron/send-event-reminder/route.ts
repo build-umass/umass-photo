@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminClient } from "@/app/utils/supabase/client";
-import Mailgun from "mailgun.js";
-import FormData from "form-data";
+import { sendMail } from "@/app/utils/sendMail";
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
@@ -42,16 +41,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: "No users found." });
   }
 
-  const mailgun = new Mailgun(FormData);
-  const mg = mailgun.client({
-    username: "api",
-    key: process.env.MAILGUN_API_KEY || "",
-    url: "https://api.mailgun.net",
-  });
-
-  const domain = process.env.MAILGUN_DOMAIN || "";
-  const sender = `UMass Photo Club <noreply@${domain}>`;
-  const results = [];
   const emails = users.map((u) => u.email).filter((email) => email); // Ensure no null/empty emails
 
   if (emails.length === 0) {
@@ -62,21 +51,14 @@ export async function GET(request: NextRequest) {
     const subject = `Upcoming Event: ${event.name}`;
     const text = `Hi there,\n\nWe have an upcoming event: ${event.name}!\n\n${event.description}\n\nDate: ${new Date(event.startdate).toLocaleString()}\n\nSee you there!`;
 
-    try {
-      // Sending with BCC to hide recipients from each other
-      const msg = await mg.messages.create(domain, {
-        from: sender,
-        to: sender,
-        bcc: emails,
-        subject: subject,
-        text: text,
-      });
-      results.push({ event: event.name, status: "sent", id: msg.id });
-    } catch (e) {
-      console.error(e);
-      results.push({ event: event.name, status: "error", error: e });
+    for (const recipient of emails) {
+      try {
+        await sendMail({ recipientEmail: recipient, subject, text });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
-  return NextResponse.json({ results });
+  return NextResponse.json({});
 }
