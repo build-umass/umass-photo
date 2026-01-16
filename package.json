@@ -20,7 +20,7 @@
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
     "test:clean": "npm run restart:supabase && npm run test",
-    "test:ci": "npm run build && npm run stop:supabase && npm run restart:supabase && act --use-gitignore=false --env-file none"
+    "test:ci": "npm run stop:supabase && act --use-gitignore=false --env-file none"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",

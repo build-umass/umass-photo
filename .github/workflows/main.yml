@@ -21,11 +21,10 @@ jobs:
         run: npm ci
       - name: Lint Codebase
         run: npm run lint
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - run: supabase start
-      - run: supabase status --output=env > .env
+      - run: npx supabase start
+      - run: npx supabase status --output=env > .env
+      - run: echo "MODE=testing" >> .env
+      - run: echo "CRON_SECRET=insecure_secret" >> .env
       - run: npm run build
       - run: npx playwright install --with-deps
       - run: npx playwright install chrome
