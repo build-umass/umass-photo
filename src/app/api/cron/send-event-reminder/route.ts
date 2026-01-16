@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAdminClient } from "@/app/utils/supabase/client";
 import { sendMail } from "@/app/utils/sendMail";
 
+const CRON_SECRET = process.env.CRON_SECRET;
+if (!CRON_SECRET) {
+  throw new Error("CRON_SECRET is not defined in environment variables");
+}
+
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${CRON_SECRET}`) {
     return new Response("Unauthorized", {
       status: 401,
     });

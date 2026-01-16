@@ -1,24 +1,17 @@
 import Mailgun from "mailgun.js";
 import FormData from "form-data";
 
+// TODO: pull this from a centralized config.ts (or something like that) that which provides type info.
+const MODE = process.env.MODE;
+if (MODE === undefined) throw new Error("MODE is not defined");
+
 const MAIL_SENDER = "UMass Photography Club";
 const MAIL_LOCAL = "no-reply";
 const MAIL_DOMAIN = "sandboxfe1ea50011674e95886b9c3ceb577dad.mailgun.org";
 
 const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
-if (MAILGUN_API_KEY === undefined)
-  throw new Error("MAILGUN_API_KEY is not defined");
-
-const MODE = process.env.MODE;
-if (MODE === undefined) throw new Error("MODE is not defined");
 
 const MAILPIT_URL = process.env.MAILPIT_URL;
-
-const mailgun = new Mailgun(FormData);
-const mailgunClient = mailgun.client({
-  username: "api",
-  key: MAILGUN_API_KEY,
-});
 
 /**
  * Send a non-Supabase email to a particular email address.
@@ -60,6 +53,14 @@ export async function sendMail({
     const resultData = await result.json();
     return resultData;
   } else {
+    // This branch is not covered by integration testing, since actually calling out to mailgun takes from our limit.
+    if (MAILGUN_API_KEY === undefined)
+      throw new Error("MAILGUN_API_KEY is not defined");
+    const mailgun = new Mailgun(FormData);
+    const mailgunClient = mailgun.client({
+      username: "api",
+      key: MAILGUN_API_KEY,
+    });
     const result = await mailgunClient.messages.create(MAIL_DOMAIN, {
       from: `${MAIL_SENDER} <${MAIL_LOCAL}@${MAIL_DOMAIN}>`,
       to: [recipientEmail],
