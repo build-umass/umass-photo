@@ -43,7 +43,13 @@ export async function insertTestData(
     ],
   );
   if (createUsersError) {
-    return { data: null, error: createUsersError };
+    return {
+      data: null,
+      error: {
+        message: "Failed to create test users",
+        error: createUsersError,
+      },
+    };
   }
 
   await Promise.all(
@@ -131,7 +137,10 @@ export async function insertTestData(
     },
   ]);
   if (photosError) {
-    return { data: null, error: photosError };
+    return {
+      data: null,
+      error: { message: "Failed to insert photos", error: photosError },
+    };
   }
 
   const { error: tagsError } = await client
@@ -144,7 +153,10 @@ export async function insertTestData(
       { name: "Summer Contest" },
     ]);
   if (tagsError) {
-    return { data: null, error: tagsError };
+    return {
+      data: null,
+      error: { message: "Failed to insert tags", error: tagsError },
+    };
   }
 
   const { error: phototagsError } = await client.from("phototag").insert([
@@ -161,7 +173,10 @@ export async function insertTestData(
     { photoid: 9, tag: "sky" },
   ]);
   if (phototagsError) {
-    return { data: null, error: phototagsError };
+    return {
+      data: null,
+      error: { message: "Failed to insert phototags", error: phototagsError },
+    };
   }
 
   const { error: eventsError } = await client.from("event").insert([
@@ -212,7 +227,10 @@ export async function insertTestData(
     },
   ]);
   if (eventsError) {
-    return { data: null, error: eventsError };
+    return {
+      data: null,
+      error: { message: "Failed to insert events", error: eventsError },
+    };
   }
 
   return {
@@ -246,7 +264,10 @@ async function insertTestUsers(
     const { data: existingUsers, error: listError } =
       await client.auth.admin.listUsers();
     if (listError) {
-      return { data: null, error: listError };
+      return {
+        data: null,
+        error: { message: "Failed to list users", error: listError },
+      };
     } else {
       const existing = existingUsers?.users?.find(
         (u) => u.email === user.email,
@@ -256,7 +277,13 @@ async function insertTestUsers(
           existing.id,
         );
         if (deleteError) {
-          return { data: null, error: deleteError };
+          return {
+            data: null,
+            error: {
+              message: "Failed to delete existing user",
+              error: deleteError,
+            },
+          };
         }
       }
     }
@@ -270,7 +297,7 @@ async function insertTestUsers(
     });
 
     if (error) {
-      return { data: null, error };
+      return { data: null, error: { message: "Failed to create user", error } };
     }
 
     // Update the user ID with the actual created ID
@@ -296,7 +323,13 @@ async function insertTestUsers(
       .select()
       .single();
     if (userError) {
-      return { data: null, error: userError };
+      return {
+        data: null,
+        error: {
+          message: "Failed to insert user into photoclubuser table",
+          error: userError,
+        },
+      };
     }
     if (data) {
       createdUsers.push(data);

@@ -12,12 +12,6 @@ export default defineConfig({
         },
       },
       {
-        test: {
-          name: "api-tests",
-          include: ["test/api/**/*.test.ts"],
-        },
-      },
-      {
         plugins: [react()],
         test: {
           name: "component-tests",

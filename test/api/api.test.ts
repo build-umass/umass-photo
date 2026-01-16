@@ -1,11 +1,6 @@
-import { afterAll, beforeAll, describe, it } from "vitest";
+import { test, expect } from "@playwright/test";
 
-describe("API Tests", () => {
-  beforeAll(async () => {});
-
-  afterAll(async () => {});
-
-  it("placeholder test", () => {
-    // Placeholder test since actual DB tests are in sql.test.ts
-  });
+test("API Tests", async ({ request }) => {
+  const response = await request.get("/api/health");
+  expect(response.ok());
 });

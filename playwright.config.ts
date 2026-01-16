@@ -61,6 +61,10 @@ export default defineConfig({
       name: "Google Chrome",
       use: { ...devices["Desktop Chrome"], channel: "chrome" },
     },
+    {
+      name: "API Testing",
+      testDir: "./test/api",
+    },
   ],
 
   webServer: {
