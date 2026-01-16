@@ -110,10 +110,10 @@ test.describe("Cron Event Reminder API", () => {
     }
     // #endregion
 
-    // #region Create an Event starting in 2 hours
+    // #region Create an event starting 2 days ago and ending in an hour
     const now = new Date();
-    const startTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-    const endTime = new Date(startTime.getTime() + 2 * 60 * 60 * 1000);
+    const startTime = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+    const endTime = new Date(now.getTime() + 1 * 60 * 60 * 1000);
 
     const { error: tagError } = await supabase
       .from("tag")

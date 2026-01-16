@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
   const { data: events, error: eventError } = await supabase
     .from("event")
     .select("*")
-    .gte("startdate", now.toISOString())
-    .lt("startdate", tomorrow.toISOString());
+    .gte("enddate", now.toISOString())
+    .lt("enddate", tomorrow.toISOString());
 
   if (eventError) {
     return NextResponse.json({ error: eventError.message }, { status: 500 });
@@ -54,7 +54,15 @@ export async function GET(request: NextRequest) {
 
   for (const event of events) {
     const subject = `Upcoming Event: ${event.name}`;
-    const text = `Hi there,\n\nWe have an upcoming event: ${event.name}!\n\n${event.description}\n\nDate: ${new Date(event.startdate).toLocaleString()}\n\nSee you there!`;
+    const text = `Hi there,
+
+We have an upcoming event that is about to finish: ${event.name}!
+
+${event.description}
+
+Date: ${new Date(event.startdate).toLocaleString()}
+
+See you there!`;
 
     for (const recipient of emails) {
       try {
