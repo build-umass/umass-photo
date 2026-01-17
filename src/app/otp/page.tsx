@@ -53,7 +53,7 @@ const OtpPage = ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
 
   return (
     <>
-      <section className="bg-[#8E122A] py-16 text-white">
+      <section className="bg-umass-red py-16 text-white">
         <div className="container mx-auto text-center">
           <h1 className="mb-4 text-4xl font-bold">{title}</h1>
           <p className="mx-auto max-w-2xl text-xl">{description}</p>
