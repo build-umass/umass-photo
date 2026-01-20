@@ -16,14 +16,7 @@ import FilterMenu from "../components/filter-menu/filterMenu";
 import "./photoGallery.css";
 import UploadChip from "./UploadChip";
 import Image from "next/image";
-
-interface PhotoItem {
-  id: number;
-  title: string;
-  author: string;
-  date: string;
-  imageUrl?: string;
-}
+import PhotoModal, { PhotoItem } from "./PhotoModal";
 
 const PhotoGallery = () => {
   const searchParams = useSearchParams();
@@ -37,7 +30,6 @@ const PhotoGallery = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(
     null,
   );
-  const [modalImageError, setModalImageError] = useState(false);
 
   const fetchPhotos = async (filters?: {
     filtering_tags: boolean;
@@ -150,30 +142,22 @@ const PhotoGallery = () => {
 
   const openModal = (index: number) => {
     setSelectedPhotoIndex(index);
-    setModalImageError(false);
   };
 
   const closeModal = () => {
     setSelectedPhotoIndex(null);
-    setModalImageError(false);
   };
 
   const goToPreviousPhoto = () => {
     if (selectedPhotoIndex !== null && selectedPhotoIndex > 0) {
       setSelectedPhotoIndex(selectedPhotoIndex - 1);
-      setModalImageError(false);
     }
   };
 
   const goToNextPhoto = () => {
     if (selectedPhotoIndex !== null && selectedPhotoIndex < photos.length - 1) {
       setSelectedPhotoIndex(selectedPhotoIndex + 1);
-      setModalImageError(false);
     }
-  };
-
-  const handleModalImageError = () => {
-    setModalImageError(true);
   };
 
   const onLastPhoto = selectedPhotoIndex === photos.length - 1;
@@ -228,82 +212,14 @@ const PhotoGallery = () => {
 
       {/* Photo Modal */}
       {selectedPhotoIndex !== null && (
-        <div id="photo-modal" onClick={closeModal}>
-          <div id="modal-content" onClick={(e) => e.stopPropagation()}>
-            {/* Navigation Arrows */}
-            <button
-              id="prev-arrow"
-              onClick={goToPreviousPhoto}
-              disabled={onFirstPhoto}
-              className={
-                onFirstPhoto
-                  ? "cursor-not-allowed opacity-30"
-                  : "cursor-camera opacity-100"
-              }
-            >
-              <Image
-                src={BackArrow.src}
-                alt="Previous photo"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            <button
-              id="next-arrow"
-              onClick={goToNextPhoto}
-              disabled={onLastPhoto}
-              className={
-                onLastPhoto
-                  ? "cursor-not-allowed opacity-30"
-                  : "cursor-camera opacity-100"
-              }
-            >
-              <Image
-                src={ForwardArrow.src}
-                alt="Next photo"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            {/* Close Button */}
-            <button id="modal-close" onClick={closeModal}>
-              <Image
-                src={CloseIcon.src}
-                alt="Close modal"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            {/* Photo */}
-            <Image
-              src={
-                modalImageError ||
-                imageErrors.has(photos[selectedPhotoIndex].id) ||
-                !photos[selectedPhotoIndex].imageUrl
-                  ? stockPhoto.src
-                  : photos[selectedPhotoIndex].imageUrl
-              }
-              alt={photos[selectedPhotoIndex].title || "Photo"}
-              id="modal-photo"
-              onError={handleModalImageError}
-              width={0}
-              height={0}
-              unoptimized
-            />
-
-            {/* Photo Details */}
-            <div id="modal-details">
-              <h2>{photos[selectedPhotoIndex].title}</h2>
-              <p>{photos[selectedPhotoIndex].author}</p>
-            </div>
-          </div>
-        </div>
+        <PhotoModal
+          closeModal={closeModal}
+          goToPreviousPhoto={goToPreviousPhoto}
+          goToNextPhoto={goToNextPhoto}
+          onFirstPhoto={onFirstPhoto}
+          onLastPhoto={onLastPhoto}
+          selectedPhoto={photos[selectedPhotoIndex]}
+        ></PhotoModal>
       )}
 
       {uploadingPhoto ? (
