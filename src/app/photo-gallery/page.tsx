@@ -3,9 +3,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import stockPhoto from "../../../public/stock-photo.jpg";
-import BackArrow from "../../../public/back_arrow.svg";
-import ForwardArrow from "../../../public/forward_arrow.svg";
-import CloseIcon from "../../../public/close.svg";
 import {
   parseBooleanParam,
   parseStringParam,
