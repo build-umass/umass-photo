@@ -147,17 +147,17 @@ export default function PhotoModal({
           <h2>{selectedPhoto.title}</h2>
           <p>{selectedPhoto.author}</p>
         </div>
-      </div>
 
-      {/* Photo Deletion Modal */}
-      {showDeleteModal && (
-        <PhotoDeletionModal
-          closeCallback={handleCancelDelete}
-          photoTitle={selectedPhoto.title}
-          onConfirmDelete={handleConfirmDelete}
-          isDeleting={isDeleting}
-        />
-      )}
+        {/* Photo Deletion Modal */}
+        {showDeleteModal && (
+          <PhotoDeletionModal
+            closeCallback={handleCancelDelete}
+            photoTitle={selectedPhoto.title}
+            onConfirmDelete={handleConfirmDelete}
+            isDeleting={isDeleting}
+          />
+        )}
+      </div>
     </div>
   );
 }
