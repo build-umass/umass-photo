@@ -54,14 +54,21 @@ export default function PhotoModal({
 
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
-    // TODO: Implement actual delete API call here
-    // Example:
-    // await fetch(`/api/delete-photo/${selectedPhoto.id}`, { method: 'DELETE' });
-    console.log(`Deleting photo: ${selectedPhoto.id}`);
+    const response = await fetch(`/api/delete-photo`, {
+      method: "DELETE",
+      body: JSON.stringify({ photoId: selectedPhoto.id }),
+    });
     setIsDeleting(false);
-    setShowDeleteModal(false);
-    closeModal();
-    onPhotoDeleted();
+    if (response.ok) {
+      console.log(`Deleted photo: ${selectedPhoto.id}`);
+      setShowDeleteModal(false);
+      closeModal();
+      onPhotoDeleted();
+    } else {
+      console.error(
+        `Failed to delete photo: ${JSON.stringify(await response.json())}`,
+      );
+    }
   };
   return (
     <div id="photo-modal" onClick={closeModal}>

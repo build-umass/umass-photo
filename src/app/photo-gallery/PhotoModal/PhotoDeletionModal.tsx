@@ -14,7 +14,7 @@ export default function PhotoDeletionModal({
 }) {
   return (
     <ModalCommon>
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="z-20 flex h-full flex-col items-center justify-center">
         <h2 className="mb-6 text-4xl font-bold">
           Are you sure you want to delete this photo?
         </h2>
