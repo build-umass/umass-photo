@@ -27,6 +27,7 @@ const PhotoGallery = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(
     null,
   );
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
   const fetchPhotos = async (filters?: {
     filtering_tags: boolean;
@@ -121,6 +122,22 @@ const PhotoGallery = () => {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch("/api/get-user-self");
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUserId(data.id);
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
   const handleFilterSubmit = (filters: {
     filtering_tags: boolean;
     filtering_authors: boolean;
@@ -143,6 +160,10 @@ const PhotoGallery = () => {
 
   const closeModal = () => {
     setSelectedPhotoIndex(null);
+  };
+
+  const handlePhotoDeleted = () => {
+    fetchPhotos();
   };
 
   const goToPreviousPhoto = () => {
@@ -216,6 +237,8 @@ const PhotoGallery = () => {
           onFirstPhoto={onFirstPhoto}
           onLastPhoto={onLastPhoto}
           selectedPhoto={photos[selectedPhotoIndex]}
+          currentUserId={currentUserId}
+          onPhotoDeleted={handlePhotoDeleted}
         ></PhotoModal>
       )}
 

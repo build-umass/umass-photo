@@ -6,11 +6,13 @@ import CloseIcon from "../../../../public/close.svg";
 import Image from "next/image";
 import { useState } from "react";
 import "./photoModal.css";
+import PhotoDeletionModal from "./PhotoDeletionModal";
 
 export interface PhotoItem {
   id: number;
   title: string;
   author: string;
+  authorId: number;
   date: string;
   imageUrl?: string;
 }
@@ -22,6 +24,8 @@ export default function PhotoModal({
   onFirstPhoto,
   onLastPhoto,
   selectedPhoto,
+  currentUserId,
+  onPhotoDeleted,
 }: {
   closeModal: () => void;
   goToPreviousPhoto: () => void;
@@ -29,10 +33,35 @@ export default function PhotoModal({
   onFirstPhoto: boolean;
   onLastPhoto: boolean;
   selectedPhoto: PhotoItem;
+  currentUserId: number | null;
+  onPhotoDeleted: () => void;
 }) {
   const [modalImageError, setModalImageError] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleModalImageError = () => {
     setModalImageError(true);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    // TODO: Implement actual delete API call here
+    // Example:
+    // await fetch(`/api/delete-photo/${selectedPhoto.id}`, { method: 'DELETE' });
+    console.log(`Deleting photo: ${selectedPhoto.id}`);
+    setIsDeleting(false);
+    setShowDeleteModal(false);
+    closeModal();
+    onPhotoDeleted();
   };
   return (
     <div id="photo-modal" onClick={closeModal}>
@@ -87,11 +116,21 @@ export default function PhotoModal({
           />
         </button>
 
+        {/* Delete Button - Only show if current user is the author */}
+        {currentUserId && currentUserId === selectedPhoto.authorId && (
+          <button
+            id="modal-delete"
+            onClick={handleDeleteClick}
+            className="cursor-camera"
+          >
+            🗑️
+          </button>
+        )}
+
         {/* Photo */}
         <Image
           src={
-            modalImageError ||
-            !selectedPhoto.imageUrl
+            modalImageError || !selectedPhoto.imageUrl
               ? stockPhoto.src
               : selectedPhoto.imageUrl
           }
@@ -109,6 +148,16 @@ export default function PhotoModal({
           <p>{selectedPhoto.author}</p>
         </div>
       </div>
+
+      {/* Photo Deletion Modal */}
+      {showDeleteModal && (
+        <PhotoDeletionModal
+          closeCallback={handleCancelDelete}
+          photoTitle={selectedPhoto.title}
+          onConfirmDelete={handleConfirmDelete}
+          isDeleting={isDeleting}
+        />
+      )}
     </div>
   );
 }

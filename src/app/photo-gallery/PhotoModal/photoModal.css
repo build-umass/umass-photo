@@ -296,3 +296,49 @@
     left: 0.5rem;
   }
 }
+
+/* Photo Deletion Button Styles */
+#modal-delete {
+  position: fixed;
+  top: 2rem;
+  right: 5rem;
+  background-color: rgba(255, 100, 100, 0.8);
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  z-index: 2001;
+}
+
+#modal-delete:hover {
+  background-color: rgba(255, 50, 50, 1);
+  transform: scale(1.1);
+}
+
+/* Responsive design for deletion button */
+@media (max-width: 768px) {
+  #modal-delete {
+    top: 1rem;
+    right: 3.5rem;
+    font-size: 1.2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #modal-delete {
+    top: 0.5rem;
+    right: 2.8rem;
+    font-size: 1rem;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
