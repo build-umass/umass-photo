@@ -3,9 +3,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import stockPhoto from "../../../public/stock-photo.jpg";
-import BackArrow from "../../../public/back_arrow.svg";
-import ForwardArrow from "../../../public/forward_arrow.svg";
-import CloseIcon from "../../../public/close.svg";
 import {
   parseBooleanParam,
   parseStringParam,
@@ -16,14 +13,7 @@ import FilterMenu from "../components/filter-menu/filterMenu";
 import "./photoGallery.css";
 import UploadChip from "./UploadChip";
 import Image from "next/image";
-
-interface PhotoItem {
-  id: number;
-  title: string;
-  author: string;
-  date: string;
-  imageUrl?: string;
-}
+import PhotoModal, { PhotoItem } from "./PhotoModal";
 
 const PhotoGallery = () => {
   const searchParams = useSearchParams();
@@ -37,7 +27,15 @@ const PhotoGallery = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(
     null,
   );
-  const [modalImageError, setModalImageError] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+
+  const [filtering_tags, setFilteringTags] = useState<boolean>(false);
+  const [filtering_authors, setFilteringAuthors] = useState<boolean>(false);
+  const [filtering_date, setFilteringDate] = useState<boolean>(false);
+  const [querytags, setQueryTags] = useState<string[]>([]);
+  const [queryauthor, setQueryAuthor] = useState<string>("");
+  const [querystart, setQueryStart] = useState<string>("");
+  const [queryend, setQueryEnd] = useState<string>("");
 
   const fetchPhotos = async (filters?: {
     filtering_tags: boolean;
@@ -132,6 +130,22 @@ const PhotoGallery = () => {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch("/api/get-user-self");
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUserId(data.id);
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
   const handleFilterSubmit = (filters: {
     filtering_tags: boolean;
     filtering_authors: boolean;
@@ -141,7 +155,26 @@ const PhotoGallery = () => {
     querystart: string;
     queryend: string;
   }) => {
+    setFilteringTags(filters.filtering_tags);
+    setFilteringAuthors(filters.filtering_authors);
+    setFilteringDate(filters.filtering_date);
+    setQueryTags(filters.querytags.map((x) => x));
+    setQueryAuthor(filters.queryauthor);
+    setQueryStart(filters.querystart);
+    setQueryEnd(filters.queryend);
     fetchPhotos(filters);
+  };
+
+  const refreshSearchResults = async () => {
+    await fetchPhotos({
+      filtering_tags,
+      filtering_authors,
+      filtering_date,
+      querytags,
+      queryauthor,
+      querystart,
+      queryend,
+    });
   };
 
   const handleImageError = (photoId: number) => {
@@ -150,30 +183,26 @@ const PhotoGallery = () => {
 
   const openModal = (index: number) => {
     setSelectedPhotoIndex(index);
-    setModalImageError(false);
   };
 
   const closeModal = () => {
     setSelectedPhotoIndex(null);
-    setModalImageError(false);
+  };
+
+  const handlePhotoDeleted = () => {
+    fetchPhotos();
   };
 
   const goToPreviousPhoto = () => {
     if (selectedPhotoIndex !== null && selectedPhotoIndex > 0) {
       setSelectedPhotoIndex(selectedPhotoIndex - 1);
-      setModalImageError(false);
     }
   };
 
   const goToNextPhoto = () => {
     if (selectedPhotoIndex !== null && selectedPhotoIndex < photos.length - 1) {
       setSelectedPhotoIndex(selectedPhotoIndex + 1);
-      setModalImageError(false);
     }
-  };
-
-  const handleModalImageError = () => {
-    setModalImageError(true);
   };
 
   const onLastPhoto = selectedPhotoIndex === photos.length - 1;
@@ -228,88 +257,23 @@ const PhotoGallery = () => {
 
       {/* Photo Modal */}
       {selectedPhotoIndex !== null && (
-        <div id="photo-modal" onClick={closeModal}>
-          <div id="modal-content" onClick={(e) => e.stopPropagation()}>
-            {/* Navigation Arrows */}
-            <button
-              id="prev-arrow"
-              onClick={goToPreviousPhoto}
-              disabled={onFirstPhoto}
-              className={
-                onFirstPhoto
-                  ? "cursor-not-allowed opacity-30"
-                  : "cursor-camera opacity-100"
-              }
-            >
-              <Image
-                src={BackArrow.src}
-                alt="Previous photo"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            <button
-              id="next-arrow"
-              onClick={goToNextPhoto}
-              disabled={onLastPhoto}
-              className={
-                onLastPhoto
-                  ? "cursor-not-allowed opacity-30"
-                  : "cursor-camera opacity-100"
-              }
-            >
-              <Image
-                src={ForwardArrow.src}
-                alt="Next photo"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            {/* Close Button */}
-            <button id="modal-close" onClick={closeModal}>
-              <Image
-                src={CloseIcon.src}
-                alt="Close modal"
-                width={128}
-                height={128}
-                unoptimized
-              />
-            </button>
-
-            {/* Photo */}
-            <Image
-              src={
-                modalImageError ||
-                imageErrors.has(photos[selectedPhotoIndex].id) ||
-                !photos[selectedPhotoIndex].imageUrl
-                  ? stockPhoto.src
-                  : photos[selectedPhotoIndex].imageUrl
-              }
-              alt={photos[selectedPhotoIndex].title || "Photo"}
-              id="modal-photo"
-              onError={handleModalImageError}
-              width={0}
-              height={0}
-              unoptimized
-            />
-
-            {/* Photo Details */}
-            <div id="modal-details">
-              <h2>{photos[selectedPhotoIndex].title}</h2>
-              <p>{photos[selectedPhotoIndex].author}</p>
-            </div>
-          </div>
-        </div>
+        <PhotoModal
+          closeModal={closeModal}
+          goToPreviousPhoto={goToPreviousPhoto}
+          goToNextPhoto={goToNextPhoto}
+          onFirstPhoto={onFirstPhoto}
+          onLastPhoto={onLastPhoto}
+          selectedPhoto={photos[selectedPhotoIndex]}
+          currentUserId={currentUserId}
+          onPhotoDeleted={handlePhotoDeleted}
+        ></PhotoModal>
       )}
 
       {uploadingPhoto ? (
         <UploadChip
           closeCallback={() => setUploadingPhoto(false)}
           defaultTags={defaultTagsForUpload}
+          uploadCallback={refreshSearchResults}
         ></UploadChip>
       ) : (
         <></>

@@ -7,9 +7,11 @@ import PreviewPage from "./PreviewPage";
 
 export default function UploadChip({
   closeCallback,
+  uploadCallback,
   defaultTags = [],
 }: {
   closeCallback: () => void;
+  uploadCallback: () => void;
   defaultTags?: string[];
 }) {
   const [previewMode, setPreviewMode] = useState(false);
@@ -92,6 +94,7 @@ export default function UploadChip({
     });
     switch (response.status) {
       case 201:
+        uploadCallback();
         closeCallback();
         return;
       default:

@@ -30,3 +30,11 @@ jobs:
       - run: npx playwright install chrome
       - run: npx playwright install msedge
       - run: npm test
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            playwright-report
+            test-results
