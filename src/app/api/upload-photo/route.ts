@@ -1,6 +1,10 @@
 import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
-import { attachCookies, getAdminClient, getUserClient } from "@/app/utils/supabase/client";
+import {
+  attachCookies,
+  getAdminClient,
+  getUserClient,
+} from "@/app/utils/supabase/client";
 
 export async function POST(request: NextRequest) {
   const client = getUserClient(request);

@@ -15,10 +15,12 @@ export async function DELETE(request: NextRequest) {
     return Response.json({ error: "Photo ID is required" }, { status: 400 });
   }
 
-  const { error: deleteError } = await client
+  const { error: deleteError, data: deleteData } = await client
     .from("photo")
     .delete()
-    .eq("id", photoId);
+    .eq("id", photoId)
+    .limit(1)
+    .select();
   if (deleteError) {
     console.error("Error deleting photo:", deleteError);
     if (deleteError.code === "403") {
@@ -28,6 +30,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
     return Response.json({ error: deleteError.message }, { status: 500 });
+  }
+  if (deleteData.length === 0) {
+    return Response.json({ error: "Could not delete photo" }, { status: 404 });
   }
 
   return Response.json(
