@@ -75,72 +75,72 @@ test.describe("Photo Upload and Delete Flow", () => {
       email: testUserEmail,
     });
 
-    console.debug("Here, we navigate to the photo gallery");
+    // Here, we navigate to the photo gallery
     await page.goto("/photo-gallery");
 
-    console.debug("Here, we wait for the page to load");
+    // Here, we wait for the page to load
     await expect(page.locator("#photo-grid")).toBeVisible();
 
-    console.debug("Here, we verify the photo title doesn't exist yet");
+    // Here, we verify the photo title doesn't exist yet
     await verifyPhotoInGallery(page, testTitle, false, 0);
 
-    console.debug("Here, we click the add photo button");
+    // Here, we click the add photo button
     await page.locator("#add-photo-button").click();
 
-    console.debug("Here, we wait for the upload modal to appear");
+    // Here, we wait for the upload modal to appear
     await expect(page.locator('input[name="title"]').first()).toBeVisible();
 
-    console.debug("Here, we upload a test image");
+    // Here, we upload a test image
     const testImagePath = path.join(__dirname, "../fixtures/test-image.jpg");
     const fileInput = page.locator('input[type="file"]').first();
     await fileInput.setInputFiles(testImagePath);
 
-    console.debug("Here, we fill in the photo title");
+    // Here, we fill in the photo title
     await page.locator('input[name="title"]').first().fill(testTitle);
 
-    console.debug("Here, we fill in the photo description");
+    // Here, we fill in the photo description
     await page
       .locator('textarea[name="description"]')
       .first()
       .fill(testDescription);
 
-    console.debug("Here, we add a tag to the photo");
+    // Here, we add a tag to the photo
     const tagInput = page.locator('input[placeholder="Create new tag..."]');
     await tagInput.fill(testTag);
     await page.locator('button:has-text("Add Tag")').first().click();
 
-    console.debug("Here, we wait for the tag to be created");
+    // Here, we wait for the tag to be created
     await expect(page.locator(`text=${testTag}`).first()).toBeVisible();
 
-    console.debug("Here, we click the Upload button");
+    // Here, we click the Upload button
     await page.locator('button[type="submit"]:has-text("Upload")').click();
 
-    console.debug("Here, we wait for the upload modal to close");
+    // Here, we wait for the upload modal to close
     await expect(page.locator('input[name="title"]').first()).not.toBeVisible({
       timeout: 10000,
     });
 
-    console.debug("Here, we verify the photo appears in the gallery");
-    console.debug("Here, we verify the photo title exists in the gallery");
+    // Here, we verify the photo appears in the gallery
+    // Here, we verify the photo title exists in the gallery
     await verifyPhotoInGallery(page, testTitle, true);
 
-    console.debug("Here, we locate the uploaded photo in the gallery");
+    // Here, we locate the uploaded photo in the gallery
     const uploadedPhotoContainer = page
       .locator(`#photo-grid >> text=${testTitle}`)
       .first();
     await expect(uploadedPhotoContainer).toBeVisible();
 
-    console.debug("Here, we open the photo modal");
+    // Here, we open the photo modal
     const photoImage = page.locator("#photo-item").first();
     await photoImage.click();
     await expect(page.locator("#photo-modal")).toBeVisible();
 
-    console.debug("Here, we verify the modal shows the correct photo details");
+    // Here, we verify the modal shows the correct photo details
     await expect(
       page.locator("#modal-details >> h2", { hasText: testTitle }),
     ).toBeVisible();
 
-    console.debug("Here, we click the delete button (trash icon) in the modal");
+    // Here, we click the delete button (trash icon) in the modal
     await page.locator("#modal-delete").click();
 
     console.debug(
@@ -158,13 +158,13 @@ test.describe("Photo Upload and Delete Flow", () => {
     console.debug('Here, we click the "Delete Photo" button to confirm');
     await page.locator('button:has-text("Delete Photo")').click();
 
-    console.debug("Here, we wait for the deletion to complete");
-    console.debug("Here, we wait for the modal to close");
+    // Here, we wait for the deletion to complete
+    // Here, we wait for the modal to close
     await expect(page.locator("#photo-modal")).not.toBeVisible({
       timeout: 10000,
     });
 
-    console.debug("Here, we verify the photo is removed from the gallery");
+    // Here, we verify the photo is removed from the gallery
     await verifyPhotoInGallery(page, testTitle, false);
   });
 });

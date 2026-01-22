@@ -19,14 +19,14 @@ export async function login({
   // Log in before running the tests
   await page.goto("/login");
 
-  console.debug("Here, we click on the one-time code navigator.");
+  // Here, we click on the one-time code navigator.
   await page.locator('button:has-text("One-Time Code")').click();
 
-  console.debug("Here, we fill in the email to request a login code.");
+  // Here, we fill in the email to request a login code.
   await page.locator('input[name="email"]').fill(email);
   await page.locator('button[type="submit"]').click();
 
-  console.debug("Here, we wait for the email to arrive in Mailpit.");
+  // Here, we wait for the email to arrive in Mailpit.
   const latestMessage: MailpitMessage = await waitForMessage(request, email);
   const code = /code: ([0-9]+)/.exec(latestMessage.Text)?.[1] || "";
   if (!code) {
@@ -35,7 +35,7 @@ export async function login({
 
   console.debug(`Code received: ${code}`);
 
-  console.debug("Here, we fill in the OTP form.");
+  // Here, we fill in the OTP form.");
   // Source - https://stackoverflow.com/a/78753805
   // Posted by Guillaume Brioudes
   // Retrieved 2026-01-21, License - CC BY-SA 4.0
@@ -43,6 +43,6 @@ export async function login({
   await page.fill('input[name="otp"]', code);
   await page.click('button[type="submit"]');
 
-  console.debug("Here, we wait to return to the homepage");
+  // Here, we wait to return to the homepage
   await page.waitForURL("/");
 }
