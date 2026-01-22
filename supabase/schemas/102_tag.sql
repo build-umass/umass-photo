@@ -7,3 +7,5 @@ CREATE POLICY "Allow admins to manage tags" ON "public"."tag" AS PERMISSIVE FOR 
 );
 CREATE POLICY "Allow everyone to select tags" ON "public"."tag" AS PERMISSIVE FOR
 SELECT TO authenticated USING (true);
+CREATE POLICY "Allow everyone to create tags" ON "public"."tag" AS PERMISSIVE FOR
+INSERT TO authenticated WITH CHECK (true);
