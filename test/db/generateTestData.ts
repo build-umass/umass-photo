@@ -56,7 +56,7 @@ export async function insertTestData(
     [...Array(9).keys()].map(async (i) => {
       const fileName = `${(i + 1).toString().padStart(2, "0")}.png`;
       const file = await fs.readFile(
-        path.resolve(import.meta.dirname, "photos", fileName),
+        path.resolve(__dirname, "photos", fileName),
       );
       await client.storage.from("photos").upload(fileName, file);
     }),
@@ -255,7 +255,7 @@ type CreateTestUsersResult =
  * @param testUsers the list of users to create
  * @returns a result object containing either the created users or an error
  */
-async function insertTestUsers(
+export async function insertTestUsers(
   client: SupabaseClient<Database>,
   testUsers: TablesInsert<"photoclubuser">[],
 ): Promise<CreateTestUsersResult> {
