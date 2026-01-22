@@ -29,6 +29,14 @@ const PhotoGallery = () => {
   );
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
+  const [filtering_tags, setFilteringTags] = useState<boolean>(false);
+  const [filtering_authors, setFilteringAuthors] = useState<boolean>(false);
+  const [filtering_date, setFilteringDate] = useState<boolean>(false);
+  const [querytags, setQueryTags] = useState<string[]>([]);
+  const [queryauthor, setQueryAuthor] = useState<string>("");
+  const [querystart, setQueryStart] = useState<string>("");
+  const [queryend, setQueryEnd] = useState<string>("");
+
   const fetchPhotos = async (filters?: {
     filtering_tags: boolean;
     filtering_authors: boolean;
@@ -147,7 +155,26 @@ const PhotoGallery = () => {
     querystart: string;
     queryend: string;
   }) => {
+    setFilteringTags(filters.filtering_tags);
+    setFilteringAuthors(filters.filtering_authors);
+    setFilteringDate(filters.filtering_date);
+    setQueryTags(filters.querytags.map((x) => x));
+    setQueryAuthor(filters.queryauthor);
+    setQueryStart(filters.querystart);
+    setQueryEnd(filters.queryend);
     fetchPhotos(filters);
+  };
+
+  const refreshSearchResults = async () => {
+    await fetchPhotos({
+      filtering_tags,
+      filtering_authors,
+      filtering_date,
+      querytags,
+      queryauthor,
+      querystart,
+      queryend,
+    });
   };
 
   const handleImageError = (photoId: number) => {
@@ -246,6 +273,7 @@ const PhotoGallery = () => {
         <UploadChip
           closeCallback={() => setUploadingPhoto(false)}
           defaultTags={defaultTagsForUpload}
+          uploadCallback={refreshSearchResults}
         ></UploadChip>
       ) : (
         <></>
