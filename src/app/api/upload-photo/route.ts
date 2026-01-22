@@ -1,43 +1,53 @@
 import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { attachCookies, getAdminClient, getUserClient } from "@/app/utils/supabase/client";
 
 export async function POST(request: NextRequest) {
   const client = getUserClient(request);
+  const adminClient = getAdminClient();
 
   const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {
-    throw new Error("userId could not be found");
+    return Response.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const formData = await request.formData();
   const image = formData.get("image") as File | null;
   if (!image) {
-    throw new Error("File missing");
+    return Response.json({ error: "Image is required" }, { status: 400 });
   }
   const extension = image.name.split(".").pop();
   const fileName = `${randomBytes(20).toString("base64url")}.${extension}`;
   console.log(`fileName: ${fileName}`);
   console.log(image);
 
-  const { error: storageUploadError } = await client.storage
+  const { error: storageUploadError } = await adminClient.storage
     .from("photos")
     .upload(fileName, image);
   if (storageUploadError) {
-    throw storageUploadError;
+    return Response.json(
+      { message: "Failed to upload image file", error: storageUploadError },
+      { status: 500 },
+    );
   }
 
   const title = formData.get("title");
   if (title === null) {
-    return new Response(JSON.stringify({ error: "Title is required" }), {
-      status: 400,
-    });
+    return Response.json(
+      { error: "Title is required" },
+      {
+        status: 400,
+      },
+    );
   }
   const description = formData.get("description");
   if (description === null) {
-    return new Response(JSON.stringify({ error: "Description is required" }), {
-      status: 400,
-    });
+    return Response.json(
+      { error: "Description is required" },
+      {
+        status: 400,
+      },
+    );
   }
   const tags: string[] = JSON.parse(formData.get("tags")!.toString());
   const { data: photoData, error: databaseUploadError } = await client
@@ -53,7 +63,10 @@ export async function POST(request: NextRequest) {
     ])
     .select();
   if (databaseUploadError) {
-    throw databaseUploadError;
+    return Response.json(
+      { message: "Failed to upload photo", error: databaseUploadError },
+      { status: 500 },
+    );
   }
 
   for (const tag of tags) {
@@ -64,7 +77,10 @@ export async function POST(request: NextRequest) {
         tag,
       });
     if (databaseUploadError) {
-      throw databaseUploadError;
+      return Response.json(
+        { message: "Failed to upload phototags", error: databaseUploadError },
+        { status: 500 },
+      );
     }
   }
 
