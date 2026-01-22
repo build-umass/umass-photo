@@ -27,16 +27,13 @@ export async function login({
   await page.locator('button[type="submit"]').click();
 
   console.debug("Here, we wait for the email to arrive in Mailpit.");
-  const latestMessage: MailpitMessage = await waitForMessage(
-    request,
-    email,
-  );
+  const latestMessage: MailpitMessage = await waitForMessage(request, email);
   const code = /code: ([0-9]+)/.exec(latestMessage.Text)?.[1] || "";
   if (!code) {
     throw new Error("Failed to extract OTP code from email.");
   }
 
-  console.debug(code);
+  console.debug(`Code received: ${code}`);
 
   console.debug("Here, we fill in the OTP form.");
   // Source - https://stackoverflow.com/a/78753805

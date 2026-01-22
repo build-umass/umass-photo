@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { getAdminClient } from "../../src/app/utils/supabase/client";
-import { randomUUID } from "crypto";
+import { randomInt, randomUUID } from "crypto";
 
 const CRON_SECRET = process.env.CRON_SECRET;
 if (!CRON_SECRET) {
@@ -61,9 +61,10 @@ test.describe("Cron Event Reminder API", () => {
   const supabase = getAdminClient();
 
   const userId = randomUUID();
-  const userEmail = `test-cron@example.com`;
-  const eventName = `Cron Test Event`;
-  const eventTag = `CronTestTag`;
+  const deduplicationId = randomInt(100000, 999999);
+  const userEmail = `test-cron-${deduplicationId}@example.com`;
+  const eventName = `Cron Test Event ${deduplicationId}`;
+  const eventTag = `CronTestTag-${deduplicationId}`;
 
   test.afterAll(async () => {
     await supabase.from("tag").delete().eq("name", eventTag);
