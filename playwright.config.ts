@@ -56,10 +56,12 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
     },
     {
+      testDir: "./test/e2eMobile",
       name: "Mobile Chrome",
       use: { ...devices["Pixel 5"] },
     },
     {
+      testDir: "./test/e2eMobile",
       name: "Mobile Safari",
       use: { ...devices["iPhone 12"] },
     },
