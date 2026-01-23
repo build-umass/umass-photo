@@ -1,13 +1,12 @@
-import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
-export async function GET(request: NextRequest) {
-  const client = getUserClient(request);
+export async function GET() {
+  const client = await createClient();
 
   const {
     data: { user },
   } = await client.auth.getUser();
-  if (!user) return new Response("{}");
+  if (!user) return Response.json({});
   const id = user.id;
   const { data: roleObjectList } = await client
     .from("photoclubuser")
@@ -17,10 +16,9 @@ export async function GET(request: NextRequest) {
   // If there is no matching photoclubuser row, or the join is empty,
   // return an empty JSON object instead of throwing.
   if (roleObjectList === null || roleObjectList.length === 0)
-    return new Response("{}");
+    return Response.json({});
   const [{ photoclubrole: roleData }] = roleObjectList;
-  if (!roleData) return new Response("{}");
+  if (!roleData) return Response.json({});
 
-  const response = new Response(JSON.stringify(roleData));
-  return attachCookies(client, response);
+  return Response.json(roleData);
 }

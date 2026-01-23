@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Jaldi } from "next/font/google";
 import "./globals.css";
-import RefreshHandler from "./components/RefreshHandler";
 import Navbar from "./components/navbar/navbar";
 import Footer from "./components/footer/footer";
 
@@ -24,7 +23,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <RefreshHandler></RefreshHandler>
       <body className="font-jaldi flex min-h-dvh flex-col antialiased">
         <Navbar></Navbar>
         <main className="flex grow flex-col bg-gray-50">{children}</main>

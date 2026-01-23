@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { getAdminClient } from "../../src/app/utils/supabase/client";
+import { getAdminClient } from "../utils/adminClient";
 import { randomInt, randomUUID } from "crypto";
 
 const CRON_SECRET = process.env.CRON_SECRET;

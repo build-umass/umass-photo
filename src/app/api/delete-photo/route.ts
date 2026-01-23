@@ -1,8 +1,8 @@
-import { getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 import { NextRequest } from "next/server";
 
 export async function DELETE(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {

@@ -1,9 +1,8 @@
-import { NextRequest } from "next/server";
-import { getAdminClient, getUserClient } from "@/app/utils/supabase/client";
+import { createClient, getAdminClient } from "@/app/utils/supabase/server";
 
-export async function DELETE(request: NextRequest) {
-  const client = getUserClient(request);
-  const adminClient = getAdminClient();
+export async function DELETE() {
+  const client = await createClient();
+  const adminClient = await getAdminClient();
 
   // Get the current user's ID
   const {

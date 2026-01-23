@@ -1,4 +1,4 @@
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: Request) {
   const email = request.headers.get("email");
@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     return new Response("{}", { status: 400 });
   }
 
-  const client = getAdminClient();
+  const client = await getAdminClient();
 
   const { error } = await client.auth.signInWithOtp({
     email,

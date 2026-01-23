@@ -6,7 +6,6 @@ export default function LogoutButton() {
   const router = useRouter();
   async function logout() {
     await fetch("/api/logout", { method: "POST" });
-    localStorage.removeItem("loginExpiryTime");
     router.push("/");
   }
   return (

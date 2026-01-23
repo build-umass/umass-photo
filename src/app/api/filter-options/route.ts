@@ -1,9 +1,7 @@
-import { NextRequest } from "next/server";
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "@/app/utils/supabase/server";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(request: NextRequest) {
-  const client = getAdminClient();
+export async function GET() {
+  const client = await getAdminClient();
 
   // Fetch all unique authors
   const { data: photos, error: photosError } = await client

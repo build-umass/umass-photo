@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 import { Tables } from "@/app/utils/supabase/database.types";
 
 export async function POST(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   const {
     toDelete,
@@ -23,5 +23,5 @@ export async function POST(request: NextRequest) {
   }
 
   const response = new Response();
-  return attachCookies(client, response);
+  return response;
 }

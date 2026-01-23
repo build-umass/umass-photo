@@ -1,7 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 import path from "path";
 import { login } from "./utils/login";
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "../utils/adminClient";
 import { insertTestUsers } from "../db/generateTestData";
 import { randomInt, randomUUID } from "crypto";
 

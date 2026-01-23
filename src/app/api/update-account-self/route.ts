@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getAdminClient, getUserClient } from "@/app/utils/supabase/client";
+import { createClient, getAdminClient } from "@/app/utils/supabase/server";
 import { TablesUpdate } from "@/app/utils/supabase/database.types";
 import { randomBytes } from "crypto";
 
@@ -8,7 +8,7 @@ type PhotoClubUserUpdateWithProfilePicture = TablesUpdate<"photoclubuser"> & {
 };
 
 export async function PUT(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   // Get the current user's ID
   const {
@@ -81,7 +81,7 @@ export async function PUT(request: NextRequest) {
     );
 
     const fileName = `${randomBytes(20).toString("base64url")}.${imageType[1]}`;
-    const adminClient = getAdminClient();
+    const adminClient = await getAdminClient();
     const { error: uploadError } = await adminClient.storage
       .from("photos")
       .upload(fileName, file);
@@ -100,7 +100,7 @@ export async function PUT(request: NextRequest) {
     requestBody.profilepicture = fileName;
   }
 
-  const adminClient = getAdminClient();
+  const adminClient = await getAdminClient();
 
   const { error: updateError } = await adminClient
     .from("photoclubuser")
