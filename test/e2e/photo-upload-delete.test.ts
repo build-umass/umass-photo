@@ -143,19 +143,15 @@ test.describe("Photo Upload and Delete Flow", () => {
     // Here, we click the delete button (trash icon) in the modal
     await page.locator("#modal-delete").click();
 
-    console.debug(
-      "Here, we wait for the deletion confirmation modal to appear",
-    );
+    // Here, we wait for the deletion confirmation modal to appear
     await expect(
       page.locator("text=Are you sure you want to delete this photo?"),
     ).toBeVisible();
 
-    console.debug(
-      "Here, we verify the photo title appears in the confirmation message",
-    );
+    // Here, we verify the photo title appears in the confirmation message
     await expect(page.locator(`text="${testTitle}"`).last()).toBeVisible();
 
-    console.debug('Here, we click the "Delete Photo" button to confirm');
+    // Here, we click the "Delete Photo" button to confirm deletion
     await page.locator('button:has-text("Delete Photo")').click();
 
     // Here, we wait for the deletion to complete
