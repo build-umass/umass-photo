@@ -54,6 +54,7 @@ export async function GET(request: NextRequest) {
         title: photo.title || "Untitled",
         description: photo.description,
         author: author?.username || "Unknown",
+        authorId: photo.authorid,
         date: new Date(photo.postdate).toLocaleDateString(),
         imageUrl: imageUrl,
         file: photo.file,

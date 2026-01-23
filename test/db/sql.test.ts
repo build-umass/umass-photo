@@ -18,15 +18,7 @@ describe("Database Rule Tests", () => {
     if (!supabaseServiceKey)
       throw new Error("Supabase service role key not found in environment!");
 
-    supabase = createClient<Database>(apiUrl, supabaseServiceKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-      db: {
-        schema: "public",
-      },
-    });
+    supabase = createClient<Database>(apiUrl, supabaseServiceKey);
 
     const seedResult = await insertTestData(supabase);
     if (seedResult.error)

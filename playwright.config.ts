@@ -8,6 +8,9 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
+/* Determine if we are running in headful mode based on an environment variable. */
+const HEADFUL = !!process.env.HEADFUL;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -30,6 +33,13 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+
+    launchOptions: {
+      headless: !HEADFUL,
+
+      /* If we are running in headful mode, run everything slowly. */
+      slowMo: HEADFUL ? 1000 : 0,
+    },
   },
 
   projects: [
@@ -46,10 +56,12 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
     },
     {
+      testDir: "./test/e2eMobile",
       name: "Mobile Chrome",
       use: { ...devices["Pixel 5"] },
     },
     {
+      testDir: "./test/e2eMobile",
       name: "Mobile Safari",
       use: { ...devices["iPhone 12"] },
     },
@@ -60,6 +72,10 @@ export default defineConfig({
     {
       name: "Google Chrome",
       use: { ...devices["Desktop Chrome"], channel: "chrome" },
+    },
+    {
+      name: "API Testing",
+      testDir: "./test/api",
     },
   ],
 

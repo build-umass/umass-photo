@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error("Database error creating tag:", error);
       const response = new Response(
-        JSON.stringify({ error: "Failed to create tag" }),
+        JSON.stringify({ message: "Database error", error }),
         {
           status: 500,
           headers: { "Content-Type": "application/json" },
