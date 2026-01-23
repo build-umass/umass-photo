@@ -31,7 +31,7 @@ export async function createClient(): Promise<SupabaseClient<Database>> {
   const cookieStore = await cookies();
 
   // This appears to error since createServerClient is defined twice in the server client, with one deprecated and one not.
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  const client = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -55,6 +55,8 @@ export async function createClient(): Promise<SupabaseClient<Database>> {
       },
     },
   });
+  await client.auth.getClaims();
+  return client;
 }
 
 export async function getAdminClient(): Promise<SupabaseClient<Database>> {
