@@ -17,5 +17,5 @@ const supabaseServiceRoleKey = (() => {
 })();
 
 export function getAdminClient(): SupabaseClient<Database> {
-    return createClient(supabaseUrl, supabaseServiceRoleKey);
+  return createClient(supabaseUrl, supabaseServiceRoleKey);
 }

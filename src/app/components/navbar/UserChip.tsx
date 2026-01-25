@@ -37,7 +37,9 @@ export default async function UserChip() {
       ) : (
         <NavBarLink href="/me">Me</NavBarLink>
       )}
-      {profile?.photoclubrole?.is_admin && <NavBarLink href="/admin-page">Admin</NavBarLink>}
+      {profile?.photoclubrole?.is_admin && (
+        <NavBarLink href="/admin-page">Admin</NavBarLink>
+      )}
     </>
   );
 }

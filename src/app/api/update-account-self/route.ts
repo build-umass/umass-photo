@@ -62,7 +62,10 @@ export async function PUT(request: NextRequest) {
         status: 403,
       },
     );
-  if (requestBody.profilePictureURL && requestBody.profilePictureURL.startsWith("data:")) {
+  if (
+    requestBody.profilePictureURL &&
+    requestBody.profilePictureURL.startsWith("data:")
+  ) {
     const imageType = requestBody.profilePictureURL.match(
       /^data:image\/([a-zA-Z]+);base64,/,
     );
