@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import ModalCommon from "../components/ChipLayout";
 import UmassPhotoButton from "../components/UmassPhotoButton";

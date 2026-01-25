@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { NextRequest } from "next/server";
+import { getAdminClient } from "@/app/utils/supabase/server";
 import { sendMail } from "@/app/utils/sendMail";
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const supabase = getAdminClient();
+  const supabase = await getAdminClient();
 
   const now = new Date();
   const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
@@ -27,11 +27,11 @@ export async function GET(request: NextRequest) {
     .lt("enddate", tomorrow.toISOString());
 
   if (eventError) {
-    return NextResponse.json({ error: eventError.message }, { status: 500 });
+    return Response.json({ error: eventError.message }, { status: 500 });
   }
 
   if (!events || events.length === 0) {
-    return NextResponse.json({ message: "No upcoming events found." });
+    return Response.json({ message: "No upcoming events found." });
   }
 
   const { data: users, error: userError } = await supabase
@@ -39,17 +39,17 @@ export async function GET(request: NextRequest) {
     .select("email");
 
   if (userError) {
-    return NextResponse.json({ error: userError.message }, { status: 500 });
+    return Response.json({ error: userError.message }, { status: 500 });
   }
 
   if (!users || users.length === 0) {
-    return NextResponse.json({ message: "No users found." });
+    return Response.json({ message: "No users found." });
   }
 
   const emails = users.map((u) => u.email).filter((email) => email); // Ensure no null/empty emails
 
   if (emails.length === 0) {
-    return NextResponse.json({ message: "No valid email addresses found." });
+    return Response.json({ message: "No valid email addresses found." });
   }
 
   for (const event of events) {
@@ -73,5 +73,5 @@ See you there!`;
     }
   }
 
-  return NextResponse.json({});
+  return Response.json({});
 }

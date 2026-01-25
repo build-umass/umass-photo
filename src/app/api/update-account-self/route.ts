@@ -1,14 +1,14 @@
 import { NextRequest } from "next/server";
-import { getAdminClient, getUserClient } from "@/app/utils/supabase/client";
+import { createClient, getAdminClient } from "@/app/utils/supabase/server";
 import { TablesUpdate } from "@/app/utils/supabase/database.types";
 import { randomBytes } from "crypto";
 
 type PhotoClubUserUpdateWithProfilePicture = TablesUpdate<"photoclubuser"> & {
-  profilePicture?: string;
+  profilePictureURL?: string;
 };
 
 export async function PUT(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   // Get the current user's ID
   const {
@@ -62,8 +62,11 @@ export async function PUT(request: NextRequest) {
         status: 403,
       },
     );
-  if (requestBody.profilePicture) {
-    const imageType = requestBody.profilePicture.match(
+  if (
+    requestBody.profilePictureURL &&
+    requestBody.profilePictureURL.startsWith("data:")
+  ) {
+    const imageType = requestBody.profilePictureURL.match(
       /^data:image\/([a-zA-Z]+);base64,/,
     );
     if (!imageType) {
@@ -76,12 +79,12 @@ export async function PUT(request: NextRequest) {
     }
 
     // convert data URL to File object
-    const file = await fetch(requestBody.profilePicture).then((res) =>
+    const file = await fetch(requestBody.profilePictureURL).then((res) =>
       res.blob(),
     );
 
     const fileName = `${randomBytes(20).toString("base64url")}.${imageType[1]}`;
-    const adminClient = getAdminClient();
+    const adminClient = await getAdminClient();
     const { error: uploadError } = await adminClient.storage
       .from("photos")
       .upload(fileName, file);
@@ -96,11 +99,12 @@ export async function PUT(request: NextRequest) {
         },
       );
     }
-    delete requestBody.profilePicture;
     requestBody.profilepicture = fileName;
   }
 
-  const adminClient = getAdminClient();
+  delete requestBody.profilePictureURL;
+
+  const adminClient = await getAdminClient();
 
   const { error: updateError } = await adminClient
     .from("photoclubuser")

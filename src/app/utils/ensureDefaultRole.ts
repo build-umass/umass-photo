@@ -1,9 +1,9 @@
 "use server";
 
-import { getAdminClient } from "./supabase/client";
+import { getAdminClient } from "./supabase/server";
 
 export default async function ensureDefaultRole() {
-  const adminClient = getAdminClient();
+  const adminClient = await getAdminClient();
   const defaultRoleName = "member";
   await adminClient.from("photoclubrole").upsert(
     {

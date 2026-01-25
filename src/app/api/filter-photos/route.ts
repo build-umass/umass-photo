@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { Tables } from "@/app/utils/supabase/database.types";
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "@/app/utils/supabase/server";
 
 export async function GET(request: NextRequest) {
-  const client = getAdminClient();
+  const client = await getAdminClient();
 
   // Get query parameters
   const searchParams = request.nextUrl.searchParams;

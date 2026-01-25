@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import {
   faFacebook,
@@ -7,8 +7,9 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
-export default function Footer() {
+export default async function Footer() {
   return (
     <footer className="bg-gray-200">
       <div className="mx-auto max-w-7xl px-3 py-15">
@@ -18,30 +19,30 @@ export default function Footer() {
               Umass Photo
             </h3>
             <div className="mb-4 flex space-x-6 hover:underline">
-              <a
+              <Link
                 className="cursor-camera text-gray-500 hover:text-gray-700"
                 href="#"
               >
                 <FontAwesomeIcon icon={faFacebook} />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="cursor-camera text-gray-500 hover:text-gray-700"
                 href="#"
               >
                 <FontAwesomeIcon icon={faLinkedin} />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="cursor-camera text-gray-500 hover:text-gray-700"
                 href="#"
               >
                 <FontAwesomeIcon icon={faYoutube} />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="cursor-camera text-gray-500 hover:text-gray-700"
                 href="#"
               >
                 <FontAwesomeIcon icon={faInstagram} />
-              </a>
+              </Link>
             </div>
             <p className="text-base font-normal text-gray-400">
               Website © BUILD Umass 2025
@@ -53,18 +54,18 @@ export default function Footer() {
                 Gallery
               </h3>
               <div className="flex flex-col space-y-2">
-                <a
+                <Link
                   className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                   href="/photo-gallery"
                 >
                   All Photos
-                </a>
-                <a
+                </Link>
+                <Link
                   className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                   href="#"
                 >
                   Submit Your photos
-                </a>
+                </Link>
               </div>
             </div>
             <div className="">
@@ -73,24 +74,24 @@ export default function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="font-Jaldi flex flex-col space-y-2">
-                  <a
+                  <Link
                     className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Spring contest
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Fall Foliage Contest
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     Summer Contest
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -100,18 +101,18 @@ export default function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
-                  <a
+                  <Link
                     className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Our Story
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     E-Board
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -121,24 +122,24 @@ export default function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
-                  <a
+                  <Link
                     className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Instagram
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
                     href="#"
                   >
                     Email
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
                     href="#"
                   >
                     Page
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

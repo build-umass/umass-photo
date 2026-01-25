@@ -1,14 +1,10 @@
 import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
-import {
-  attachCookies,
-  getAdminClient,
-  getUserClient,
-} from "@/app/utils/supabase/client";
+import { createClient, getAdminClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
-  const client = getUserClient(request);
-  const adminClient = getAdminClient();
+  const client = await createClient();
+  const adminClient = await getAdminClient();
 
   const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {
@@ -88,6 +84,5 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const response = new Response("", { status: 201 });
-  return attachCookies(client, response);
+  return new Response("", { status: 201 });
 }

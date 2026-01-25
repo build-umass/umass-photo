@@ -1,4 +1,4 @@
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: Request) {
   const { email, password }: { email?: string; password?: string } =
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const adminClient = getAdminClient();
+  const adminClient = await getAdminClient();
 
   const { data: usersResult, error: listError } =
     await adminClient.auth.admin.listUsers();

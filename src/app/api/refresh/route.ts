@@ -1,9 +1,5 @@
-import dotenv from "dotenv";
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest } from "next/server";
-import { Database } from "@/app/utils/supabase/database.types";
-
-dotenv.config();
+import { createClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   let access_token = request.cookies.get("access-token")?.value;
@@ -25,12 +21,7 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
 
-  const supabaseUrl = process.env.API_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.ANON_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!supabaseUrl) throw new Error("No Supabase URL found!");
-  if (!supabaseAnonKey) throw new Error("No Supabase Anon Key found!");
-
-  const client = createClient<Database>(supabaseUrl, supabaseAnonKey);
+  const client = await createClient();
 
   const { error: setSessionError } = await client.auth.setSession({
     access_token,

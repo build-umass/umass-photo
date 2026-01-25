@@ -24,8 +24,7 @@ const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
     if (!response.ok) {
       throw new Error("Failed to verify OTP");
     }
-    const { expires_at: atExpiryTime, userExists } = await response.json();
-    localStorage.setItem("loginExpiryTime", (atExpiryTime * 1000).toString());
+    const { userExists } = await response.json();
     if (!userExists) {
       window.location.assign("/create-account");
     } else {

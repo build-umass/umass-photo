@@ -1,14 +1,14 @@
 import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {
     const response = new Response("", { status: 401 });
-    return attachCookies(client, response);
+    return response;
   }
 
   const body = await request.json();
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
   if (!imageDataURL) {
     const response = new Response("", { status: 400 });
-    return attachCookies(client, response);
+    return response;
   }
 
   // Convert data URL to File
@@ -63,5 +63,5 @@ export async function POST(request: NextRequest) {
   }
 
   const response = new Response("", { status: 201 });
-  return attachCookies(client, response);
+  return response;
 }

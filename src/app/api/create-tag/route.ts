@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const client = getUserClient(request);
+    const client = await createClient();
 
     const {
       data: { user },
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
         },
       );
-      return attachCookies(client, response);
+      return response;
     }
     const body = await request.json();
     const { name } = body;
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
         },
       );
-      return attachCookies(client, response);
+      return response;
     }
 
     const trimmedName = name.trim();
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
           headers: { "Content-Type": "application/json" },
         },
       );
-      return attachCookies(client, response);
+      return response;
     }
 
     const response = new Response(
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    return attachCookies(client, response);
+    return response;
   } catch (error) {
     console.error("Error in create-tag API:", error);
     const response = new Response(

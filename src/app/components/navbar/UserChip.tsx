@@ -1,40 +1,45 @@
-"use client";
+"use server";
 
-import { UserResponse } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
 import NavBarLink from "./NavBarLink";
 import { Tables } from "@/app/utils/supabase/database.types";
+import { createClient } from "@/app/utils/supabase/server";
 
-export default function UserChip() {
-  const [currentUser, setCurrentUser] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("/api/user-data");
-      const userData: UserResponse["data"] = await response.json();
-      if (userData.user) {
-        setCurrentUser(userData.user.id);
-      }
-    })();
-  }, []);
+export default async function UserChip() {
+  const client = await createClient();
+  const {
+    data: { user },
+  } = await client.auth.getUser();
 
-  useEffect(() => {
-    if (currentUser !== "")
-      (async () => {
-        const response = await fetch("/api/get-role");
-        const role: Tables<"photoclubrole"> = await response.json();
-        setIsAdmin(role.is_admin);
-      })();
-  }, [currentUser]);
+  let profile:
+    | (Tables<"photoclubuser"> & { photoclubrole: Tables<"photoclubrole"> })
+    | null = null;
+  if (user !== null) {
+    const { data: profileMatches, error: selectError } = await client
+      .from("photoclubuser")
+      .select("*, photoclubrole(*)")
+      .eq("id", user.id)
+      .limit(1);
+
+    if (selectError) {
+      console.error("Error fetching user profile:", selectError);
+      profile = null;
+    }
+
+    if (profileMatches && profileMatches.length === 1) {
+      profile = profileMatches[0];
+    }
+  }
 
   return (
     <>
-      {currentUser === "" ? (
+      {profile === null ? (
         <NavBarLink href="/login">Login</NavBarLink>
       ) : (
         <NavBarLink href="/me">Me</NavBarLink>
       )}
-      {isAdmin ? <NavBarLink href="/admin-page">Admin</NavBarLink> : <></>}
+      {profile?.photoclubrole?.is_admin && (
+        <NavBarLink href="/admin-page">Admin</NavBarLink>
+      )}
     </>
   );
 }

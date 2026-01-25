@@ -1,12 +1,10 @@
-import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
-export async function GET(request: NextRequest) {
-  const client = getUserClient(request);
+export async function GET() {
+  const client = await createClient();
 
   const { data: tagObjectList } = await client.from("tag").select("*");
-  if (!tagObjectList) return new Response("[]");
+  if (!tagObjectList) return Response.json([]);
   const tagList = tagObjectList.map(({ name }) => name);
-  const response = new Response(JSON.stringify(tagList));
-  return attachCookies(client, response);
+  return Response.json(tagList);
 }

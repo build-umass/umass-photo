@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -12,7 +12,7 @@ const teachers = Teachers({
   style: ["normal", "italic"],
 });
 
-export default function Navbar() {
+export default async function Navbar() {
   return (
     <nav className="bg-umass-red sticky top-0 right-0 left-0 z-50 text-white">
       <div className="container mx-auto flex h-16 items-stretch">

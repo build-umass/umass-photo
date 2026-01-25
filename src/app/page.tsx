@@ -1,7 +1,7 @@
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <div className="relative mb-6 h-93.75 w-full overflow-x-auto bg-white whitespace-nowrap shadow-xl">

@@ -1,8 +1,7 @@
-import { NextRequest } from "next/server";
-import { attachCookies, getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
-export async function GET(request: NextRequest) {
-  const client = getUserClient(request);
+export async function GET() {
+  const client = await createClient();
 
   const { data: eventList, error: selectEventError } = await client
     .from("event")
@@ -29,5 +28,5 @@ export async function GET(request: NextRequest) {
     };
   });
   const response = new Response(JSON.stringify(eventListWithURLs));
-  return attachCookies(client, response);
+  return response;
 }

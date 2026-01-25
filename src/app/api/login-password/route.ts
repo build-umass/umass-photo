@@ -1,4 +1,4 @@
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { getAdminClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: Request) {
   const { email, password }: { email?: string; password?: string } =
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const client = getAdminClient();
+  const client = await getAdminClient();
 
   const { data, error } = await client.auth.signInWithPassword({
     email,

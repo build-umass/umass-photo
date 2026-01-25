@@ -1,9 +1,8 @@
-import { NextRequest } from "next/server";
-import { getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
 const DEFAULT_PROFILE_URL = "/blank_profile.png";
-export async function GET(request: NextRequest) {
-  const client = getUserClient(request);
+export async function GET() {
+  const client = await createClient();
 
   const { data: userData, error: getUserError } = await client.auth.getUser();
   if (getUserError) {

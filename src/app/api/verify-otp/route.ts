@@ -1,5 +1,5 @@
 import { getSupabaseOtpType, normalizeOtpMode } from "@/app/utils/otpModes";
-import { getAdminClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: Request) {
   const token = request.headers.get("token");
@@ -15,12 +15,13 @@ export async function POST(request: Request) {
       status: 400,
     });
 
-  const client = getAdminClient();
+  const client = await createClient();
   const type = getSupabaseOtpType(mode);
   const {
     data: { user, session },
     error,
   } = await client.auth.verifyOtp({ email, token, type });
+  const { data: claimData } = await client.auth.getClaims();
 
   if (error)
     return new Response(JSON.stringify(error), {
@@ -56,24 +57,15 @@ export async function POST(request: Request) {
     }
   }
 
+  console.log(`email: ${claimData?.claims.email}`);
+
   return new Response(
     JSON.stringify({
       session: session,
-      expires_at: session.expires_at,
       userExists,
     }),
     {
       status: 200,
-      headers: [
-        [
-          "Set-Cookie",
-          `access-token=${session.access_token}; SameSite=strict; HttpOnly; Secure; Path=/api`,
-        ],
-        [
-          "Set-Cookie",
-          `refresh-token=${session.refresh_token}; SameSite=strict; HttpOnly; Secure; Path=/api/refresh`,
-        ],
-      ],
     },
   );
 }

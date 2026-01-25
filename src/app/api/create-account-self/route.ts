@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
-import { getUserClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/server";
 import ensureDefaultRole from "@/app/utils/ensureDefaultRole";
 
 export async function POST(request: NextRequest) {
-  const client = getUserClient(request);
+  const client = await createClient();
 
   // Get the current user's ID
   const {
