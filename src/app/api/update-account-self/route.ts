@@ -4,7 +4,7 @@ import { TablesUpdate } from "@/app/utils/supabase/database.types";
 import { randomBytes } from "crypto";
 
 type PhotoClubUserUpdateWithProfilePicture = TablesUpdate<"photoclubuser"> & {
-  profilePicture?: string;
+  profilePictureURL?: string;
 };
 
 export async function PUT(request: NextRequest) {
@@ -62,8 +62,8 @@ export async function PUT(request: NextRequest) {
         status: 403,
       },
     );
-  if (requestBody.profilePicture) {
-    const imageType = requestBody.profilePicture.match(
+  if (requestBody.profilePictureURL && requestBody.profilePictureURL.startsWith("data:")) {
+    const imageType = requestBody.profilePictureURL.match(
       /^data:image\/([a-zA-Z]+);base64,/,
     );
     if (!imageType) {
@@ -76,7 +76,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // convert data URL to File object
-    const file = await fetch(requestBody.profilePicture).then((res) =>
+    const file = await fetch(requestBody.profilePictureURL).then((res) =>
       res.blob(),
     );
 
@@ -96,9 +96,10 @@ export async function PUT(request: NextRequest) {
         },
       );
     }
-    delete requestBody.profilePicture;
     requestBody.profilepicture = fileName;
   }
+
+  delete requestBody.profilePictureURL;
 
   const adminClient = await getAdminClient();
 
