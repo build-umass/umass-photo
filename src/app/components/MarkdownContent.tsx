@@ -1,6 +1,19 @@
 import Markdown from "react-markdown";
 
-export default function MarkdownElement({ content }: { content: string }) {
+/**
+ * A component which renders markdown content as HTML.
+ * @param param0.children The markdown content to render.
+ *
+ * @example
+ * ```jsx
+ * <MarkdownContent># Hello World</MarkdownContent>
+ * ```
+ * Will render as
+ * ```html
+ * <h1>Hello World</h1>
+ * ```
+ */
+export default function MarkdownContent({ children }: { children: string }) {
   return (
     <Markdown
       components={{
@@ -55,9 +68,12 @@ export default function MarkdownElement({ content }: { content: string }) {
         a(props) {
           if (props.href) return <a {...props} className="text-blue-500"></a>;
         },
+        ul(props) {
+          return <ul {...props} className="list-disc pl-6"></ul>;
+        },
       }}
     >
-      {content}
+      {children}
     </Markdown>
   );
 }

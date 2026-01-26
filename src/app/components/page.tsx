@@ -1,4 +1,7 @@
-import MarkdownElement from "./markdown/MarkdownElement";
+"use client";
+import { useState } from "react";
+import MarkdownEditorPlainText from "./MarkdownEditor/MarkdownEditorPlainText";
+import MarkdownContent from "./MarkdownContent";
 
 const sampleText = `
 ---
@@ -249,5 +252,17 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 `.trim();
 
 export default function ComponentsPreview() {
-  return <MarkdownElement content={sampleText}></MarkdownElement>;
+  const [text, setText] = useState<string>(sampleText);
+  return (
+    <div className="flex grow relative">
+      <MarkdownEditorPlainText
+        className="w-1/2"
+        value={text}
+        onChange={setText}
+      ></MarkdownEditorPlainText>
+      <div className="absolute right-0 top-0 h-full w-1/2 overflow-scroll border-l p-4">
+        <MarkdownContent>{text}</MarkdownContent>
+      </div>
+    </div>
+  );
 }
