@@ -37,18 +37,21 @@ export type Database = {
       blog: {
         Row: {
           authorid: string
-          file: string
+          content: string
           id: number
+          postdate: string
         }
         Insert: {
           authorid: string
-          file: string
+          content: string
           id?: number
+          postdate: string
         }
         Update: {
           authorid?: string
-          file?: string
+          content?: string
           id?: number
+          postdate?: string
         }
         Relationships: [
           {
