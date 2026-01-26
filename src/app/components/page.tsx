@@ -254,13 +254,13 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 export default function ComponentsPreview() {
   const [text, setText] = useState<string>(sampleText);
   return (
-    <div className="flex grow relative">
+    <div className="relative flex grow">
       <MarkdownEditorPlainText
         className="w-1/2"
         value={text}
         onChange={setText}
       ></MarkdownEditorPlainText>
-      <div className="absolute right-0 top-0 h-full w-1/2 overflow-scroll border-l p-4">
+      <div className="absolute top-0 right-0 h-full w-1/2 overflow-scroll border-l p-4">
         <MarkdownContent>{text}</MarkdownContent>
       </div>
     </div>
