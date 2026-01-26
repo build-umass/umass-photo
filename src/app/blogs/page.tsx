@@ -6,7 +6,7 @@ export default async function BlogsPage() {
 
   const { data: blogData, error: blogError } = await client
     .from("blog")
-    .select("*");
+    .select("*, photoclubuser(*)");
 
   console.log(JSON.stringify(blogData, null, 2));
 
@@ -18,12 +18,16 @@ export default async function BlogsPage() {
   }
 
   return blogData.map((blog) => (
-    <Link href={`/blogs/${blog.id}`} key={blog.id} className="cursor-camera hover:bg-gray-300 transition-colors duration-500">
+    <Link
+      href={`/blogs/${blog.id}`}
+      key={blog.id}
+      className="cursor-camera transition-colors duration-500 hover:bg-gray-300"
+    >
       <div className="mb-8">
-        <h2 className="mb-2 text-2xl font-bold">A blog post</h2>
+        <h2 className="mb-2 text-2xl font-bold">{blog.title}</h2>
         <p className="mb-4 text-gray-600">
-          Published on {new Date(blog.postdate).toLocaleDateString()}
-          {/* By {blog.photoclubuser.username} */}
+          Published on {new Date(blog.postdate).toLocaleDateString()} by{" "}
+          {blog.photoclubuser.username}
         </p>
       </div>
     </Link>

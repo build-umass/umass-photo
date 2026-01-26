@@ -19,5 +19,12 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  return <MarkdownContent>{blogData.content}</MarkdownContent>;
+  return (
+    <>
+      <h1 className="text-umass-red mx-auto mb-4 text-3xl font-bold">
+        {blogData.title}
+      </h1>
+      <MarkdownContent>{blogData.content}</MarkdownContent>;
+    </>
+  );
 }
