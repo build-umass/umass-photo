@@ -1,7 +1,8 @@
 CREATE TABLE blog (
     id SERIAL PRIMARY KEY,
     authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    postdate TIMESTAMPTZ NOT NULL
 );
 ALTER TABLE public.blog enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FOR ALL TO authenticated USING (
