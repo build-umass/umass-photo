@@ -30,8 +30,6 @@ const supabaseServiceRoleKey = (() => {
 export async function createClient(): Promise<SupabaseClient<Database>> {
   const cookieStore = await cookies();
 
-  console.log(JSON.stringify(cookieStore.getAll(), null, 2));
-
   // This appears to error since createServerClient is defined twice in the server client, with one deprecated and one not.
   const client = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
