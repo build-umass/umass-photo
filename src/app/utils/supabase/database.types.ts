@@ -40,18 +40,21 @@ export type Database = {
           content: string
           id: number
           postdate: string
+          title: string
         }
         Insert: {
           authorid: string
           content: string
           id?: number
           postdate: string
+          title: string
         }
         Update: {
           authorid?: string
           content?: string
           id?: number
           postdate?: string
+          title?: string
         }
         Relationships: [
           {
