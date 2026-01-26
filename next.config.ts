@@ -17,6 +17,11 @@ const apiUrlPattern: RemotePattern = {
 };
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
   images: {
     remotePatterns: [
       apiUrlPattern,
