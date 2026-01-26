@@ -1,6 +1,6 @@
-import MarkdownContent from "@/app/components/MarkdownContent";
 import { createClient } from "@/app/utils/supabase/server";
 import { notFound } from "next/navigation";
+import BlogContent from "../BlogContent";
 
 export default async function BlogPostPage({
   params,
@@ -19,12 +19,5 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  return (
-    <>
-      <h1 className="text-umass-red mx-auto mb-4 text-3xl font-bold">
-        {blogData.title}
-      </h1>
-      <MarkdownContent>{blogData.content}</MarkdownContent>
-    </>
-  );
+  return <BlogContent blog={blogData} />;
 }
