@@ -21,7 +21,7 @@ const {
 if (help) {
   console.log(
     `
-Usage: tsx syncSupabase.ts --name <migration-name>
+Usage: node scripts/syncSupabase.ts --name <migration-name>
 
 Syncs Supabase database and types after a schema modification.
 If this command fails, your database and types may be out of sync!
@@ -35,7 +35,7 @@ Options:
   -h, --help             Show this help message
 
 Examples:
-  tsx syncSupabase.ts --name add_user_table
+  node scripts/syncSupabase.ts --name add_user_table
 `.trim(),
   );
   process.exit(0);
@@ -46,8 +46,8 @@ if (!name) {
     `
 Error: Migration name is required
 
-Usage: tsx syncSupabase.ts --name <migration-name>
-       tsx syncSupabase.ts -n <migration-name>
+Usage: node scripts/syncSupabase.ts --name <migration-name>
+       node scripts/syncSupabase.ts -n <migration-name>
 Run with --help for more information
 `.trim(),
   );
