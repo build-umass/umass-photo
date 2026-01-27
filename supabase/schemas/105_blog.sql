@@ -1,7 +1,9 @@
 CREATE TABLE blog (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
-    FILE VARCHAR(128) NOT NULL
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    postdate TIMESTAMPTZ NOT NULL
 );
 ALTER TABLE public.blog enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FOR ALL TO authenticated USING (
@@ -11,3 +13,12 @@ CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FO
 );
 CREATE POLICY "Allow everyone to select blogs" ON "public"."blog" AS PERMISSIVE FOR
 SELECT TO authenticated USING (true);
+CREATE POLICY "Allow everyone to manage blogs that they are authors of" ON "public"."blog" AS PERMISSIVE FOR ALL USING (
+    (
+        SELECT auth.uid()
+    ) = authorid
+) WITH CHECK (
+    (
+        SELECT auth.uid()
+    ) = authorid
+);

@@ -4,6 +4,7 @@ import {
   TablesInsert,
 } from "@/app/utils/supabase/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { randomUUID } from "crypto";
 import * as fs from "fs/promises";
 import * as path from "path";
 
@@ -230,6 +231,47 @@ export async function insertTestData(
     return {
       data: null,
       error: { message: "Failed to insert events", error: eventsError },
+    };
+  }
+
+  const { error: blogsError } = await client.from("blog").insert([
+    {
+      id: randomUUID(),
+      authorid: "43188856-13db-410a-b1a2-b006056cd84f",
+      content:
+        "We're excited to announce the launch of our new blog! Here we'll share photography tips, event highlights, and member spotlights.\n\n## What to Expect\n\n- **Weekly Tips**: Improve your photography skills with expert advice\n- **Event Recaps**: See the best shots from our photo walks and workshops\n- **Member Features**: Get to know your fellow photographers\n\nStay tuned for more updates!",
+      postdate: "2024-01-15 10:00:00",
+      title: "Welcome to UMass Photo Club",
+    },
+    {
+      id: randomUUID(),
+      authorid: "beebdcae-ba00-4c16-9e1c-2103381337bf",
+      content:
+        "![Camera Settings](https://images.unsplash.com/photo-1606986628834-bc8b7a95a6d2?w=800)\n\nThe exposure triangle consists of three key elements that determine your photo's exposure:\n\n## 1. Aperture (f-stop)\nControls depth of field and how much light enters the lens.\n\n## 2. Shutter Speed\nDetermines motion blur and exposure time.\n\n## 3. ISO\nAffects sensor sensitivity and image noise.\n\n**Pro tip**: Master one element at a time before combining them!",
+      postdate: "2024-02-20 14:30:00",
+      title: "Understanding Exposure Triangle",
+    },
+    {
+      id: randomUUID(),
+      authorid: "43188856-13db-410a-b1a2-b006056cd84f",
+      content:
+        "What an amazing turnout for our Spring Photo Walk! Over 30 members joined us to capture the beautiful spring blooms around campus.\n\n## Best Shots\n\n1. Cherry blossoms at the pond\n2. Macro shots of tulips\n3. Wide landscapes of the campus green\n\nThank you to everyone who participated. Check out the gallery for all submitted photos!\n\n*Next walk: May 15th - Golden Hour Session*",
+      postdate: "2024-04-18 16:45:00",
+      title: "Spring Photo Walk Highlights",
+    },
+    {
+      id: randomUUID(),
+      authorid: "beebdcae-ba00-4c16-9e1c-2103381337bf",
+      content:
+        "🌙 Ready to shoot the stars? Here are my top tips:\n\n1. **Use a tripod** - Essential for long exposures\n2. **Manual focus** - Autofocus struggles in low light\n3. **Wide aperture** - f/2.8 or wider is ideal\n4. **High ISO** - Start at 3200 and adjust\n5. **Long exposure** - 15-30 seconds for stars\n\n## Bonus Tip\nUse the 500 rule to avoid star trails: 500 ÷ focal length = max shutter speed\n\nJoin us at the Night Sky Workshop to practice these techniques!",
+      postdate: "2024-09-10 12:00:00",
+      title: "5 Tips for Night Photography",
+    },
+  ]);
+  if (blogsError) {
+    return {
+      data: null,
+      error: { message: "Failed to insert blogs", error: blogsError },
     };
   }
 

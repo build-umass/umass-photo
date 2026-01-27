@@ -38,6 +38,7 @@ describe("Database Rule Tests", () => {
     tag: 5,
     phototag: 11,
     event: 5,
+    blog: 4,
   };
 
   for (const [tableName, expectedCount] of Object.entries(
