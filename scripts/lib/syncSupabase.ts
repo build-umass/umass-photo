@@ -31,14 +31,14 @@ export function syncSupabase(migrationName: string): void {
     ["supabase", "stop", "--project-id=UMassPhoto", "--no-backup"],
     {
       stdio: "inherit",
-      shell: true,
+      shell: false,
     },
   );
 
   // Second stop might fail if nothing running, that's okay
   spawnSync("npx", ["supabase", "stop", "--all"], {
     stdio: "inherit",
-    shell: true,
+    shell: false,
   });
 
   console.log(`\nGenerating migration: ${migrationName}...`);
@@ -47,7 +47,7 @@ export function syncSupabase(migrationName: string): void {
     ["supabase", "db", "diff", "-f", migrationName],
     {
       stdio: "inherit",
-      shell: true,
+      shell: false,
     },
   );
   if (diffResult.status !== 0) {
@@ -59,7 +59,7 @@ export function syncSupabase(migrationName: string): void {
   console.log("\nStarting Supabase...");
   const startResult = spawnSync("npx", ["supabase", "start"], {
     stdio: "inherit",
-    shell: true,
+    shell: false,
   });
   if (startResult.status !== 0) {
     throw new Error(
@@ -73,7 +73,7 @@ export function syncSupabase(migrationName: string): void {
     ["supabase", "gen", "types", "typescript", "--local"],
     {
       stdio: ["inherit", "pipe", "inherit"],
-      shell: true,
+      shell: false,
     },
   );
   if (genTypesResult.status !== 0) {
@@ -85,6 +85,7 @@ export function syncSupabase(migrationName: string): void {
   // Write types to file
   const typesPath = resolve(
     import.meta.dirname,
+    "..",
     "..",
     "src/app/utils/supabase/database.types.ts",
   );
