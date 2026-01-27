@@ -42,8 +42,9 @@ export default function EventsPage() {
           <Image
             src={event.herofileURL}
             alt={`Hero image for ${event.name}`}
-            fill
-            className="object-cover"
+            className="h-full w-full object-cover"
+            width={500}
+            height={500}
           />
         </div>
 
