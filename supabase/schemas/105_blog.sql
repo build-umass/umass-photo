@@ -1,5 +1,5 @@
 CREATE TABLE blog (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,

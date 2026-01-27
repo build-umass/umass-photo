@@ -5,6 +5,7 @@ import { useState } from "react";
 import BlogContent from "../BlogContent";
 import { markdownTutorialContent } from "../markdownTutorialContent";
 import { createBlog } from "./createBlog";
+import { randomUUID } from "crypto";
 
 export default function EditorContent({ authorid }: { authorid: string }) {
   const [content, setContent] = useState(markdownTutorialContent);
@@ -31,7 +32,7 @@ export default function EditorContent({ authorid }: { authorid: string }) {
             title,
             content,
             authorid,
-            id: 0,
+            id: randomUUID(),
             postdate: new Date().toISOString(),
           }}
         />

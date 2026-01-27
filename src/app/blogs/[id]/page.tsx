@@ -5,7 +5,7 @@ import BlogContent from "../BlogContent";
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ id: number }>;
+  params: Promise<{ id: string }>;
 }) {
   const blogId = (await params).id;
   const client = await createClient();

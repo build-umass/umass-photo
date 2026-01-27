@@ -38,21 +38,21 @@ export type Database = {
         Row: {
           authorid: string
           content: string
-          id: number
+          id: string
           postdate: string
           title: string
         }
         Insert: {
           authorid: string
           content: string
-          id?: number
+          id?: string
           postdate: string
           title: string
         }
         Update: {
           authorid?: string
           content?: string
-          id?: number
+          id?: string
           postdate?: string
           title?: string
         }
