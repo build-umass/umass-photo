@@ -11,9 +11,11 @@ type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
   eventData,
   onClose,
+  loggedIn,
 }: {
   eventData: EventWithURL;
   onClose: () => void;
+  loggedIn: boolean;
 }) {
   const startTime = new Date(eventData.startdate);
   const endTime = new Date(eventData.enddate);
@@ -53,18 +55,20 @@ export default function ViewEventChip({
             Close
           </UmassPhotoButton>
           <div className="grow"></div>
-          <UmassPhotoButton
-            className="bg-umass-red"
-            onClick={() => {
-              const params = new URLSearchParams({
-                uploadingPhoto: "true",
-                defaultTags: eventData.tag,
-              });
-              router.push(`/photo-gallery?${params.toString()}`);
-            }}
-          >
-            Submit
-          </UmassPhotoButton>
+          {loggedIn && (
+            <UmassPhotoButton
+              className="bg-umass-red"
+              onClick={() => {
+                const params = new URLSearchParams({
+                  uploadingPhoto: "true",
+                  defaultTags: eventData.tag,
+                });
+                router.push(`/photo-gallery?${params.toString()}`);
+              }}
+            >
+              Submit
+            </UmassPhotoButton>
+          )}
           <UmassPhotoButton
             className="bg-umass-red"
             onClick={() => {
