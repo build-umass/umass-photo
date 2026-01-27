@@ -3,9 +3,10 @@
 import { Tables } from "@/app/utils/supabase/database.types";
 import Image from "next/image";
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import { formatDate } from "@/app/utils/dates";
 import { useRouter } from "next/navigation";
+import UmassPhotoButtonGray from "../UmassPhotoButton/UmassPhotoButtonGray";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
@@ -51,13 +52,10 @@ export default function ViewEventChip({
 
         {/* Footer Section */}
         <div className="flex flex-wrap justify-between gap-3">
-          <UmassPhotoButton className="bg-gray-400" onClick={onClose}>
-            Close
-          </UmassPhotoButton>
+          <UmassPhotoButtonGray onClick={onClose}>Close</UmassPhotoButtonGray>
           <div className="grow"></div>
           {loggedIn && (
-            <UmassPhotoButton
-              className="bg-umass-red"
+            <UmassPhotoButtonRed
               onClick={() => {
                 const params = new URLSearchParams({
                   uploadingPhoto: "true",
@@ -67,10 +65,9 @@ export default function ViewEventChip({
               }}
             >
               Submit
-            </UmassPhotoButton>
+            </UmassPhotoButtonRed>
           )}
-          <UmassPhotoButton
-            className="bg-umass-red"
+          <UmassPhotoButtonRed
             onClick={() => {
               const params = new URLSearchParams({
                 selectedTags: eventData.tag,
@@ -79,7 +76,7 @@ export default function ViewEventChip({
             }}
           >
             View Gallery
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
         </div>
       </div>
     </ModalCommon>

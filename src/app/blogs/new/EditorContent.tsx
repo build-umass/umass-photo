@@ -1,6 +1,6 @@
 "use client";
 import MarkdownEditorPlainText from "@/app/components/MarkdownEditor/MarkdownEditorPlainText";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import { useState } from "react";
 import BlogContent from "../BlogContent";
 import { markdownTutorialContent } from "../markdownTutorialContent";
@@ -55,20 +55,15 @@ export default function EditorContent({ authorid }: { authorid: string }) {
         </>
       )}
       <div className="absolute top-0 right-0 flex gap-4 p-4">
-        <UmassPhotoButton
-          onClick={publishBlog}
-          className={`${uploading ? "bg-gray-300" : "bg-umass-red"} text-white`}
-          disabled={uploading}
-        >
+        <UmassPhotoButtonRed onClick={publishBlog} disabled={uploading}>
           Publish
-        </UmassPhotoButton>
-        <UmassPhotoButton
-          className="bg-umass-red text-white"
+        </UmassPhotoButtonRed>
+        <UmassPhotoButtonRed
           onClick={() => setIsPreview(!isPreview)}
           disabled={uploading}
         >
           Toggle Preview
-        </UmassPhotoButton>
+        </UmassPhotoButtonRed>
       </div>
     </div>
   );

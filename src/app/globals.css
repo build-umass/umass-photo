@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-umass-red: #8e122a;
-  --color-umass-red-dark: #6b0f20;
+  --color-umass-red-light: oklch(0.67 0.18 19.12);
+  --color-umass-red: oklch(0.4185 0.1556 18.22);
+  --color-umass-red-dark: oklch(0.3449 0.1239 17.53);
   --color-umass-gray-light: oklch(87.2% 0.01 258.338);
   --color-umass-gray: oklch(70.7% 0.022 261.325);
   --color-umass-gray-dark: oklch(55.1% 0.027 264.364);

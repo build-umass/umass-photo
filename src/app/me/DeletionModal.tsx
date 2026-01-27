@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ModalCommon from "../components/ChipLayout";
-import UmassPhotoButton from "../components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "../components/UmassPhotoButton/UmassPhotoButtonRed";
 import { Tables } from "../utils/supabase/database.types";
 import { useRouter } from "next/navigation";
 
@@ -51,20 +51,15 @@ export default function DeletionModal({
           disabled={isDeleting}
         />
         <div className="flex gap-4">
-          <UmassPhotoButton
-            className="bg-gray-400 text-white"
-            onClick={closeCallback}
-            disabled={isDeleting}
-          >
+          <UmassPhotoButtonRed onClick={closeCallback} disabled={isDeleting}>
             Cancel
-          </UmassPhotoButton>
-          <UmassPhotoButton
-            className={`${confirmationInputValue === user.username && !isDeleting ? "bg-umass-red" : "cursor-not-allowed bg-gray-400"} text-white`}
+          </UmassPhotoButtonRed>
+          <UmassPhotoButtonRed
             disabled={confirmationInputValue !== user.username || isDeleting}
             onClick={handleDelete}
           >
             {isDeleting ? "Deleting..." : "Delete Account"}
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
         </div>
       </div>
     </ModalCommon>

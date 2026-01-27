@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import UmassPhotoButton from "../components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "../components/UmassPhotoButton/UmassPhotoButtonRed";
 import DeletionModal from "./DeletionModal";
 import LogoutButton from "./LogoutButton";
 import { Tables, TablesUpdate } from "../utils/supabase/database.types";
@@ -138,19 +138,13 @@ export default function UserDataInterface({
         <p>
           <strong>Role:</strong> {profileData.role}
         </p>
-        <UmassPhotoButton
-          className={`${edited ? "bg-umass-red" : "bg-gray-400"} mx-auto block text-white`}
-          onClick={() => saveProfile()}
-        >
+        <UmassPhotoButtonRed onClick={() => saveProfile()} disabled={!edited}>
           Save
-        </UmassPhotoButton>
+        </UmassPhotoButtonRed>
         <LogoutButton></LogoutButton>
-        <UmassPhotoButton
-          className="bg-umass-red mx-auto block text-white"
-          onClick={() => setDeleteMenuOpen(true)}
-        >
+        <UmassPhotoButtonRed onClick={() => setDeleteMenuOpen(true)}>
           Delete Account
-        </UmassPhotoButton>
+        </UmassPhotoButtonRed>
       </div>
       {deleteMenuOpen && (
         <DeletionModal

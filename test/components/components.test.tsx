@@ -1,10 +1,10 @@
 import { describe, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 
 describe("Component Tests", () => {
   it("Umass Photo Button should have color", () => {
-    render(<UmassPhotoButton>Example Text</UmassPhotoButton>);
+    render(<UmassPhotoButtonRed>Example Text</UmassPhotoButtonRed>);
     screen.getByText("Example Text");
   });
 });

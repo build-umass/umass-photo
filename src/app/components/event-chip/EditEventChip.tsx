@@ -1,8 +1,9 @@
 "use client";
 import ImageSelectField from "@/app/components/ImageSelectField";
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import { useRef, useState } from "react";
+import UmassPhotoButtonGray from "../UmassPhotoButton/UmassPhotoButtonGray";
 
 /**
  * Converts a Date object into the datetime-local format
@@ -125,17 +126,15 @@ export default function EditEventChip({
 
   const footerContent = (
     <>
-      <UmassPhotoButton className="bg-gray-400" onClick={closeCallback}>
-        Close
-      </UmassPhotoButton>
+      <UmassPhotoButtonGray onClick={closeCallback}>Close</UmassPhotoButtonGray>
       {validationErrorMessage ? (
         <div className="text-umass-red">{validationErrorMessage}</div>
       ) : (
         <></>
       )}
-      <UmassPhotoButton className="bg-umass-red" onClick={handleConfirmChanges}>
+      <UmassPhotoButtonRed onClick={handleConfirmChanges}>
         Confirm Changes
-      </UmassPhotoButton>
+      </UmassPhotoButtonRed>
     </>
   );
 
