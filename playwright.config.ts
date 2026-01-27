@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 import dotenv from "dotenv";
 import path from "path";
-dotenv.config({ path: path.resolve(__dirname, ".env") });
+dotenv.config({ path: path.resolve(import.meta.dirname, ".env") });
 
 /* Determine if we are running in headful mode based on an environment variable. */
 const HEADFUL = !!process.env.HEADFUL;

@@ -14,4 +14,4 @@ CREATE POLICY "Allow admins to manage events" ON "public"."event" AS PERMISSIVE 
     )
 );
 CREATE POLICY "Allow everyone to select events" ON "public"."event" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
