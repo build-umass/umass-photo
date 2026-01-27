@@ -33,8 +33,6 @@ export async function login({
     throw new Error("Failed to extract OTP code from email.");
   }
 
-  console.debug(`Code received: ${code}`);
-
   // Here, we fill in the OTP form.");
   // Source - https://stackoverflow.com/a/78753805
   // Posted by Guillaume Brioudes
