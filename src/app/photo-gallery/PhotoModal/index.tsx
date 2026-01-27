@@ -12,7 +12,7 @@ export interface PhotoItem {
   id: number;
   title: string;
   author: string;
-  authorId: number;
+  authorId: string;
   date: string;
   imageUrl?: string;
 }
@@ -33,7 +33,7 @@ export default function PhotoModal({
   onFirstPhoto: boolean;
   onLastPhoto: boolean;
   selectedPhoto: PhotoItem;
-  currentUserId: number | null;
+  currentUserId: string | null;
   onPhotoDeleted: () => void;
 }) {
   const [modalImageError, setModalImageError] = useState(false);
