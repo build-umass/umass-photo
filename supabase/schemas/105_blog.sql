@@ -12,7 +12,7 @@ CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FO
     )
 );
 CREATE POLICY "Allow everyone to select blogs" ON "public"."blog" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
 CREATE POLICY "Allow everyone to manage blogs that they are authors of" ON "public"."blog" AS PERMISSIVE FOR ALL USING (
     (
         SELECT auth.uid()
