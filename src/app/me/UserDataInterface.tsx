@@ -106,58 +106,77 @@ export default function UserDataInterface({
   return (
     <>
       <div className="relative z-10 min-w-1/2 bg-black/50 p-10 text-white">
-        <h1 className="text-center text-2xl">Edit Account</h1>
-        <button
-          className="mx-auto block overflow-clip rounded-full"
-          onClick={() => profilePictureInput.current?.click()}
-        >
-          <Image
-            src={profileData.profilePictureURL || "/blank_profile.png"}
-            alt="Profile Picture"
-            width={100}
-            height={100}
+        <h1 className="text-left text-2xl mb-6">Edit Account</h1>
+        <hr className="-mt-5 mb-5" /> 
+        <div className="mb-6">
+          <button
+            className="overflow-clip rounded-full block"
+            onClick={() => profilePictureInput.current?.click()}
+          >
+            <Image
+              src={profileData.profilePictureURL || "/blank_profile.png"}
+              alt="Profile Picture"
+              width={100}
+              height={100}
+            />
+          </button>
+          <input
+            type="file"
+            className="aria-hidden hidden"
+            onChange={updateSelectedProfilePicture}
+            ref={profilePictureInput}
           />
-        </button>
-        <input
-          type="file"
-          className="aria-hidden hidden"
-          onChange={updateSelectedProfilePicture}
-          ref={profilePictureInput}
-        />
-        <p className="text-center text-xl">{profileData.username}</p>
-        <textarea
-          className="min-w-full text-white"
-          value={profileData.bio || ""}
-          onChange={(e) =>
-            setProfileData({ ...profileData, bio: e.target.value })
-          }
-        ></textarea>
-        <p>
-          <strong>Email:</strong> {profileData.email}
-        </p>
-        <p>
-          <strong>Role:</strong> {profileData.role}
-        </p>
-        <UmassPhotoButton
-          className={`${edited ? "bg-umass-red" : "bg-gray-400"} mx-auto block text-white`}
-          onClick={() => saveProfile()}
-        >
-          Save
-        </UmassPhotoButton>
-        <LogoutButton></LogoutButton>
-        <UmassPhotoButton
-          className="bg-umass-red mx-auto block text-white"
-          onClick={() => setDeleteMenuOpen(true)}
-        >
-          Delete Account
-        </UmassPhotoButton>
+        </div>
+
+        <p className="text-left text-xl mb-6">{profileData.username}</p>
+
+        <div className="mb-6 space-y-3">
+          <p className="text-left">
+            <strong>Email:</strong> {profileData.email}
+          </p>
+          <p className="text-left">
+            <strong>Role:</strong> {profileData.role}
+          </p>
+          <div className="mb-8">
+            <label className="block text-left font-semibold mb-2">Bio:</label>
+            <textarea
+              className="w-full bg-white/20 backdrop-blur-sm text-white p-3 rounded-lg border border-white/30 placeholder-gray-300"
+              placeholder="Tell us about yourself..."
+              value={profileData.bio || ""}
+              onChange={(e) =>
+                setProfileData({ ...profileData, bio: e.target.value })
+              }
+              rows={4}
+            />
+          </div>
+        </div>
+
+
+        <div className="">
+          <UmassPhotoButton
+            className={`${edited ? "bg-umass-red" : "bg-gray-400"} text-white m-3`}
+            onClick={() => saveProfile()}
+          >
+            Save
+          </UmassPhotoButton>
+
+          <LogoutButton />
+
+          <UmassPhotoButton
+            className="bg-umass-red text-white m-3"
+            onClick={() => setDeleteMenuOpen(true)}
+          >
+            Delete Account
+          </UmassPhotoButton>
+        </div>
+
+        {deleteMenuOpen && (
+          <DeletionModal
+            closeCallback={() => setDeleteMenuOpen(false)}
+            user={profileData}
+          />
+        )}
       </div>
-      {deleteMenuOpen && (
-        <DeletionModal
-          closeCallback={() => setDeleteMenuOpen(false)}
-          user={profileData}
-        />
-      )}
     </>
   );
 }

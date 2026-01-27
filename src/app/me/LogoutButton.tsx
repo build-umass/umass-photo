@@ -11,7 +11,7 @@ export default function LogoutButton() {
   }
   return (
     <UmassPhotoButton
-      className="mx-auto block bg-none text-white"
+      className="mx-auto bg-none text-white border-1"
       onClick={logout}
     >
       Logout
