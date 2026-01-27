@@ -1,27 +1,26 @@
+// This is the tsconfig file for scripts used in the development process.
+// Feel free to change this.
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "esnext",
+    "lib": ["esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
     "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "scripts"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }
