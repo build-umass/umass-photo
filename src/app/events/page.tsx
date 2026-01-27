@@ -42,7 +42,7 @@ export default function EventsPage() {
           <Image
             src={event.herofileURL}
             alt={`Hero image for ${event.name}`}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             width={500}
             height={500}
           />
