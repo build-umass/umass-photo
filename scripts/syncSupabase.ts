@@ -24,6 +24,8 @@ if (help) {
 Usage: tsx syncSupabase.ts --name <migration-name>
 
 Syncs Supabase database and types after a schema modification.
+If this command fails, your database and types may be out of sync!
+This is likely an issue with your newly-created migration in supabase/migrations.
 
 Arguments:
   migration-name         Name of the migration file to create
