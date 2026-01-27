@@ -8,8 +8,6 @@ export default async function BlogsPage() {
     .from("blog")
     .select("*, photoclubuser(*)");
 
-  console.log(JSON.stringify(blogData, null, 2));
-
   if (blogError) {
     return <div>Error loading blog posts.</div>;
   }
@@ -17,19 +15,29 @@ export default async function BlogsPage() {
     return <div>No blog posts found.</div>;
   }
 
-  return blogData.map((blog) => (
-    <Link
-      href={`/blogs/${blog.id}`}
-      key={blog.id}
-      className="cursor-camera transition-colors duration-500 hover:bg-gray-300"
-    >
-      <div className="mb-8">
-        <h2 className="mb-2 text-2xl font-bold">{blog.title}</h2>
-        <p className="mb-4 text-gray-600">
-          Published on {new Date(blog.postdate).toLocaleDateString()} by{" "}
-          {blog.photoclubuser.username}
-        </p>
-      </div>
-    </Link>
-  ));
+  return (
+    <>
+      <Link
+        href="/blogs/new"
+        className="cursor-camera py-8 text-center text-2xl font-bold transition-colors duration-500 hover:bg-gray-300"
+      >
+        Create New Blog Post
+      </Link>
+      {blogData.map((blog) => (
+        <Link
+          href={`/blogs/${blog.id}`}
+          key={blog.id}
+          className="cursor-camera transition-colors duration-500 hover:bg-gray-300"
+        >
+          <div className="mb-8">
+            <h2 className="mb-2 text-2xl font-bold">{blog.title}</h2>
+            <p className="mb-4 text-gray-600">
+              Published on {new Date(blog.postdate).toLocaleDateString()} by{" "}
+              {blog.photoclubuser.username}
+            </p>
+          </div>
+        </Link>
+      ))}
+    </>
+  );
 }

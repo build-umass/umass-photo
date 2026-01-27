@@ -5,13 +5,14 @@ import { useState } from "react";
 import BlogContent from "../BlogContent";
 import { markdownTutorialContent } from "../markdownTutorialContent";
 import { createBlog } from "./createBlog";
-import { randomUUID } from "crypto";
+import { useRouter } from "next/navigation";
 
 export default function EditorContent({ authorid }: { authorid: string }) {
   const [content, setContent] = useState(markdownTutorialContent);
   const [title, setTitle] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const router = useRouter();
 
   async function publishBlog() {
     setUploading(true);
@@ -21,6 +22,7 @@ export default function EditorContent({ authorid }: { authorid: string }) {
       console.error("Error publishing blog:", error);
     } finally {
       setUploading(false);
+      router.push("/blogs");
     }
   }
 
@@ -32,7 +34,7 @@ export default function EditorContent({ authorid }: { authorid: string }) {
             title,
             content,
             authorid,
-            id: randomUUID(),
+            id: "00000000-0000-0000-0000-000000000000",
             postdate: new Date().toISOString(),
           }}
         />
