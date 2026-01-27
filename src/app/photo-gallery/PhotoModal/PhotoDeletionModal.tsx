@@ -1,5 +1,5 @@
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
 
 export default function PhotoDeletionModal({
   closeCallback,

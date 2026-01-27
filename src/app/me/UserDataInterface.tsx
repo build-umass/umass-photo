@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import UmassPhotoButton from "../components/UmassPhotoButton";
+import UmassPhotoButton from "../components/UmassPhotoButton/UmassPhotoButton";
 import DeletionModal from "./DeletionModal";
 import LogoutButton from "./LogoutButton";
 import { Tables, TablesUpdate } from "../utils/supabase/database.types";

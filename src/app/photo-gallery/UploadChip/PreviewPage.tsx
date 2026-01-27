@@ -1,4 +1,4 @@
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 

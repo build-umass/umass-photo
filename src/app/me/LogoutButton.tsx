@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import UmassPhotoButton from "../components/UmassPhotoButton";
+import UmassPhotoButton from "../components/UmassPhotoButton/UmassPhotoButton";
 
 export default function LogoutButton() {
   const router = useRouter();

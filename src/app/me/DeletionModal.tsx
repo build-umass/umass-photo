@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ModalCommon from "../components/ChipLayout";
-import UmassPhotoButton from "../components/UmassPhotoButton";
+import UmassPhotoButton from "../components/UmassPhotoButton/UmassPhotoButton";
 import { Tables } from "../utils/supabase/database.types";
 import { useRouter } from "next/navigation";
 

@@ -3,7 +3,7 @@
 import { Tables } from "@/app/utils/supabase/database.types";
 import Image from "next/image";
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
 import { formatDate } from "@/app/utils/dates";
 import { useRouter } from "next/navigation";
 

@@ -1,5 +1,5 @@
 "use client";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
 import ImageSelectField from "@/app/components/ImageSelectField";
 import ModalCommon from "@/app/components/ChipLayout";
 import { FormEvent, useEffect, useState } from "react";

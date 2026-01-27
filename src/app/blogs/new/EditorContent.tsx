@@ -1,6 +1,6 @@
 "use client";
 import MarkdownEditorPlainText from "@/app/components/MarkdownEditor/MarkdownEditorPlainText";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButton from "@/app/components/UmassPhotoButton/UmassPhotoButton";
 import { useState } from "react";
 import BlogContent from "../BlogContent";
 import { markdownTutorialContent } from "../markdownTutorialContent";

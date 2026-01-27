@@ -2,6 +2,11 @@
 
 @theme {
   --color-umass-red: #8e122a;
+  --color-umass-red-dark: #6b0f20;
+  --color-umass-gray-light: oklch(87.2% 0.01 258.338);
+  --color-umass-gray: oklch(70.7% 0.022 261.325);
+  --color-umass-gray-dark: oklch(55.1% 0.027 264.364);
+  --radius-default: 0.375rem;
 }
 
 @utility cursor-camera {
