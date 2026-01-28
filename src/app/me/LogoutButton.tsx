@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import UmassPhotoButton from "../components/UmassPhotoButton";
+import UmassPhotoButtonRed from "../components/UmassPhotoButton/UmassPhotoButtonRed";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -9,12 +9,5 @@ export default function LogoutButton() {
     router.push("/");
     router.refresh();
   }
-  return (
-    <UmassPhotoButton
-      className="mx-auto block bg-none text-white"
-      onClick={logout}
-    >
-      Logout
-    </UmassPhotoButton>
-  );
+  return <UmassPhotoButtonRed onClick={logout}>Logout</UmassPhotoButtonRed>;
 }

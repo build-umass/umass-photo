@@ -3,17 +3,20 @@
 import { Tables } from "@/app/utils/supabase/database.types";
 import Image from "next/image";
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import { formatDate } from "@/app/utils/dates";
 import { useRouter } from "next/navigation";
+import UmassPhotoButtonGray from "../UmassPhotoButton/UmassPhotoButtonGray";
 
 type EventWithURL = Tables<"event"> & { herofileURL: string };
 export default function ViewEventChip({
   eventData,
   onClose,
+  loggedIn,
 }: {
   eventData: EventWithURL;
   onClose: () => void;
+  loggedIn: boolean;
 }) {
   const startTime = new Date(eventData.startdate);
   const endTime = new Date(eventData.enddate);
@@ -49,24 +52,22 @@ export default function ViewEventChip({
 
         {/* Footer Section */}
         <div className="flex flex-wrap justify-between gap-3">
-          <UmassPhotoButton className="bg-gray-400" onClick={onClose}>
-            Close
-          </UmassPhotoButton>
+          <UmassPhotoButtonGray onClick={onClose}>Close</UmassPhotoButtonGray>
           <div className="grow"></div>
-          <UmassPhotoButton
-            className="bg-umass-red"
-            onClick={() => {
-              const params = new URLSearchParams({
-                uploadingPhoto: "true",
-                defaultTags: eventData.tag,
-              });
-              router.push(`/photo-gallery?${params.toString()}`);
-            }}
-          >
-            Submit
-          </UmassPhotoButton>
-          <UmassPhotoButton
-            className="bg-umass-red"
+          {loggedIn && (
+            <UmassPhotoButtonRed
+              onClick={() => {
+                const params = new URLSearchParams({
+                  uploadingPhoto: "true",
+                  defaultTags: eventData.tag,
+                });
+                router.push(`/photo-gallery?${params.toString()}`);
+              }}
+            >
+              Submit
+            </UmassPhotoButtonRed>
+          )}
+          <UmassPhotoButtonRed
             onClick={() => {
               const params = new URLSearchParams({
                 selectedTags: eventData.tag,
@@ -75,7 +76,7 @@ export default function ViewEventChip({
             }}
           >
             View Gallery
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
         </div>
       </div>
     </ModalCommon>

@@ -43,10 +43,10 @@ export type Database = {
           title: string
         }
         Insert: {
-          authorid: string
+          authorid?: string
           content: string
           id?: string
-          postdate: string
+          postdate?: string
           title: string
         }
         Update: {

@@ -1,4 +1,4 @@
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
@@ -24,15 +24,14 @@ export default function PreviewPage({
     <div className="flex h-full w-full flex-col">
       <div className="relative grow">{imageDiv}</div>
       <div className="flex justify-end pt-3">
-        <UmassPhotoButton
-          className="bg-umass-red"
-          type="button"
+        <UmassPhotoButtonRed
           onClick={() => {
             setPreviewMode((previewMode) => !previewMode);
           }}
+          type="button"
         >
           Close Preview
-        </UmassPhotoButton>
+        </UmassPhotoButtonRed>
       </div>
     </div>
   );

@@ -15,14 +15,19 @@ export default async function BlogsPage() {
     return <div>No blog posts found.</div>;
   }
 
+  const loggedIn = (await client.auth.getUser()).data.user !== null;
+
   return (
     <>
-      <Link
-        href="/blogs/new"
-        className="cursor-camera py-8 text-center text-2xl font-bold transition-colors duration-500 hover:bg-gray-300"
-      >
-        Create New Blog Post
-      </Link>
+      {loggedIn && (
+        <Link
+          href="/blogs/new"
+          className="cursor-camera py-8 text-center text-2xl font-bold transition-colors duration-500 hover:bg-gray-300"
+        >
+          Create New Blog Post
+        </Link>
+      )}
+
       {blogData.map((blog) => (
         <Link
           href={`/blogs/${blog.id}`}

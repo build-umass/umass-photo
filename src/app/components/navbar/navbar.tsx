@@ -39,6 +39,7 @@ export default async function Navbar() {
         <div className={`flex ${teachers.className}`}>
           <NavBarLink href={"/"}>Home</NavBarLink>
           <NavBarLink href={"/photo-gallery"}>Gallery</NavBarLink>
+          <NavBarLink href={"/blogs"}>Blogs</NavBarLink>
           <NavBarLink href={"/events"}>Events</NavBarLink>
           <NavBarLink href={"/about"}>About</NavBarLink>
           <NavBarLink href={"/contact"}>Contact</NavBarLink>

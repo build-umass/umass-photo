@@ -1,9 +1,10 @@
 "use client";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import ImageSelectField from "@/app/components/ImageSelectField";
 import ModalCommon from "@/app/components/ChipLayout";
 import { FormEvent, useEffect, useState } from "react";
 import PreviewPage from "./PreviewPage";
+import UmassPhotoButtonGray from "@/app/components/UmassPhotoButton/UmassPhotoButtonGray";
 
 export default function UploadChip({
   closeCallback,
@@ -220,26 +221,19 @@ export default function UploadChip({
         </div>
 
         <div className="flex flex-row gap-3">
-          <UmassPhotoButton
-            className="bg-gray-400"
-            type="button"
-            onClick={closeCallback}
-          >
+          <UmassPhotoButtonGray onClick={closeCallback} type="button">
             Close
-          </UmassPhotoButton>
+          </UmassPhotoButtonGray>
           <div aria-hidden="true" className="grow"></div>
-          <UmassPhotoButton
-            className="bg-umass-red"
-            type="button"
+          <UmassPhotoButtonRed
             onClick={() => {
               setPreviewMode((previewMode) => !previewMode);
             }}
+            type="button"
           >
             Preview
-          </UmassPhotoButton>
-          <UmassPhotoButton className="bg-umass-red" type="submit">
-            Upload
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
+          <UmassPhotoButtonRed type="submit">Upload</UmassPhotoButtonRed>
         </div>
       </form>
     </ModalCommon>
