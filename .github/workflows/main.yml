@@ -26,9 +26,44 @@ jobs:
       - run: echo "MODE=testing" >> .env
       - run: echo "CRON_SECRET=insecure_secret" >> .env
       - run: npm run build
+
+      - name: Resolve Playwright Version
+        id: playwright-version
+        run: "echo \"playwright-version=$(npm list --long --json @playwright/test | jq -r .dependencies[\\\"@playwright/test\\\"].version)\" >> \"$GITHUB_OUTPUT\""
+
+      - name: Cache Playwright
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.playwright-version }}
+      - run: npx playwright install-deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
       - run: npx playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Cache Playwright Chrome
+        id: playwright-cache-chrome
+        uses: actions/cache@v5
+        with:
+          path: /opt/google/chrome
+          key: playwright-chrome-${{ runner.os }}-${{ steps.playwright-version.outputs.playwright-version }}
+      - run: npx playwright install-deps chrome
+        if: steps.playwright-cache-chrome.outputs.cache-hit == 'true'
       - run: npx playwright install chrome
+        if: steps.playwright-cache-chrome.outputs.cache-hit != 'true'
+
+      - name: Cache Playwright Edge
+        id: playwright-cache-edge
+        uses: actions/cache@v5
+        with:
+          path: /opt/microsoft/msedge
+          key: playwright-edge-${{ runner.os }}-${{ steps.playwright-version.outputs.playwright-version }}
+      - run: npx playwright install-deps msedge
+        if: steps.playwright-cache-edge.outputs.cache-hit == 'true'
       - run: npx playwright install msedge
+        if: steps.playwright-cache-edge.outputs.cache-hit != 'true'
+
       - run: npm test
       - name: Archive code coverage results
         if: always()
