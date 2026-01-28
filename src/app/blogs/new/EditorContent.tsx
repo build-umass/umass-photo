@@ -6,10 +6,13 @@ import BlogContent from "../BlogContent";
 import { markdownTutorialContent } from "../markdownTutorialContent";
 import { createBlog } from "./createBlog";
 import { useRouter } from "next/navigation";
+import { TablesInsert } from "@/app/utils/supabase/database.types";
 
-export default function EditorContent({ authorid }: { authorid: string }) {
-  const [content, setContent] = useState(markdownTutorialContent);
-  const [title, setTitle] = useState("");
+export default function EditorContent() {
+  const [blogData, setBlogData] = useState<TablesInsert<"blog">>({
+    title: "",
+    content: markdownTutorialContent,
+  });
   const [isPreview, setIsPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
@@ -17,40 +20,34 @@ export default function EditorContent({ authorid }: { authorid: string }) {
   async function publishBlog() {
     setUploading(true);
     try {
-      await createBlog(title, content);
+      await createBlog(blogData);
+      router.push("/blogs");
     } catch (error) {
       console.error("Error publishing blog:", error);
     } finally {
       setUploading(false);
-      router.push("/blogs");
     }
   }
 
   return (
     <div className="relative flex grow flex-col">
       {isPreview ? (
-        <BlogContent
-          blog={{
-            title,
-            content,
-            authorid,
-            id: "00000000-0000-0000-0000-000000000000",
-            postdate: new Date().toISOString(),
-          }}
-        />
+        <BlogContent blog={blogData} />
       ) : (
         <>
           <input
             name="title"
             placeholder="Title"
             className="text-center text-3xl"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={blogData.title}
+            onChange={(e) =>
+              setBlogData({ ...blogData, title: e.target.value })
+            }
           ></input>
           <MarkdownEditorPlainText
-            onChange={setContent}
-            value={content}
             className="grow"
+            value={blogData.content}
+            onChange={(value) => setBlogData({ ...blogData, content: value })}
           ></MarkdownEditorPlainText>
         </>
       )}
