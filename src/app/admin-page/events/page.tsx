@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { Tables } from "../../utils/supabase/database.types";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
-import AdminPageButton from "../common/AdminPageButton";
 import EventManagementRow, { RowFlag } from "./EventManagementRow";
 import EditEventChip from "@/app/components/event-chip/EditEventChip";
+import AdminPageTable from "../common/AdminPageTable";
+import TableEditorHeader from "../common/TableEditorHeader";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 
 export default function EventManagementTab() {
   const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
@@ -77,12 +79,12 @@ export default function EventManagementTab() {
             }}
           ></EditEventChip>
         )}
-        <div className="flex justify-between">
-          <h1 className="text-umass-red text-6xl font-bold">Events</h1>
-          <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
-        </div>
-        <table className="border-2 border-gray-200 drop-shadow-xl">
-          <tbody>
+        <TableEditorHeader
+          tableName="Events"
+          onSave={saveChanges}
+        ></TableEditorHeader>
+        <AdminPageTable>
+          <thead>
             <tr>
               <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>ID</AdminPageTableHeaderCell>
@@ -93,19 +95,22 @@ export default function EventManagementTab() {
               <AdminPageTableHeaderCell>Tag</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
             </tr>
-            <tr>
+          </thead>
+          <tbody>
+            <tr className="bg-gray-100 even:bg-gray-200">
               <td colSpan={8}>
-                <button
-                  onClick={() => {
-                    setEditingEvent(true);
-                  }}
-                  className="text-umass-red border-umass-red w-full border-8 text-center"
-                >
-                  + Add New Event
-                </button>
+                <div className="flex justify-center py-2">
+                  <UmassPhotoButtonRed
+                    onClick={() => {
+                      setEditingEvent(true);
+                    }}
+                  >
+                    + Add New Event
+                  </UmassPhotoButtonRed>
+                </div>
               </td>
             </tr>
-            {Object.entries(eventData).map(([id, row], index) => {
+            {Object.entries(eventData).map(([id, row]) => {
               return (
                 <EventManagementRow
                   key={id}
@@ -113,12 +118,11 @@ export default function EventManagementTab() {
                   setRowFlag={(rowFlag: RowFlag) => setRowFlag(id, rowFlag)}
                   event={row}
                   setEvent={(ev: Tables<"event">) => setEventById(id, ev)}
-                  index={index}
                 ></EventManagementRow>
               );
             })}
           </tbody>
-        </table>
+        </AdminPageTable>
       </>
     );
   }

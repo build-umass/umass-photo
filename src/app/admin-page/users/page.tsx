@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { Tables } from "../../utils/supabase/database.types";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
-import AdminPageButton from "../common/AdminPageButton";
 import UserManagementRow, { RowFlag } from "./UserManagementRow";
+import AdminPageTable from "../common/AdminPageTable";
+import TableEditorHeader from "../common/TableEditorHeader";
 
 export default function UserManagementTab() {
   const [rowFlags, setRowFlags] = useState<Record<string, RowFlag>>({});
@@ -72,12 +73,12 @@ export default function UserManagementTab() {
   } else {
     return (
       <>
-        <div className="flex justify-between">
-          <h1 className="text-umass-red text-6xl font-bold">Users</h1>
-          <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
-        </div>
-        <table className="border-2 border-gray-200 drop-shadow-xl">
-          <tbody>
+        <TableEditorHeader
+          tableName="Events"
+          onSave={saveChanges}
+        ></TableEditorHeader>
+        <AdminPageTable>
+          <thead>
             <tr>
               <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>ID</AdminPageTableHeaderCell>
@@ -87,7 +88,9 @@ export default function UserManagementTab() {
               <AdminPageTableHeaderCell>Role</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
             </tr>
-            {Object.entries(userData).map(([id, row], index) => {
+          </thead>
+          <tbody>
+            {Object.entries(userData).map(([id, row]) => {
               return (
                 <UserManagementRow
                   key={id}
@@ -95,13 +98,12 @@ export default function UserManagementTab() {
                   setRowFlag={(rowFlag: RowFlag) => setRowFlag(id, rowFlag)}
                   user={row}
                   setUser={(user) => setUser(id, user)}
-                  index={index}
                   roles={roles}
                 ></UserManagementRow>
               );
             })}
           </tbody>
-        </table>
+        </AdminPageTable>
       </>
     );
   }

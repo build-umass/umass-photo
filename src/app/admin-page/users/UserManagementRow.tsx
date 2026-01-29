@@ -1,6 +1,7 @@
 import { Tables } from "@/app/utils/supabase/database.types";
 import AdminPageTableCell from "../common/AdminPageTableCell";
-import AdminPageButton from "../common/AdminPageButton";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
+import AdminPageTableRow from "../common/AdminPageTableRow";
 
 export enum RowFlag {
   MODIFIED,
@@ -13,14 +14,12 @@ export default function UserManagementRow({
   setRowFlag,
   user,
   setUser,
-  index,
   roles,
 }: {
   rowFlag: RowFlag;
   setRowFlag: (rowFlag: RowFlag) => void;
   user: Tables<"photoclubuser">;
   setUser: (isDeleted: Tables<"photoclubuser">) => void;
-  index: number;
   roles: ReadonlyArray<string>;
 }) {
   const role = user.role;
@@ -38,10 +37,8 @@ export default function UserManagementRow({
         ? "bg-red-500"
         : "";
 
-  const rowBackgroundColor = index % 2 == 1 ? "bg-gray-200" : "bg-gray-100";
-
   return (
-    <tr className={rowBackgroundColor}>
+    <AdminPageTableRow>
       <AdminPageTableCell
         className={`w-2 ${indicatorColor}`}
       ></AdminPageTableCell>
@@ -59,13 +56,10 @@ export default function UserManagementRow({
         </select>
       </AdminPageTableCell>
       <AdminPageTableCell>
-        <AdminPageButton
-          className="bg-umass-red text-white"
-          onClick={() => setRowFlag(RowFlag.DELETED)}
-        >
+        <UmassPhotoButtonRed onClick={() => setRowFlag(RowFlag.DELETED)}>
           X
-        </AdminPageButton>
+        </UmassPhotoButtonRed>
       </AdminPageTableCell>
-    </tr>
+    </AdminPageTableRow>
   );
 }
