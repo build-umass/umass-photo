@@ -2,6 +2,7 @@ import { Tables } from "@/app/utils/supabase/database.types";
 import AdminPageTableCell from "../common/AdminPageTableCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import AdminPageTableRow from "../common/AdminPageTableRow";
+import { rowEquals } from "../common/rowEquals";
 
 /**
  * Converts a Date object into the datetime-local format
@@ -13,7 +14,6 @@ function dateToDateTimeLocalString(date: Date) {
 }
 
 export enum RowFlag {
-  MODIFIED,
   DELETED,
   NONE,
 }
@@ -23,48 +23,60 @@ export default function EventManagementRow({
   setRowFlag,
   event,
   setEvent,
+  savedEvent,
 }: {
   rowFlag: RowFlag;
-  setRowFlag: (rowFlag: RowFlag) => void;
-  event: Tables<"event">;
-  setEvent: (ev: Tables<"event">) => void;
+  setRowFlag: (updater: (oldRowFlag: RowFlag) => RowFlag) => void;
+  event: Readonly<Tables<"event">>;
+  setEvent: (
+    updater: (oldEvent: Readonly<Tables<"event">>) => Readonly<Tables<"event">>,
+  ) => void;
+  savedEvent: Readonly<Tables<"event">>;
 }) {
   const tag = event.tag;
 
   const setName = (name: string) => {
-    const newEvent: Tables<"event"> = { ...event };
-    newEvent.name = name;
-    setEvent(newEvent);
-    setRowFlag(RowFlag.MODIFIED);
+    setEvent((oldEvent) => {
+      return {
+        ...oldEvent,
+        name,
+      };
+    });
   };
 
   const setDescription = (description: string) => {
-    const newEvent: Tables<"event"> = { ...event };
-    newEvent.description = description;
-    setEvent(newEvent);
-    setRowFlag(RowFlag.MODIFIED);
+    setEvent((oldEvent) => {
+      return {
+        ...oldEvent,
+        description,
+      };
+    });
   };
 
   const setStart = (value: Date) => {
-    const newEvent: Tables<"event"> = { ...event };
-    newEvent.startdate = value.toISOString();
-    setEvent(newEvent);
-    setRowFlag(RowFlag.MODIFIED);
+    setEvent((oldEvent) => {
+      return {
+        ...oldEvent,
+        startdate: value.toISOString(),
+      };
+    });
   };
 
   const setEnd = (value: Date) => {
-    const newEvent: Tables<"event"> = { ...event };
-    newEvent.enddate = value.toISOString();
-    setEvent(newEvent);
-    setRowFlag(RowFlag.MODIFIED);
+    setEvent((oldEvent) => {
+      return {
+        ...oldEvent,
+        enddate: value.toISOString(),
+      };
+    });
   };
 
   const indicatorColor =
-    rowFlag === RowFlag.MODIFIED
-      ? "bg-yellow-500"
-      : rowFlag === RowFlag.DELETED
-        ? "bg-red-500"
-        : "";
+    rowFlag === RowFlag.DELETED
+      ? "bg-red-500"
+      : rowEquals(event, savedEvent)
+        ? ""
+        : "bg-yellow-500";
 
   const currentStartDate = new Date(event.startdate);
   const currentEndDate = new Date(event.enddate);
@@ -103,7 +115,7 @@ export default function EventManagementRow({
       </AdminPageTableCell>
       <AdminPageTableCell>{tag}</AdminPageTableCell>
       <AdminPageTableCell>
-        <UmassPhotoButtonRed onClick={() => setRowFlag(RowFlag.DELETED)}>
+        <UmassPhotoButtonRed onClick={() => setRowFlag(() => RowFlag.DELETED)}>
           X
         </UmassPhotoButtonRed>
       </AdminPageTableCell>
