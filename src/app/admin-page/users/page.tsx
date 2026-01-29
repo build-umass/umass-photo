@@ -71,7 +71,7 @@ export default function UserManagementTab() {
     return <>loading...</>;
   } else {
     return (
-      <div className="flex grow flex-col bg-gray-100 p-24">
+      <>
         <div className="flex justify-between">
           <h1 className="text-umass-red text-6xl font-bold">Users</h1>
           <AdminPageButton onClick={saveChanges}>SAVE</AdminPageButton>
@@ -102,7 +102,7 @@ export default function UserManagementTab() {
             })}
           </tbody>
         </table>
-      </div>
+      </>
     );
   }
 }

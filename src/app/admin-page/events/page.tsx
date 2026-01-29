@@ -68,7 +68,7 @@ export default function EventManagementTab() {
     return <>loading...</>;
   } else {
     return (
-      <div className="flex grow flex-col bg-gray-100 p-24">
+      <>
         {editingEvent && (
           <EditEventChip
             closeCallback={() => {
@@ -119,7 +119,7 @@ export default function EventManagementTab() {
             })}
           </tbody>
         </table>
-      </div>
+      </>
     );
   }
 }

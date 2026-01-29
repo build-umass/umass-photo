@@ -1,24 +1,40 @@
+"use client";
 import { ReactNode } from "react";
-import AdminPageButton from "../common/AdminPageButton";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminPageTabButton({
   children,
-  highlighted,
-  className,
-  ...props
+  href,
 }: {
   children: ReactNode;
-  highlighted?: boolean;
-  className?: string;
-  [key: string]: unknown;
+  href: string;
 }) {
-  const color = highlighted ? "bg-white/20" : "";
-  return (
-    <AdminPageButton
-      className={`${className ?? ""} ${color} text-white`}
-      {...props}
-    >
-      {children}
-    </AdminPageButton>
-  );
+  const pathname = usePathname();
+
+  // TODO normalize these
+  const selected = href === pathname;
+
+  if (selected)
+    return (
+      <Link
+        className={
+          "bg-umass-red-dark cursor-camera p-5 text-3xl font-bold text-white transition-colors duration-500"
+        }
+        href={href}
+      >
+        {children}
+      </Link>
+    );
+  else
+    return (
+      <Link
+        className={
+          "bg-umass-red hover:bg-umass-red-dark cursor-camera p-5 text-3xl font-bold text-white transition-colors duration-500"
+        }
+        href={href}
+      >
+        {children}
+      </Link>
+    );
 }
