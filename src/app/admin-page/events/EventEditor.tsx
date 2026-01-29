@@ -85,7 +85,6 @@ export default function EventEditor({
         <AdminPageTable>
           <thead>
             <tr>
-              <AdminPageTableHeaderCell className="w-2"></AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>ID</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Name</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Description</AdminPageTableHeaderCell>
@@ -93,11 +92,12 @@ export default function EventEditor({
               <AdminPageTableHeaderCell>End</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Tag</AdminPageTableHeaderCell>
               <AdminPageTableHeaderCell>Delete</AdminPageTableHeaderCell>
+              <AdminPageTableHeaderCell>Reset</AdminPageTableHeaderCell>
             </tr>
           </thead>
           <tbody>
             <tr className="bg-gray-100 even:bg-gray-200">
-              <td colSpan={8}>
+              <td colSpan={9}>
                 <div className="flex justify-center py-2">
                   <UmassPhotoButtonRed
                     onClick={() => {

@@ -3,6 +3,7 @@ import AdminPageTableCell from "../common/AdminPageTableCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import AdminPageTableRow from "../common/AdminPageTableRow";
 import { rowEquals } from "../common/rowEquals";
+import { MdRefresh } from "react-icons/md";
 
 /**
  * Converts a Date object into the datetime-local format
@@ -71,52 +72,53 @@ export default function EventManagementRow({
     });
   };
 
-  const indicatorColor =
-    rowFlag === RowFlag.DELETED
-      ? "bg-red-500"
-      : rowEquals(event, savedEvent)
-        ? ""
-        : "bg-yellow-500";
-
   const currentStartDate = new Date(event.startdate);
   const currentEndDate = new Date(event.enddate);
 
   return (
     <AdminPageTableRow>
-      <AdminPageTableCell
-        className={`w-2 ${indicatorColor}`}
-      ></AdminPageTableCell>
       <AdminPageTableCell>{event.id}</AdminPageTableCell>
       <AdminPageTableCell>
-        <input
-          defaultValue={event.name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <input value={event.name} onChange={(e) => setName(e.target.value)} />
       </AdminPageTableCell>
       <AdminPageTableCell>
         <textarea
-          defaultValue={event.description}
+          value={event.description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </AdminPageTableCell>
       <AdminPageTableCell>
         <input
           type="datetime-local"
-          defaultValue={dateToDateTimeLocalString(currentStartDate)}
+          value={dateToDateTimeLocalString(currentStartDate)}
           onChange={(e) => setStart(new Date(e.target.value))}
         ></input>
       </AdminPageTableCell>
       <AdminPageTableCell>
         <input
           type="datetime-local"
-          defaultValue={dateToDateTimeLocalString(currentEndDate)}
+          value={dateToDateTimeLocalString(currentEndDate)}
           onChange={(e) => setEnd(new Date(e.target.value))}
         ></input>
       </AdminPageTableCell>
       <AdminPageTableCell>{tag}</AdminPageTableCell>
       <AdminPageTableCell>
-        <UmassPhotoButtonRed onClick={() => setRowFlag(() => RowFlag.DELETED)}>
-          X
+        <UmassPhotoButtonRed
+          onClick={() =>
+            setRowFlag((flag) =>
+              flag === RowFlag.DELETED ? RowFlag.NONE : RowFlag.DELETED,
+            )
+          }
+        >
+          {rowFlag === RowFlag.DELETED ? "Restore" : "Delete"}
+        </UmassPhotoButtonRed>
+      </AdminPageTableCell>
+      <AdminPageTableCell>
+        <UmassPhotoButtonRed
+          onClick={() => setEvent(() => savedEvent)}
+          disabled={rowEquals(event, savedEvent)}
+        >
+          <MdRefresh></MdRefresh>
         </UmassPhotoButtonRed>
       </AdminPageTableCell>
     </AdminPageTableRow>
