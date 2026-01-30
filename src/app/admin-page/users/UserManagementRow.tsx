@@ -2,9 +2,10 @@ import { Tables } from "@/app/utils/supabase/database.types";
 import AdminPageTableCell from "../common/AdminPageTableCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import AdminPageTableRow from "../common/AdminPageTableRow";
+import { rowEquals } from "../common/rowEquals";
+import { MdRefresh } from "react-icons/md";
 
 export enum RowFlag {
-  MODIFIED,
   DELETED,
   NONE,
 }
@@ -15,39 +16,37 @@ export default function UserManagementRow({
   user,
   setUser,
   roles,
+  savedUser,
 }: {
   rowFlag: RowFlag;
-  setRowFlag: (rowFlag: RowFlag) => void;
-  user: Tables<"photoclubuser">;
-  setUser: (isDeleted: Tables<"photoclubuser">) => void;
+  setRowFlag: (updater: (oldRowFlag: RowFlag) => RowFlag) => void;
+  user: Readonly<Tables<"photoclubuser">>;
+  setUser: (
+    updater: (
+      oldUser: Readonly<Tables<"photoclubuser">>,
+    ) => Readonly<Tables<"photoclubuser">>,
+  ) => void;
   roles: ReadonlyArray<string>;
+  savedUser: Readonly<Tables<"photoclubuser">>;
 }) {
   const role = user.role;
   const setRole = (role: string) => {
-    const newUser: Tables<"photoclubuser"> = { ...user };
-    newUser.role = role;
-    setUser(newUser);
-    setRowFlag(RowFlag.MODIFIED);
+    setUser((oldUser) => {
+      return {
+        ...oldUser,
+        role,
+      };
+    });
   };
-
-  const indicatorColor =
-    rowFlag === RowFlag.MODIFIED
-      ? "bg-yellow-500"
-      : rowFlag === RowFlag.DELETED
-        ? "bg-red-500"
-        : "";
 
   return (
     <AdminPageTableRow>
-      <AdminPageTableCell
-        className={`w-2 ${indicatorColor}`}
-      ></AdminPageTableCell>
       <AdminPageTableCell>{user.id}</AdminPageTableCell>
       <AdminPageTableCell>{user.username}</AdminPageTableCell>
       <AdminPageTableCell>{user.email}</AdminPageTableCell>
       <AdminPageTableCell>{user.bio}</AdminPageTableCell>
       <AdminPageTableCell>
-        <select defaultValue={role} onChange={(e) => setRole(e.target.value)}>
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
           {roles.map((role) => (
             <option value={role} key={role}>
               {role}
@@ -56,8 +55,22 @@ export default function UserManagementRow({
         </select>
       </AdminPageTableCell>
       <AdminPageTableCell>
-        <UmassPhotoButtonRed onClick={() => setRowFlag(RowFlag.DELETED)}>
-          X
+        <UmassPhotoButtonRed
+          onClick={() =>
+            setRowFlag((flag) =>
+              flag === RowFlag.DELETED ? RowFlag.NONE : RowFlag.DELETED,
+            )
+          }
+        >
+          {rowFlag === RowFlag.DELETED ? "Restore" : "Delete"}
+        </UmassPhotoButtonRed>
+      </AdminPageTableCell>
+      <AdminPageTableCell>
+        <UmassPhotoButtonRed
+          onClick={() => setUser(() => savedUser)}
+          disabled={rowEquals(user, savedUser)}
+        >
+          <MdRefresh></MdRefresh>
         </UmassPhotoButtonRed>
       </AdminPageTableCell>
     </AdminPageTableRow>
