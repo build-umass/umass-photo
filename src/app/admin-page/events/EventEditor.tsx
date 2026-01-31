@@ -23,7 +23,7 @@ export default function EventEditor({
   );
 
   const [eventData, setEventData] = useState(initialEditorState);
-  const [editingEvent, setEditingEvent] = useState<boolean>(false);
+  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
 
   const saveChanges = async () => {
     const toDelete: string[] = [];
@@ -44,13 +44,6 @@ export default function EventEditor({
   } else {
     return (
       <>
-        {editingEvent && (
-          <EditEventChip
-            closeCallback={() => {
-              setEditingEvent(false);
-            }}
-          ></EditEventChip>
-        )}
         <TableEditorHeader
           tableName="Events"
           onSave={saveChanges}
@@ -72,11 +65,7 @@ export default function EventEditor({
             <tr className="bg-gray-100 even:bg-gray-200">
               <td colSpan={9}>
                 <div className="flex justify-center py-2">
-                  <UmassPhotoButtonRed
-                    onClick={() => {
-                      setEditingEvent(true);
-                    }}
-                  >
+                  <UmassPhotoButtonRed onClick={() => setIsEditorOpen(true)}>
                     + Add New Event
                   </UmassPhotoButtonRed>
                 </div>
@@ -99,6 +88,11 @@ export default function EventEditor({
             })}
           </tbody>
         </AdminPageTable>
+        {isEditorOpen && (
+          <EditEventChip
+            closeCallback={() => setIsEditorOpen(false)}
+          ></EditEventChip>
+        )}
       </>
     );
   }

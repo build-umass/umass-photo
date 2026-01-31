@@ -4,7 +4,7 @@ import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoBut
 import AdminPageTableRow from "../common/AdminPageTableRow";
 import { RowEditState, rowEquals } from "../common/rowEquals";
 import { MdRefresh } from "react-icons/md";
-import DateSelector from "./DateSelector";
+import DateSelector from "@/app/components/DateSelector";
 
 export default function EventManagementRow({
   value,
