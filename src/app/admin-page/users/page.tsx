@@ -28,7 +28,7 @@ export default async function UsersPage() {
 
   return (
     <UserEditor
-      defaultUserData={userDataRecord}
+      savedUserData={userDataRecord}
       roleOptions={roleOptionStrings}
     ></UserEditor>
   );

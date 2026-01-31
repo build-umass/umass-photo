@@ -2,65 +2,39 @@
 import { useState } from "react";
 import { Tables } from "../../utils/supabase/database.types";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
-import UserManagementRow, { RowFlag } from "./UserManagementRow";
+import UserManagementRow from "./UserManagementRow";
 import AdminPageTable from "../common/AdminPageTable";
 import TableEditorHeader from "../common/TableEditorHeader";
 import { useRouter } from "next/navigation";
-import { rowEquals } from "../common/rowEquals";
+import { RowEditState, rowEquals } from "../common/rowEquals";
 
 export default function UserEditor({
-  defaultUserData,
+  savedUserData: savedUserData,
   roleOptions,
 }: {
-  defaultUserData: Readonly<Record<string, Tables<"photoclubuser">>>;
+  savedUserData: Readonly<Record<string, Tables<"photoclubuser">>>;
   roleOptions: ReadonlyArray<string>;
 }) {
-  const [rowFlags, setRowFlags] = useState<Readonly<Record<string, RowFlag>>>(
-    {},
+  const initialEditorState = Object.fromEntries(
+    Object.entries(savedUserData).map(([id, value]) => [
+      id,
+      { markedForDeletion: false, value } as RowEditState<
+        Tables<"photoclubuser">
+      >,
+    ]),
   );
-  const [userData, setUserData] =
-    useState<Readonly<Record<string, Tables<"photoclubuser">>>>(
-      defaultUserData,
-    );
+
+  const [userData, setUserData] = useState(initialEditorState);
 
   const router = useRouter();
-
-  const setRowFlag = (
-    id: string,
-    updater: (oldRowFlag: RowFlag) => RowFlag,
-  ) => {
-    setRowFlags((rowFlags) => {
-      const newRowFlag = updater(rowFlags[id] ?? RowFlag.NONE);
-      if (newRowFlag === RowFlag.NONE) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [id]: _, ...newRowFlags } = rowFlags;
-        return newRowFlags;
-      } else {
-        return { ...rowFlags, [id]: newRowFlag };
-      }
-    });
-  };
-
-  const setUser = (
-    id: string,
-    updater: (
-      oldUser: Readonly<Tables<"photoclubuser">>,
-    ) => Readonly<Tables<"photoclubuser">>,
-  ) => {
-    setUserData((oldUserData) => {
-      return {
-        ...oldUserData,
-        [id]: updater(oldUserData[id]),
-      };
-    });
-  };
 
   const saveChanges = async () => {
     const toDelete: string[] = [];
     const toModify: Tables<"photoclubuser">[] = [];
     Object.entries(userData).forEach(([id, row]) => {
-      if (rowFlags[id] === RowFlag.DELETED) toDelete.push(id);
-      if (!rowEquals(row, defaultUserData[id])) toModify.push(row);
+      if (row.markedForDeletion) toDelete.push(id);
+      else if (!rowEquals(row.value, savedUserData[id]))
+        toModify.push(row.value);
     });
     await fetch("/api/update-user-data", {
       method: "POST",
@@ -95,12 +69,15 @@ export default function UserEditor({
               return (
                 <UserManagementRow
                   key={id}
-                  rowFlag={rowFlags[id] ?? RowFlag.NONE}
-                  setRowFlag={(updater) => setRowFlag(id, updater)}
-                  user={row}
-                  setUser={(updater) => setUser(id, updater)}
+                  value={row}
+                  onChange={(updater) =>
+                    setUserData((oldData) => ({
+                      ...oldData,
+                      [id]: updater(oldData[id]),
+                    }))
+                  }
                   roles={roleOptions}
-                  savedUser={userData[id]}
+                  savedValue={savedUserData[id]}
                 ></UserManagementRow>
               );
             })}

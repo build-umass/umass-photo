@@ -1,64 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import EventManagementRow, { RowFlag } from "./EventManagementRow";
+import EventManagementRow from "./EventManagementRow";
 import { Tables } from "@/app/utils/supabase/database.types";
 import EditEventChip from "@/app/components/event-chip/EditEventChip";
 import TableEditorHeader from "../common/TableEditorHeader";
 import AdminPageTable from "../common/AdminPageTable";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
-import { rowEquals } from "../common/rowEquals";
+import { RowEditState, rowEquals } from "../common/rowEquals";
 
 export default function EventEditor({
-  initialEventData,
+  savedEventData: savedEventData,
 }: {
-  initialEventData: Readonly<Record<string, Tables<"event">>>;
+  savedEventData: Readonly<Record<string, Tables<"event">>>;
 }) {
-  const [rowFlags, setRowFlags] = useState<Readonly<Record<string, RowFlag>>>(
-    {},
+  const initialEditorState = Object.fromEntries(
+    Object.entries(savedEventData).map(([id, value]) => [
+      id,
+      { markedForDeletion: false, value } as RowEditState<Tables<"event">>,
+    ]),
   );
-  const [eventData, setEventData] =
-    useState<Readonly<Record<string, Tables<"event">>>>(initialEventData);
+
+  const [eventData, setEventData] = useState(initialEditorState);
   const [editingEvent, setEditingEvent] = useState<boolean>(false);
 
-  const getRowFlag = (id: string) => {
-    return rowFlags[id] ?? RowFlag.NONE;
-  };
-  const setRowFlag = (
-    id: string,
-    updater: (oldRowFlag: RowFlag) => RowFlag,
-  ) => {
-    setRowFlags((oldRowFlags) => {
-      const newRowFlag = updater(oldRowFlags[id] ?? RowFlag.NONE);
-      if (newRowFlag === RowFlag.NONE) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [id]: _, ...rest } = oldRowFlags;
-        return rest;
-      } else {
-        return {
-          ...oldRowFlags,
-          [id]: newRowFlag,
-        };
-      }
-    });
-  };
-
-  const setEventById = (
-    id: string,
-    updater: (old: Readonly<Tables<"event">>) => Readonly<Tables<"event">>,
-  ) => {
-    setEventData((oldEventData: Readonly<Record<string, Tables<"event">>>) => {
-      return { ...oldEventData, [id]: updater(oldEventData[id]) };
-    });
-  };
-
   const saveChanges = async () => {
-    const toDelete: number[] = [];
+    const toDelete: string[] = [];
     const toModify: Tables<"event">[] = [];
     Object.entries(eventData).forEach(([id, row]) => {
-      if (rowFlags[id] === RowFlag.DELETED) toDelete.push(Number(id));
-      if (rowEquals(row, initialEventData[id])) toModify.push(row);
+      if (row.markedForDeletion) toDelete.push(id);
+      else if (!rowEquals(row.value, savedEventData[id]))
+        toModify.push(row.value);
     });
     await fetch("/api/update-event-data", {
       method: "POST",
@@ -113,15 +86,14 @@ export default function EventEditor({
               return (
                 <EventManagementRow
                   key={id}
-                  rowFlag={getRowFlag(id)}
-                  setRowFlag={(updater: (newRowFlag: RowFlag) => RowFlag) =>
-                    setRowFlag(id, updater)
+                  value={row}
+                  onChange={(updater) =>
+                    setEventData((oldData) => ({
+                      ...oldData,
+                      [id]: updater(oldData[id]),
+                    }))
                   }
-                  event={row}
-                  setEvent={(
-                    updater: (oldEvent: Tables<"event">) => Tables<"event">,
-                  ) => setEventById(id, updater)}
-                  savedEvent={initialEventData[id]}
+                  savedValue={savedEventData[id]}
                 ></EventManagementRow>
               );
             })}

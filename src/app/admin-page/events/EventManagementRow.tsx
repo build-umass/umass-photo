@@ -2,121 +2,107 @@ import { Tables } from "@/app/utils/supabase/database.types";
 import AdminPageTableCell from "../common/AdminPageTableCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 import AdminPageTableRow from "../common/AdminPageTableRow";
-import { rowEquals } from "../common/rowEquals";
+import { RowEditState, rowEquals } from "../common/rowEquals";
 import { MdRefresh } from "react-icons/md";
-
-/**
- * Converts a Date object into the datetime-local format
- */
-function dateToDateTimeLocalString(date: Date) {
-  date = new Date(date);
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-  return date.toISOString().slice(0, 16);
-}
-
-export enum RowFlag {
-  DELETED,
-  NONE,
-}
+import DateSelector from "./DateSelector";
 
 export default function EventManagementRow({
-  rowFlag,
-  setRowFlag,
-  event,
-  setEvent,
-  savedEvent,
+  value,
+  onChange,
+  savedValue,
 }: {
-  rowFlag: RowFlag;
-  setRowFlag: (updater: (oldRowFlag: RowFlag) => RowFlag) => void;
-  event: Readonly<Tables<"event">>;
-  setEvent: (
-    updater: (oldEvent: Readonly<Tables<"event">>) => Readonly<Tables<"event">>,
+  value: Readonly<RowEditState<Tables<"event">>>;
+  onChange: (
+    updater: (
+      oldEvent: Readonly<RowEditState<Tables<"event">>>,
+    ) => Readonly<RowEditState<Tables<"event">>>,
   ) => void;
-  savedEvent: Readonly<Tables<"event">>;
+  savedValue: Readonly<Tables<"event">>;
 }) {
-  const tag = event.tag;
-
-  const setName = (name: string) => {
-    setEvent((oldEvent) => {
-      return {
-        ...oldEvent,
-        name,
-      };
-    });
-  };
-
-  const setDescription = (description: string) => {
-    setEvent((oldEvent) => {
-      return {
-        ...oldEvent,
-        description,
-      };
-    });
-  };
-
-  const setStart = (value: Date) => {
-    setEvent((oldEvent) => {
-      return {
-        ...oldEvent,
-        startdate: value.toISOString(),
-      };
-    });
-  };
-
-  const setEnd = (value: Date) => {
-    setEvent((oldEvent) => {
-      return {
-        ...oldEvent,
-        enddate: value.toISOString(),
-      };
-    });
-  };
-
-  const currentStartDate = new Date(event.startdate);
-  const currentEndDate = new Date(event.enddate);
-
   return (
     <AdminPageTableRow>
-      <AdminPageTableCell>{event.id}</AdminPageTableCell>
+      <AdminPageTableCell>{value.value.id}</AdminPageTableCell>
       <AdminPageTableCell>
-        <input value={event.name} onChange={(e) => setName(e.target.value)} />
-      </AdminPageTableCell>
-      <AdminPageTableCell>
-        <textarea
-          value={event.description}
-          onChange={(e) => setDescription(e.target.value)}
+        <input
+          value={value.value.name}
+          onChange={(e) =>
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              value: {
+                ...oldEvent.value,
+                name: e.target.value,
+              },
+            }))
+          }
         />
       </AdminPageTableCell>
       <AdminPageTableCell>
-        <input
-          type="datetime-local"
-          value={dateToDateTimeLocalString(currentStartDate)}
-          onChange={(e) => setStart(new Date(e.target.value))}
-        ></input>
+        <textarea
+          value={value.value.description}
+          onChange={(e) =>
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              value: {
+                ...oldEvent.value,
+                description: e.target.value,
+              },
+            }))
+          }
+        />
       </AdminPageTableCell>
       <AdminPageTableCell>
-        <input
-          type="datetime-local"
-          value={dateToDateTimeLocalString(currentEndDate)}
-          onChange={(e) => setEnd(new Date(e.target.value))}
-        ></input>
+        <DateSelector
+          value={value.value.startdate}
+          onChange={(updater) =>
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              value: {
+                ...oldEvent.value,
+                startdate: updater(oldEvent.value.startdate),
+              },
+            }))
+          }
+        ></DateSelector>
       </AdminPageTableCell>
-      <AdminPageTableCell>{tag}</AdminPageTableCell>
+      <AdminPageTableCell>
+        <DateSelector
+          value={value.value.enddate}
+          onChange={(updater) =>
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              value: {
+                ...oldEvent.value,
+                enddate: updater(oldEvent.value.enddate),
+              },
+            }))
+          }
+        ></DateSelector>
+      </AdminPageTableCell>
+      <AdminPageTableCell>{value.value.tag}</AdminPageTableCell>
       <AdminPageTableCell>
         <UmassPhotoButtonRed
           onClick={() =>
-            setRowFlag((flag) =>
-              flag === RowFlag.DELETED ? RowFlag.NONE : RowFlag.DELETED,
-            )
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              markedForDeletion: !oldEvent.markedForDeletion,
+            }))
           }
         >
-          {rowFlag === RowFlag.DELETED ? "Restore" : "Delete"}
+          {value.markedForDeletion ? "Restore" : "Delete"}
         </UmassPhotoButtonRed>
       </AdminPageTableCell>
       <AdminPageTableCell>
         <UmassPhotoButtonRed
-          onClick={() => setEvent(() => savedEvent)}
-          disabled={rowEquals(event, savedEvent)}
+          onClick={() =>
+            onChange((oldEvent) => ({
+              ...oldEvent,
+              markedForDeletion: false,
+              value: savedValue,
+            }))
+          }
+          disabled={
+            rowEquals(value.value, savedValue) && !value.markedForDeletion
+          }
         >
           <MdRefresh></MdRefresh>
         </UmassPhotoButtonRed>

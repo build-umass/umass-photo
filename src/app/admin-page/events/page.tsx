@@ -17,5 +17,5 @@ export default async function EventsPage() {
     (eventData ?? []).map((event) => [event.id, event]),
   );
 
-  return <EventEditor initialEventData={eventDataRecord}></EventEditor>;
+  return <EventEditor savedEventData={eventDataRecord}></EventEditor>;
 }
