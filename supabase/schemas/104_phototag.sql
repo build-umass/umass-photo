@@ -7,6 +7,10 @@ CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS PERMI
     (
         SELECT private.has_good_role()
     )
+) WITH CHECK (
+    (
+        SELECT private.has_good_role()
+    )
 );
 CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS PERMISSIVE FOR
 SELECT USING (true);

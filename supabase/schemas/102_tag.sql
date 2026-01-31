@@ -4,6 +4,10 @@ CREATE POLICY "Allow admins to manage tags" ON "public"."tag" AS PERMISSIVE FOR 
     (
         SELECT private.has_good_role()
     )
+) WITH CHECK (
+    (
+        SELECT private.has_good_role()
+    )
 );
 CREATE POLICY "Allow everyone to select tags" ON "public"."tag" AS PERMISSIVE FOR
 SELECT USING (true);

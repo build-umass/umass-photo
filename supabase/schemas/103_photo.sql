@@ -11,6 +11,10 @@ CREATE POLICY "Allow admins to manage photos" ON "public"."photo" AS PERMISSIVE 
     (
         SELECT private.has_good_role()
     )
+) WITH CHECK (
+    (
+        SELECT private.has_good_role()
+    )
 );
 CREATE POLICY "Allow everyone to select photos" ON "public"."photo" AS PERMISSIVE FOR
 SELECT USING (true);

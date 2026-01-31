@@ -12,6 +12,10 @@ CREATE POLICY "Allow admins to manage events" ON "public"."event" AS PERMISSIVE 
     (
         SELECT private.has_good_role()
     )
+) WITH CHECK (
+    (
+        SELECT private.has_good_role()
+    )
 );
 CREATE POLICY "Allow everyone to select events" ON "public"."event" AS PERMISSIVE FOR
 SELECT USING (true);

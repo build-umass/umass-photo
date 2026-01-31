@@ -10,6 +10,10 @@ CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FO
     (
         SELECT private.has_good_role()
     )
+) WITH CHECK (
+    (
+        SELECT private.has_good_role()
+    )
 );
 CREATE POLICY "Allow everyone to select blogs" ON "public"."blog" AS PERMISSIVE FOR
 SELECT USING (true);
