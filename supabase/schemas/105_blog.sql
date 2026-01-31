@@ -8,11 +8,11 @@ CREATE TABLE blog (
 ALTER TABLE public.blog enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage blogs" ON "public"."blog" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT public.has_good_role()
+        SELECT public.is_admin()
     )
 ) WITH CHECK (
     (
-        SELECT public.has_good_role()
+        SELECT public.is_admin()
     )
 );
 CREATE POLICY "Allow everyone to select blogs" ON "public"."blog" AS PERMISSIVE FOR

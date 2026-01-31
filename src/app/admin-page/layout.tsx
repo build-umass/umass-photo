@@ -11,7 +11,7 @@ export default async function AdminPageLayout({
 }>) {
   const client = await createClient();
 
-  if (!(await client.rpc("has_good_role")).data) {
+  if (!(await client.rpc("is_admin")).data) {
     redirect("/login");
   }
 
