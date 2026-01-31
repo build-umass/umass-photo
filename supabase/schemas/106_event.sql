@@ -10,11 +10,11 @@ CREATE TABLE event (
 ALTER TABLE public.event enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage events" ON "public"."event" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 ) WITH CHECK (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 );
 CREATE POLICY "Allow everyone to select events" ON "public"."event" AS PERMISSIVE FOR

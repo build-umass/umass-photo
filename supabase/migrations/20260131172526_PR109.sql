@@ -1,13 +1,10 @@
-CREATE OR REPLACE FUNCTION filter_photos(
-        filtering_tags boolean,
-        filtering_authors boolean,
-        filtering_date boolean,
-        querytags json,
-        queryauthor UUID,
-        querystart TIMESTAMPTZ,
-        queryend TIMESTAMPTZ
-    ) RETURNS SETOF public.photo
-LANGUAGE SQL SET search_path = '' AS $$
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.filter_photos(filtering_tags boolean, filtering_authors boolean, filtering_date boolean, querytags json, queryauthor uuid, querystart timestamp with time zone, queryend timestamp with time zone)
+ RETURNS SETOF public.photo
+ LANGUAGE sql
+ SET search_path TO ''
+AS $function$
 SELECT *
 FROM public.photo p
 WHERE (
@@ -40,4 +37,7 @@ WHERE (
 ORDER BY CASE
         WHEN NOT filtering_date THEN p.postdate
     END DESC;
-$$;
+$function$
+;
+
+

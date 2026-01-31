@@ -8,21 +8,22 @@ CREATE TABLE photoclubuser (
 );
 ALTER TABLE public.photoclubuser enable ROW LEVEL SECURITY;
 
-CREATE FUNCTION private.has_good_role() RETURNS BOOLEAN SECURITY DEFINER AS $$
+CREATE OR REPLACE FUNCTION public.has_good_role() RETURNS BOOLEAN SECURITY DEFINER
+SET search_path = '' LANGUAGE SQL AS $$
 SELECT "public"."photoclubrole"."is_admin"
 FROM "public"."photoclubuser"
     JOIN "public"."photoclubrole" ON "public"."photoclubuser"."role" = "public"."photoclubrole"."roleid"
 WHERE (
         SELECT auth.uid()
-    ) = "public"."photoclubuser"."id" $$ LANGUAGE SQL;
+    ) = "public"."photoclubuser"."id" $$;
 
 CREATE POLICY "Allow admins to manage users" ON "public"."photoclubuser" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 ) WITH CHECK (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 );
 
@@ -48,10 +49,10 @@ INSERT TO public WITH CHECK (
 -- This is placed here for dependency reasons
 CREATE POLICY "Allow admins to manage roles" ON "public"."photoclubrole" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 ) WITH CHECK (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 );

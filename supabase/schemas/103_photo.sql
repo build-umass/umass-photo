@@ -9,11 +9,11 @@ CREATE TABLE photo (
 ALTER TABLE public.photo enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow admins to manage photos" ON "public"."photo" AS PERMISSIVE FOR ALL TO authenticated USING (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 ) WITH CHECK (
     (
-        SELECT private.has_good_role()
+        SELECT public.has_good_role()
     )
 );
 CREATE POLICY "Allow everyone to select photos" ON "public"."photo" AS PERMISSIVE FOR

@@ -261,6 +261,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      has_good_role: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
