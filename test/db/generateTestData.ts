@@ -30,14 +30,14 @@ export async function insertTestData(
     client,
     [
       {
-        email: "amoinus@gmail.com",
-        username: "max 1",
+        email: "admin@example.com",
+        username: "Admin123",
         role: "admin",
         id: "43188856-13db-410a-b1a2-b006056cd84f",
       },
       {
-        email: "maxwelltang@umass.edu",
-        username: "max 2",
+        email: "member@example.com",
+        username: "Member123",
         role: "member",
         id: "beebdcae-ba00-4c16-9e1c-2103381337bf",
       },
