@@ -14,7 +14,15 @@ CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS PERMI
 );
 CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS PERMISSIVE FOR
 SELECT USING (true);
-CREATE POLICY "Allow everyone to manage phototags for photos they are authors of" ON "public"."phototag" AS PERMISSIVE FOR ALL WITH CHECK (
+CREATE POLICY "Allow everyone to manage phototags for photos they are authors of" ON "public"."phototag" AS PERMISSIVE FOR ALL USING (
+    (
+        SELECT auth.uid()
+    ) = (
+        SELECT authorid
+        FROM photo
+        WHERE photo.id = photoid
+    )
+) WITH CHECK (
     (
         SELECT auth.uid()
     ) = (
