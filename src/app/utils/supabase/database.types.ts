@@ -34,6 +34,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      ban: {
+        Row: {
+          email: string | null
+          id: string
+          ip: string | null
+          reason: string
+          username: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          ip?: string | null
+          reason: string
+          username?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          ip?: string | null
+          reason?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
       blog: {
         Row: {
           authorid: string
@@ -231,6 +255,29 @@ export type Database = {
         }
         Relationships: []
       }
+      userip: {
+        Row: {
+          ipaddress: string
+          userid: string
+        }
+        Insert: {
+          ipaddress: string
+          userid: string
+        }
+        Update: {
+          ipaddress?: string
+          userid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "userip_userid_fkey"
+            columns: ["userid"]
+            isOneToOne: false
+            referencedRelation: "photoclubuser"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -262,6 +309,7 @@ export type Database = {
         }
       }
       is_admin: { Args: never; Returns: boolean }
+      is_banned: { Args: { userid: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
