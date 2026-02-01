@@ -1,5 +1,5 @@
 INSERT INTO
-    photoclubrole
+  photoclubrole
 VALUES
-    ('admin', TRUE),
-    ('member', false);
+  ('admin', TRUE),
+  ('member', FALSE);

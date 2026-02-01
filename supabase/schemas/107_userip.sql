@@ -3,9 +3,11 @@ CREATE TABLE userip (
   ipaddress VARCHAR(32) NOT NULL
 );
 
-ALTER TABLE public.userip enable ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow admins to manage user ips" ON "public"."userip" AS PERMISSIVE FOR ALL TO authenticated USING (
+ALTER TABLE public.userip enable ROW level security;
+
+
+CREATE POLICY "Allow admins to manage user ips" ON "public"."userip" AS permissive FOR ALL TO authenticated USING (
   (
     SELECT
       public.is_admin ()

@@ -1,13 +1,14 @@
-CREATE FUNCTION filter_photos(
-    filtering_tags boolean,
-    filtering_authors boolean,
-    filtering_date boolean,
-    querytags json,
-    queryauthor UUID,
-    querystart TIMESTAMPTZ,
-    queryend TIMESTAMPTZ
-) RETURNS SETOF public.photo LANGUAGE SQL
-SET search_path = '' AS $$
+CREATE FUNCTION filter_photos (
+  filtering_tags BOOLEAN,
+  filtering_authors BOOLEAN,
+  filtering_date BOOLEAN,
+  querytags JSON,
+  queryauthor UUID,
+  querystart TIMESTAMPTZ,
+  queryend TIMESTAMPTZ
+) returns setof public.photo language sql
+SET
+  search_path = '' AS $$
 SELECT *
 FROM public.photo p
 WHERE (

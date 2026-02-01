@@ -1,4 +1,4 @@
 INSERT INTO
-    STORAGE.buckets (id, name, public)
+  storage.buckets (id, name, public)
 VALUES
-    ('photos', 'photos', TRUE);
+  ('photos', 'photos', TRUE);

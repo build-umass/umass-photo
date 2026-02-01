@@ -1,29 +1,46 @@
 CREATE TABLE photo (
-    id INTEGER PRIMARY KEY DEFAULT FLOOR(random() * 2147483647),
-    title VARCHAR(128) NOT NULL,
-    description TEXT,
-    authorid UUID REFERENCES photoclubuser(id) ON DELETE CASCADE NOT NULL,
-    FILE VARCHAR(128) NOT NULL,
-    postdate TIMESTAMPTZ NOT NULL
+  id INTEGER PRIMARY KEY DEFAULT FLOOR(RANDOM() * 2147483647),
+  title VARCHAR(128) NOT NULL,
+  description TEXT,
+  authorid UUID REFERENCES photoclubuser (id) ON DELETE CASCADE NOT NULL,
+  file VARCHAR(128) NOT NULL,
+  postdate TIMESTAMPTZ NOT NULL
 );
-ALTER TABLE public.photo enable ROW LEVEL SECURITY;
-CREATE POLICY "Allow admins to manage photos" ON "public"."photo" AS PERMISSIVE FOR ALL TO authenticated USING (
+
+
+ALTER TABLE public.photo enable ROW level security;
+
+
+CREATE POLICY "Allow admins to manage photos" ON "public"."photo" AS permissive FOR ALL TO authenticated USING (
+  (
+    SELECT
+      public.is_admin ()
+  )
+)
+WITH
+  CHECK (
     (
-        SELECT public.is_admin()
+      SELECT
+        public.is_admin ()
     )
-) WITH CHECK (
+  );
+
+
+CREATE POLICY "Allow everyone to select photos" ON "public"."photo" AS permissive FOR
+SELECT
+  USING (TRUE);
+
+
+CREATE POLICY "Allow everyone to manage photos that they are authors of" ON "public"."photo" AS permissive FOR ALL USING (
+  (
+    SELECT
+      auth.uid ()
+  ) = authorid
+)
+WITH
+  CHECK (
     (
-        SELECT public.is_admin()
-    )
-);
-CREATE POLICY "Allow everyone to select photos" ON "public"."photo" AS PERMISSIVE FOR
-SELECT USING (true);
-CREATE POLICY "Allow everyone to manage photos that they are authors of" ON "public"."photo" AS PERMISSIVE FOR ALL USING (
-    (
-        SELECT auth.uid()
+      SELECT
+        auth.uid ()
     ) = authorid
-) WITH CHECK (
-    (
-        SELECT auth.uid()
-    ) = authorid
-);
+  );
