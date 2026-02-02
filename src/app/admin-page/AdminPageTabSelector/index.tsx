@@ -13,7 +13,11 @@ export const eventTab: TabInfo = {
   title: "Events",
   href: "/admin-page/events",
 };
-export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab];
+export const banTab: TabInfo = {
+  title: "Bans",
+  href: "/admin-page/bans",
+};
+export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab, banTab];
 
 export default function AdminPageTabSelector() {
   return (
