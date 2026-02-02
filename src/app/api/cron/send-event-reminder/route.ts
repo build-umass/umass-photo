@@ -30,20 +30,21 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: eventError.message }, { status: 500 });
   }
 
-  if (!events || events.length === 0) {
-    return Response.json({ message: "No upcoming events found." });
-  }
+  // if (!events || events.length === 0) {
+  //   return Response.json({ message: "No upcoming events found." });
+  // }
 
   const { data: users, error: userError } = await supabase
     .from("photoclubuser")
-    .select("email");
+    .select("email")
+    .eq("email_opt_in", true);
 
   if (userError) {
     return Response.json({ error: userError.message }, { status: 500 });
   }
 
   if (!users || users.length === 0) {
-    return Response.json({ message: "No users found." });
+    return Response.json({ message: "No opted-in users found." });
   }
 
   const emails = users.map((u) => u.email).filter((email) => email); // Ensure no null/empty emails
@@ -73,5 +74,6 @@ See you there!`;
     }
   }
 
-  return Response.json({});
+
+  return Response.json({"Success": true});
 }

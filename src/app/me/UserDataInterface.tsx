@@ -84,6 +84,7 @@ export default function UserDataInterface({
     const accountUpdate: PhotoClubUserUpdateWithProfilePicture = {
       id: profileData.id,
       bio: profileData.bio,
+      email_opt_in: profileData.email_opt_in,
       profilePictureURL: profileData.profilePictureURL,
     };
 
@@ -137,6 +138,19 @@ export default function UserDataInterface({
           <p className="text-left">
             <strong>Role:</strong> {profileData.role}
           </p>
+          <div className="flex items-center space-x-3">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={profileData.email_opt_in || false}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, email_opt_in: e.target.checked })
+                }
+                className="w-4 h-4 accent-umass-red"
+              />
+              <span className="text-left">Receive email notifications</span>
+            </label>
+          </div>
           <div className="mb-8">
             <label className="block text-left font-semibold mb-2">Bio:</label>
             <textarea
