@@ -7,6 +7,8 @@ import { RowEditState } from "../common/rowEquals";
 import { useState } from "react";
 import TableEditorHeader from "../common/TableEditorHeader";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
+import BanModal from "./BanModal";
 
 export default function BanEditor({
   savedBans,
@@ -21,6 +23,7 @@ export default function BanEditor({
       markedForDeletion: false,
     })),
   );
+  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -36,6 +39,15 @@ export default function BanEditor({
             <AdminPageTableHeaderCell>Reset</AdminPageTableHeaderCell>
           </tr>
         </thead>
+        <tr className="bg-gray-100 even:bg-gray-200">
+          <td colSpan={6}>
+            <div className="flex justify-center py-2">
+              <UmassPhotoButtonRed onClick={() => setIsEditorOpen(true)}>
+                + Add New Ban
+              </UmassPhotoButtonRed>
+            </div>
+          </td>
+        </tr>
         {editorState.map((banState, index) => (
           <BanManagementRow
             key={banState.value.id}
@@ -51,6 +63,13 @@ export default function BanEditor({
           ></BanManagementRow>
         ))}
       </AdminPageTable>
+      {isEditorOpen && (
+        <BanModal
+          onClose={() => {
+            setIsEditorOpen(false);
+          }}
+        ></BanModal>
+      )}
     </>
   );
 }
