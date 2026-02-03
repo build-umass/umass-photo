@@ -25,42 +25,58 @@ WITH
   );
 
 
-CREATE FUNCTION public.is_banned (userid UUID) returns BOOLEAN language sql strict AS $$
+CREATE FUNCTION public.ban_affects_user (
+  ban public.ban,
+  photoclubuser public.photoclubuser
+) returns BOOLEAN language sql stable strict
+SET
+  search_path = '' AS $$
+SELECT
+  (
+    ban.email IS NULL
+    OR photoclubuser.email LIKE ban.email
+  )
+  AND (
+    ban.username IS NULL
+    OR photoclubuser.username LIKE ban.username
+  )
+  AND (
+    ban.ip IS NULL
+    OR EXISTS (
+      SELECT
+        1
+      FROM
+        public.userip
+      WHERE
+        public.userip.userid = photoclubuser.id
+        AND public.userip.ipaddress LIKE ban.ip
+    )
+  )
+$$;
+
+
+CREATE FUNCTION public.is_banned (photoclubuser public.photoclubuser) returns BOOLEAN language sql strict
+SET
+  search_path = '' AS $$
 SELECT
   EXISTS (
     SELECT
       1
     FROM
       public.ban
-      JOIN public.photoclubuser ON (
-        public.ban.email IS NOT NULL
-        AND public.photoclubuser.email LIKE public.ban.email
-      )
     WHERE
-      public.photoclubuser.id = userid
+      public.ban_affects_user(public.ban.*, photoclubuser)
   )
-  OR EXISTS (
-    SELECT
-      1
-    FROM
-      public.ban
-      JOIN public.userip ON (
-        public.ban.ip IS NOT NULL
-        AND public.userip.ipaddress LIKE public.ban.ip
-      )
-    WHERE
-      public.userip.userid = userid
-  )
-  OR EXISTS (
-    SELECT
-      1
-    FROM
-      public.ban
-      JOIN public.photoclubuser ON (
-        public.ban.username IS NOT NULL
-        AND public.photoclubuser.username LIKE public.ban.username
-      )
-    WHERE
-      public.photoclubuser.id = userid
-  )
- $$;
+$$;
+
+
+CREATE FUNCTION public.ban_affects_users (ban public.ban) returns setof public.photoclubuser language sql strict
+SET
+  search_path = '' AS $$
+SELECT
+  *
+FROM
+  public.photoclubuser
+WHERE
+  public.ban_affects_user (ban, public.photoclubuser.*)
+$$;

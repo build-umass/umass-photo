@@ -283,6 +283,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ban_affects_user: {
+        Args: {
+          ban: Database["public"]["Tables"]["ban"]["Row"]
+          photoclubuser: Database["public"]["Tables"]["photoclubuser"]["Row"]
+        }
+        Returns: boolean
+      }
+      ban_affects_users: {
+        Args: { ban: Database["public"]["Tables"]["ban"]["Row"] }
+        Returns: {
+          bio: string | null
+          email: string
+          id: string
+          profilepicture: string | null
+          role: string
+          username: string
+        }[]
+        SetofOptions: {
+          from: "ban"
+          to: "photoclubuser"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       filter_photos: {
         Args: {
           filtering_authors: boolean
@@ -309,7 +333,12 @@ export type Database = {
         }
       }
       is_admin: { Args: never; Returns: boolean }
-      is_banned: { Args: { userid: string }; Returns: boolean }
+      is_banned: {
+        Args: {
+          photoclubuser: Database["public"]["Tables"]["photoclubuser"]["Row"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

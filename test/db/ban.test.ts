@@ -1,13 +1,158 @@
 import dotenv from "dotenv";
 import { beforeAll, describe, it, expect } from "vitest";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Database, Tables } from "@/app/utils/supabase/database.types";
+import { Database, TablesInsert } from "@/app/utils/supabase/database.types";
 import { randomUUID } from "crypto";
-import { insertTestUsers } from "./insertTestUsers";
+import { deleteTestUsers, insertTestUsers } from "./insertTestUsers";
 
 dotenv.config();
 
-describe("Ban System Tests - public.is_banned()", () => {
+type TestCaseDescription = Readonly<{
+  user: TablesInsert<"photoclubuser">;
+  ban: TablesInsert<"ban">;
+  userIps: TablesInsert<"userip">[];
+  expected: boolean;
+  description: string;
+}>;
+
+/** Common uuid for test cases that require correlated uuids */
+const constUUID = randomUUID();
+const testCases: readonly TestCaseDescription[] = [
+  {
+    description: "should return true for user banned by email",
+    user: {
+      id: randomUUID(),
+      email: "banned-by-email@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by email",
+      email: "banned-by-email@example.com",
+    },
+    userIps: [],
+    expected: true,
+  },
+  {
+    description: "should return true for user banned by ip",
+    user: {
+      id: constUUID,
+      email: "banned-by-email@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by ip",
+      ip: "192.168.1.1",
+    },
+    userIps: [
+      {
+        userid: constUUID,
+        ipaddress: "192.168.1.1",
+      },
+    ],
+    expected: true,
+  },
+  {
+    description: "should return true for user banned by username",
+    user: {
+      id: randomUUID(),
+      email: "banned-by-username@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by username",
+      username: "TestUser1",
+    },
+    userIps: [],
+    expected: true,
+  },
+  {
+    description: "should return true for user banned by email (regex)",
+    user: {
+      id: randomUUID(),
+      email: "banned-by-email@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by email",
+      email: "banned-by-email%",
+    },
+    userIps: [],
+    expected: true,
+  },
+  {
+    description: "should return true for user banned by ip (regex)",
+    user: {
+      id: constUUID,
+      email: "banned-by-email@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by ip",
+      ip: "192.168.%",
+    },
+    userIps: [
+      {
+        userid: constUUID,
+        ipaddress: "192.168.1.1",
+      },
+    ],
+    expected: true,
+  },
+  {
+    description: "should return true for user banned by username (regex)",
+    user: {
+      id: randomUUID(),
+      email: "banned-by-username@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test ban by username",
+      username: "Test%",
+    },
+    userIps: [],
+    expected: true,
+  },
+  {
+    description: "should return false for incomplete match",
+    user: {
+      id: randomUUID(),
+      email: "cleanuser@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test multiple bans",
+      username: "Nonmatching%",
+      email: "%@example.com",
+    },
+    userIps: [],
+    expected: false,
+  },
+  {
+    description: "should return true for multiple matches",
+    user: {
+      id: randomUUID(),
+      email: "cleanuser@example.com",
+      username: "TestUser1",
+      role: "member",
+    },
+    ban: {
+      reason: "Test multiple bans",
+      username: "TestUser1",
+      email: "%@example.com",
+    },
+    userIps: [],
+    expected: true,
+  },
+];
+
+describe("public.ban_affects_user()", () => {
   let supabase: SupabaseClient<Database>;
 
   beforeAll(async () => {
@@ -22,194 +167,175 @@ describe("Ban System Tests - public.is_banned()", () => {
     supabase = createClient<Database>(apiUrl, supabaseServiceKey);
   });
 
-  it("should return true for user banned by email", async () => {
-    const userBannedByEmail: Tables<"photoclubuser"> = {
-      id: randomUUID(),
-      email: "banned-by-email@example.com",
-      username: "TestUser1",
-      role: "member",
-      profilepicture: null,
-      bio: null,
-    };
+  testCases.forEach(
+    ({
+      user: userInsert,
+      ban,
+      userIps: userIpsInsert,
+      expected,
+      description,
+    }) => {
+      it(description, async () => {
+        // Set up test data
+        const [user] = await insertTestUsers(supabase, [userInsert]);
+        const { data: userIps } = await supabase
+          .from("userip")
+          .insert(userIpsInsert)
+          .select()
+          .throwOnError();
 
-    const { error: userError } = await insertTestUsers(supabase, [
-      userBannedByEmail,
-    ]);
-    if (userError) throw new Error(`Error inserting test users: ${userError}`);
+        // Run the test
+        const { data } = await supabase
+          .rpc("ban_affects_user", {
+            ban: {
+              id: randomUUID(),
+              email: null,
+              ip: null,
+              username: null,
+              ...ban,
+            },
+            photoclubuser: user,
+          })
+          .throwOnError();
+        expect(data).toBe(expected);
 
-    const banId = randomUUID();
-    const banReason = "Test ban by email";
+        // Clean up test data
+        for (const userIp of userIps) {
+          await supabase
+            .from("userip")
+            .delete()
+            .eq("userid", userIp.userid)
+            .eq("ipaddress", userIp.ipaddress)
+            .throwOnError();
+        }
+        await deleteTestUsers(supabase, [user]);
+      });
+    },
+  );
+});
 
-    const { error: banError } = await supabase.from("ban").insert([
-      {
-        id: banId,
-        reason: banReason,
-        email: userBannedByEmail.email,
-        ip: null,
-        username: null,
-      },
-    ]);
-    if (banError) throw new Error(`Error inserting ban records: ${banError}`);
+describe("public.is_banned()", () => {
+  let supabase: SupabaseClient<Database>;
 
-    const { data, error } = await supabase.rpc("is_banned", {
-      userid: userBannedByEmail.id,
-    });
+  beforeAll(async () => {
+    const apiUrl = process.env.API_URL || process.env.SUPABASE_URL;
+    const supabaseServiceKey =
+      process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    expect(error).toBeNull();
-    expect(data).toBe(true);
+    if (!apiUrl) throw new Error("Supabase URL not found in environment!");
+    if (!supabaseServiceKey)
+      throw new Error("Supabase service role key not found in environment!");
 
-    await supabase.from("ban").delete().eq("id", banId);
-    await supabase
-      .from("photoclubuser")
-      .delete()
-      .eq("id", userBannedByEmail.id);
-    await supabase.auth.admin.deleteUser(userBannedByEmail.id);
+    supabase = createClient<Database>(apiUrl, supabaseServiceKey);
   });
 
-  it("should return true for user banned by username", async () => {
-    const userBannedByUsername: Tables<"photoclubuser"> = {
-      id: randomUUID(),
-      email: "banned-by-username@example.com",
-      username: "BannedUsername",
-      role: "member",
-      profilepicture: null,
-      bio: null,
-    };
+  testCases.forEach(
+    ({
+      user: userInsert,
+      ban: banInsert,
+      userIps: userIpsInsert,
+      expected,
+      description,
+    }) => {
+      it(description, async () => {
+        // Set up test data
+        const [user] = await insertTestUsers(supabase, [userInsert]);
 
-    const { error: userError } = await insertTestUsers(supabase, [
-      userBannedByUsername,
-    ]);
-    if (userError) throw new Error(`Error inserting test users: ${userError}`);
+        const { data: userIps } = await supabase
+          .from("userip")
+          .insert(userIpsInsert)
+          .select()
+          .throwOnError();
 
-    const banId = randomUUID();
-    const banReason = "Test ban by username";
+        const { data: ban } = await supabase
+          .from("ban")
+          .insert([banInsert])
+          .select()
+          .single()
+          .throwOnError();
 
-    const { error: banError } = await supabase.from("ban").insert([
-      {
-        id: banId,
-        reason: banReason,
-        email: null,
-        ip: null,
-        username: userBannedByUsername.username,
-      },
-    ]);
-    if (banError) throw new Error(`Error inserting ban records: ${banError}`);
+        // Run the test
+        const { data } = await supabase
+          .rpc("is_banned", {
+            photoclubuser: user,
+          })
+          .throwOnError();
+        expect(data).toBe(expected);
 
-    const { data, error } = await supabase.rpc("is_banned", {
-      userid: userBannedByUsername.id,
-    });
+        // Clean up test data
+        await supabase.from("ban").delete().eq("id", ban.id);
+        await deleteTestUsers(supabase, [user]);
+        for (const userIp of userIps) {
+          await supabase
+            .from("userip")
+            .delete()
+            .eq("userid", userIp.userid)
+            .eq("ipaddress", userIp.ipaddress)
+            .throwOnError();
+        }
+      });
+    },
+  );
+});
 
-    expect(error).toBeNull();
-    expect(data).toBe(true);
+describe("public.ban_affects_users()", () => {
+  let supabase: SupabaseClient<Database>;
 
-    await supabase.from("ban").delete().eq("id", banId);
-    await supabase
-      .from("photoclubuser")
-      .delete()
-      .eq("id", userBannedByUsername.id);
-    await supabase.auth.admin.deleteUser(userBannedByUsername.id);
+  beforeAll(async () => {
+    const apiUrl = process.env.API_URL || process.env.SUPABASE_URL;
+    const supabaseServiceKey =
+      process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!apiUrl) throw new Error("Supabase URL not found in environment!");
+    if (!supabaseServiceKey)
+      throw new Error("Supabase service role key not found in environment!");
+
+    supabase = createClient<Database>(apiUrl, supabaseServiceKey);
   });
 
-  it("should return true for user banned by IP address", async () => {
-    const userBannedByIp: Tables<"photoclubuser"> = {
-      id: randomUUID(),
-      email: "banned-by-ip@example.com",
-      username: "TestUser3",
-      role: "member",
-      profilepicture: null,
-      bio: null,
-    };
+  testCases.forEach(
+    ({
+      user: userInsert,
+      ban,
+      userIps: userIpsInsert,
+      expected,
+      description,
+    }) => {
+      it(description, async () => {
+        // Set up test data
+        const [user] = await insertTestUsers(supabase, [userInsert]);
 
-    const { error: userError } = await insertTestUsers(supabase, [
-      userBannedByIp,
-    ]);
-    if (userError) throw new Error(`Error inserting test users: ${userError}`);
+        const { data: userIps } = await supabase
+          .from("userip")
+          .insert(userIpsInsert)
+          .select()
+          .throwOnError();
 
-    const { error: userIpError } = await supabase.from("userip").insert([
-      {
-        userid: userBannedByIp.id,
-        ipaddress: "10.0.0.50",
-      },
-    ]);
-    if (userIpError)
-      throw new Error(`Error inserting user IP records: ${userIpError}`);
+        // Run the test
+        const { data } = await supabase
+          .rpc("ban_affects_users", {
+            ban: {
+              id: randomUUID(),
+              email: null,
+              ip: null,
+              username: null,
+              ...ban,
+            },
+          })
+          .throwOnError();
+        expect(data.map(datum => datum.id)).toEqual(expected ? [user.id] : []);
 
-    const banId = randomUUID();
-    const banReason = "Test ban by IP";
-
-    const { error: banError } = await supabase.from("ban").insert([
-      {
-        id: banId,
-        reason: banReason,
-        email: null,
-        ip: "10.0.0.50",
-        username: null,
-      },
-    ]);
-    if (banError) throw new Error(`Error inserting ban records: ${banError}`);
-
-    const { data, error } = await supabase.rpc("is_banned", {
-      userid: userBannedByIp.id,
-    });
-
-    expect(error).toBeNull();
-    expect(data).toBe(true);
-
-    await supabase
-      .from("userip")
-      .delete()
-      .eq("userid", userBannedByIp.id)
-      .eq("ipaddress", "10.0.0.50");
-    await supabase.from("ban").delete().eq("id", banId);
-    await supabase.from("photoclubuser").delete().eq("id", userBannedByIp.id);
-    await supabase.auth.admin.deleteUser(userBannedByIp.id);
-  });
-
-  it("should return false for user who is not banned", async () => {
-    const cleanUser: Tables<"photoclubuser"> = {
-      id: randomUUID(),
-      email: "not-banned@example.com",
-      username: "CleanUser",
-      role: "member",
-      profilepicture: null,
-      bio: null,
-    };
-
-    const { error: userError } = await insertTestUsers(supabase, [cleanUser]);
-    if (userError) throw new Error(`Error inserting test users: ${userError}`);
-
-    const { error: userIpError } = await supabase.from("userip").insert([
-      {
-        userid: cleanUser.id,
-        ipaddress: "192.168.1.200",
-      },
-    ]);
-    if (userIpError)
-      throw new Error(`Error inserting user IP records: ${userIpError}`);
-
-    const { data, error } = await supabase.rpc("is_banned", {
-      userid: cleanUser.id,
-    });
-
-    expect(error).toBeNull();
-    expect(data).toBe(false);
-
-    await supabase
-      .from("userip")
-      .delete()
-      .eq("userid", cleanUser.id)
-      .eq("ipaddress", "192.168.1.200");
-    await supabase.from("photoclubuser").delete().eq("id", cleanUser.id);
-    await supabase.auth.admin.deleteUser(cleanUser.id);
-  });
-
-  it("should handle non-existent user ID gracefully", async () => {
-    const nonExistentId = randomUUID();
-    const { data, error } = await supabase.rpc("is_banned", {
-      userid: nonExistentId,
-    });
-
-    expect(error).toBeNull();
-    expect(data).toBe(false);
-  });
+        // Clean up test data
+        await deleteTestUsers(supabase, [user]);
+        for (const userIp of userIps) {
+          await supabase
+            .from("userip")
+            .delete()
+            .eq("userid", userIp.userid)
+            .eq("ipaddress", userIp.ipaddress)
+            .throwOnError();
+        }
+      });
+    },
+  );
 });
