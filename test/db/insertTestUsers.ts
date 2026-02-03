@@ -64,11 +64,15 @@ export async function deleteTestUsers(
   client: SupabaseClient<Database>,
   users: readonly Tables<"photoclubuser">[],
 ): Promise<void> {
-  await client.from("photoclubuser").delete().in(
-    "id",
-    users.map((user) => user.id),
-  ).throwOnError();
-  
+  await client
+    .from("photoclubuser")
+    .delete()
+    .in(
+      "id",
+      users.map((user) => user.id),
+    )
+    .throwOnError();
+
   for (const user of users) {
     const { error } = await client.auth.admin.deleteUser(user.id);
     if (error) throw error;

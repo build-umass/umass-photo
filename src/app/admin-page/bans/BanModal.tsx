@@ -6,8 +6,15 @@ import { uploadBan } from "./uploadBan";
 import Link from "next/link";
 import { MdRefresh } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { getBannedUsers } from "./getBannedUsers";
 
-export default function BanModal({ onClose }: { onClose: () => void }) {
+export default function BanModal({
+  onClose,
+  onSave,
+}: {
+  onClose: () => void;
+  onSave: () => void;
+}) {
   const initialBan: TablesInsert<"ban"> = {
     reason: "",
   };
@@ -37,7 +44,27 @@ export default function BanModal({ onClose }: { onClose: () => void }) {
   ]);
 
   async function updateBannedUsers() {
-    // TODO implement this
+    setFetchingUsers(true);
+    try {
+      setUsersBanned(await getBannedUsers(newBan));
+      setLastVerifiedFilters({ ...newBan });
+    } catch (e) {
+      console.error(e);
+    }
+    setFetchingUsers(false);
+  }
+
+  async function uploadAndClose() {
+    setPendingSubmission(true);
+    try {
+      await uploadBan(newBan);
+      router.refresh();
+      onClose();
+      onSave();
+    } catch (e) {
+      console.error("Failed to upload ban:", e);
+      setPendingSubmission(false);
+    }
   }
 
   const emailInputId = useId();
@@ -51,15 +78,7 @@ export default function BanModal({ onClose }: { onClose: () => void }) {
         className="flex grow flex-col items-center gap-2"
         onSubmit={async (e) => {
           e.preventDefault();
-          setPendingSubmission(true);
-          try {
-            await uploadBan(newBan);
-            router.refresh();
-            onClose();
-          } catch (e) {
-            console.error("Failed to upload ban:", e);
-            setPendingSubmission(false);
-          }
+          await uploadAndClose();
         }}
       >
         <h1 className="text-xl font-bold">Create a New Ban Rule</h1>
@@ -129,7 +148,7 @@ export default function BanModal({ onClose }: { onClose: () => void }) {
           onChange={(e) => setNewBan({ ...newBan, reason: e.target.value })}
         ></input>
         The following users will be banned by this rule:
-        <div className="flex gap-2">
+        <div className="flex gap-2 overflow-scroll">
           {usersBanned.map((user) => (
             <span key={user.id} className="bg-gray-300">
               {user.username} &lt;{user.email}&gt;
@@ -138,7 +157,7 @@ export default function BanModal({ onClose }: { onClose: () => void }) {
         </div>
         <UmassPhotoButtonRed
           onClick={updateBannedUsers}
-          disabled={!modifiedSinceLastVerify}
+          disabled={!modifiedSinceLastVerify || fetchingUsers}
           type="button"
         >
           <MdRefresh></MdRefresh>

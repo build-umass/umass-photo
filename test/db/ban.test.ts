@@ -323,7 +323,9 @@ describe("public.ban_affects_users()", () => {
             },
           })
           .throwOnError();
-        expect(data.map(datum => datum.id)).toEqual(expected ? [user.id] : []);
+        expect(data.map((datum) => datum.id)).toEqual(
+          expected ? [user.id] : [],
+        );
 
         // Clean up test data
         await deleteTestUsers(supabase, [user]);
