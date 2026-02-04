@@ -29,9 +29,7 @@ export default function TagManagementRow({
           {value.value.name}
         </span>
       </AdminPageTableCell>
-      <AdminPageTableCell>
-        {eventName}
-      </AdminPageTableCell>
+      <AdminPageTableCell>{eventName}</AdminPageTableCell>
       <AdminPageTableCell>
         <UmassPhotoButtonRed
           onClick={() =>
@@ -50,7 +48,9 @@ export default function TagManagementRow({
           onClick={() =>
             onChange(() => ({ markedForDeletion: false, value: savedValue }))
           }
-          disabled={rowEquals(value.value, savedValue) && !value.markedForDeletion}
+          disabled={
+            rowEquals(value.value, savedValue) && !value.markedForDeletion
+          }
         >
           <MdRefresh size={24} className="mx-auto" />
         </UmassPhotoButtonRed>
