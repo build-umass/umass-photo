@@ -13,7 +13,7 @@ CREATE POLICY "Allow admins to manage photos" ON "public"."photo" AS PERMISSIVE 
     )
 );
 CREATE POLICY "Allow everyone to select photos" ON "public"."photo" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
 CREATE POLICY "Allow everyone to manage photos that they are authors of" ON "public"."photo" AS PERMISSIVE FOR ALL USING (
     (
         SELECT auth.uid()

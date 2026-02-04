@@ -9,7 +9,7 @@ CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS PERMI
     )
 );
 CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
 CREATE POLICY "Allow everyone to manage phototags for photos they are authors of" ON "public"."phototag" AS PERMISSIVE FOR ALL WITH CHECK (
     (
         SELECT auth.uid()

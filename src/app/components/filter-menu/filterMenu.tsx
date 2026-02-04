@@ -149,7 +149,7 @@ const FilterMenu = ({ onFilterSubmit }: FilterMenuProps) => {
             setShowMenu(true);
           }
         }}
-        className={`${showMenu ? "expanded" : ""} cursor-camera`}
+        className={`${showMenu ? "expanded" : ""} cursor-camera bg-umass-red`}
       >
         <Image
           src={menu.src}

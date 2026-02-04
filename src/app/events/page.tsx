@@ -1,67 +1,28 @@
-"use client";
+"use server";
+import { createClient } from "../utils/supabase/server";
+import { EventWithURL } from "./types";
+import EventMenu from "./EventMenu";
 
-import { useEffect, useState } from "react";
-import { Tables } from "../utils/supabase/database.types";
-import Image from "next/image";
-import ViewEventChip from "../components/event-chip/ViewEventChip";
-import { formatDate } from "../utils/dates";
+export default async function EventsPage() {
+  const client = await createClient();
 
-type EventWithURL = Tables<"event"> & { herofileURL: string };
-export default function EventsPage() {
-  const [events, setEvents] = useState<EventWithURL[]>([]);
-  const [currentFocusedEvent, setCurrentFocusedEvent] =
-    useState<EventWithURL | null>(null);
+  const { data: events, error: eventsError } = await client
+    .from("event")
+    .select("*");
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch("/api/get-event-all-with-urls");
-        if (response.ok) {
-          const data = await response.json();
-          setEvents(data);
-        } else {
-          console.error("Failed to fetch events");
-        }
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    }
-
-    fetchEvents();
-  }, []);
-
-  function getEventListingElement(event: EventWithURL) {
-    const endDate = new Date(event.enddate);
-    return (
-      <div
-        key={event.id}
-        className="flex overflow-hidden rounded-lg bg-white shadow-md"
-      >
-        {/* Image Block - Left */}
-        <div className="relative h-64 w-2/5 shrink-0 bg-gray-200">
-          <Image
-            src={event.herofileURL}
-            alt={`Hero image for ${event.name}`}
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Text Content - Right */}
-        <div className="flex flex-col justify-center p-8">
-          <h2 className="mb-3 text-2xl font-bold text-black">{event.name}</h2>
-          <p className="mb-4 text-lg text-gray-600">{formatDate(endDate)}</p>
-          <p className="mb-6 text-gray-700">{event.description}</p>
-          <button
-            className="cursor-camera bg-umass-red w-fit rounded-md px-6 py-2 text-white transition hover:bg-[#6A0D20]"
-            onClick={() => setCurrentFocusedEvent(event)}
-          >
-            Learn More
-          </button>
-        </div>
-      </div>
-    );
+  if (eventsError) {
+    console.error("Failed to fetch events:", eventsError);
+    return <div>Error loading events.</div>;
   }
+
+  const eventsWithURLs: EventWithURL[] = (events ?? []).map((event) => {
+    const herofileURL = client.storage
+      .from("photos")
+      .getPublicUrl(event.herofile).data.publicUrl;
+    return { ...event, herofileURL };
+  });
+
+  const loggedIn = (await client.auth.getUser()).data.user !== null;
 
   return (
     <>
@@ -75,12 +36,7 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Events List */}
-      <section className="container mx-auto grow px-4 py-12">
-        <div className="mx-auto max-w-5xl space-y-8">
-          {events.map(getEventListingElement)}
-        </div>
-      </section>
+      <EventMenu events={eventsWithURLs} loggedIn={loggedIn}></EventMenu>
 
       {/* CTA Section */}
       <section className="bg-umass-red py-12 text-white">
@@ -91,12 +47,6 @@ export default function EventsPage() {
           </button>
         </div>
       </section>
-      {currentFocusedEvent && (
-        <ViewEventChip
-          eventData={currentFocusedEvent}
-          onClose={() => setCurrentFocusedEvent(null)}
-        />
-      )}
     </>
   );
 }

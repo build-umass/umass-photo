@@ -4,5 +4,5 @@ CREATE TABLE photoclubrole (
 );
 ALTER TABLE public.photoclubrole enable ROW LEVEL SECURITY;
 CREATE POLICY "Allow everyone to select roles" ON "public"."photoclubrole" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
 -- Admin management policy is added in 001_photoclubuser.sql for dependency reasons
