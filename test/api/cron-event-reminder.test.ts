@@ -104,6 +104,7 @@ test.describe("Cron Event Reminder API", () => {
         username: `testuser`,
         bio: "Cron Test Bio",
         role: "member",
+        email_opt_in: true,
       });
     if (profileError) {
       console.error("Profile creation error:", profileError);
@@ -146,7 +147,7 @@ test.describe("Cron Event Reminder API", () => {
     });
     expect(response.status()).toBe(200);
     const body = await response.json();
-    expect(body).toEqual({});
+    expect(body).toEqual({ Success: true });
 
     // Verify Email in Mailpit
     const mailpitResponse = await request.get(`${MAILPIT_URL}/api/v1/messages`);
