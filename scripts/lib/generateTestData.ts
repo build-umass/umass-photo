@@ -1,12 +1,15 @@
-import {
+import { createClient } from "@supabase/supabase-js";
+import type {
   Database,
   Tables,
   TablesInsert,
-} from "@/app/utils/supabase/database.types";
+} from "../../src/app/utils/supabase/database.types.ts";
+import { config } from "dotenv";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
 import * as fs from "fs/promises";
 import * as path from "path";
+config();
 
 type SeedDataResult =
   | {
@@ -57,7 +60,15 @@ export async function insertTestData(
     [...Array(9).keys()].map(async (i) => {
       const fileName = `${(i + 1).toString().padStart(2, "0")}.png`;
       const file = await fs.readFile(
-        path.resolve(import.meta.dirname, "photos", fileName),
+        path.resolve(
+          import.meta.dirname,
+          "..",
+          "..",
+          "test",
+          "db",
+          "photos",
+          fileName,
+        ),
       );
       await client.storage.from("photos").upload(fileName, file);
     }),
@@ -379,4 +390,26 @@ export async function insertTestUsers(
   }
 
   return { data: createdUsers, error: null };
+}
+
+export async function generateTestData() {
+  const apiUrl = process.env.API_URL || process.env.SUPABASE_URL;
+  const supabaseServiceKey =
+    process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!apiUrl) throw new Error("Supabase URL not found in environment!");
+  if (!supabaseServiceKey)
+    throw new Error("Supabase service role key not found in environment!");
+
+  const supabase = createClient<Database>(apiUrl, supabaseServiceKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+    db: {
+      schema: "public",
+    },
+  });
+
+  await insertTestData(supabase);
 }

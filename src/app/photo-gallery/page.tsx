@@ -27,7 +27,7 @@ const PhotoGallery = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(
     null,
   );
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [filtering_tags, setFilteringTags] = useState<boolean>(false);
   const [filtering_authors, setFilteringAuthors] = useState<boolean>(false);
@@ -213,13 +213,15 @@ const PhotoGallery = () => {
       <FilterMenu onFilterSubmit={handleFilterSubmit} />
 
       {/* Add Photo Button - positioned above filter button */}
-      <button
-        id="add-photo-button"
-        onClick={() => setUploadingPhoto((prev) => !prev)}
-        className={`${uploadingPhoto ? "expanded" : ""} cursor-camera`}
-      >
-        <span>+</span>
-      </button>
+      {currentUserId !== null && (
+        <button
+          id="add-photo-button"
+          onClick={() => setUploadingPhoto((prev) => !prev)}
+          className={`${uploadingPhoto ? "expanded" : ""} cursor-camera`}
+        >
+          <span>+</span>
+        </button>
+      )}
 
       <div id="photo-grid">
         {loading ? (

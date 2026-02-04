@@ -21,7 +21,7 @@ CREATE POLICY "Allow admins to manage users" ON "public"."photoclubuser" AS PERM
     )
 );
 CREATE POLICY "Allow everyone to select users" ON "public"."photoclubuser" AS PERMISSIVE FOR
-SELECT TO authenticated USING (true);
+SELECT USING (true);
 CREATE POLICY "Allow everyone to insert their own profiles if they set safe roles" ON "public"."photoclubuser" AS PERMISSIVE FOR
 INSERT TO public WITH CHECK (
         (

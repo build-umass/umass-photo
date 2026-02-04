@@ -91,7 +91,10 @@ test.describe("Photo Upload and Delete Flow", () => {
     await expect(page.locator('input[name="title"]').first()).toBeVisible();
 
     // Here, we upload a test image
-    const testImagePath = path.join(__dirname, "../fixtures/test-image.jpg");
+    const testImagePath = path.join(
+      import.meta.dirname,
+      "../fixtures/test-image.jpg",
+    );
     const fileInput = page.locator('input[type="file"]').first();
     await fileInput.setInputFiles(testImagePath);
 

@@ -2,7 +2,9 @@
 import { TablesInsert } from "@/app/utils/supabase/database.types";
 import { createClient } from "@/app/utils/supabase/server";
 
-export async function createBlog(blog: TablesInsert<"blog">) {
+export async function updateBlogAction(
+  blog: TablesInsert<"blog"> & { id: string },
+) {
   const client = await createClient();
   const {
     data: { user },
@@ -14,10 +16,13 @@ export async function createBlog(blog: TablesInsert<"blog">) {
     );
   }
 
-  const { error: insertError } = await client.from("blog").insert(blog);
-  if (insertError) {
+  const { error: updateError } = await client
+    .from("blog")
+    .update(blog)
+    .eq("id", blog.id);
+  if (updateError) {
     throw new Error(
-      `Failed to insert blog into database: ${JSON.stringify(insertError)}`,
+      `Failed to insert blog into database: ${JSON.stringify(updateError)}`,
     );
   }
 }

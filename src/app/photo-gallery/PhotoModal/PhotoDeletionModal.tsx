@@ -1,5 +1,6 @@
 import ModalCommon from "@/app/components/ChipLayout";
-import UmassPhotoButton from "@/app/components/UmassPhotoButton";
+import UmassPhotoButtonGray from "@/app/components/UmassPhotoButton/UmassPhotoButtonGray";
+import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
 
 export default function PhotoDeletionModal({
   closeCallback,
@@ -24,20 +25,12 @@ export default function PhotoDeletionModal({
           gallery.
         </p>
         <div className="flex gap-4">
-          <UmassPhotoButton
-            className="bg-gray-400 text-white"
-            onClick={closeCallback}
-            disabled={isDeleting}
-          >
+          <UmassPhotoButtonGray onClick={closeCallback} disabled={isDeleting}>
             Cancel
-          </UmassPhotoButton>
-          <UmassPhotoButton
-            className={`${!isDeleting ? "bg-umass-red" : "cursor-not-allowed bg-gray-400"} text-white`}
-            disabled={isDeleting}
-            onClick={onConfirmDelete}
-          >
+          </UmassPhotoButtonGray>
+          <UmassPhotoButtonRed disabled={isDeleting} onClick={onConfirmDelete}>
             {isDeleting ? "Deleting..." : "Delete Photo"}
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
         </div>
       </div>
     </ModalCommon>

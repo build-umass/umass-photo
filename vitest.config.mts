@@ -16,7 +16,7 @@ export default defineConfig({
         test: {
           name: "component-tests",
           include: ["test/components/**/*.test.tsx"],
-          alias: { "@": path.resolve(__dirname, "./src/") },
+          alias: { "@": path.resolve(import.meta.dirname, "./src/") },
           environment: "jsdom",
         },
       },
