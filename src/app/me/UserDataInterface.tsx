@@ -107,11 +107,11 @@ export default function UserDataInterface({
   return (
     <>
       <div className="relative z-10 min-w-1/2 bg-black/50 p-10 text-white">
-        <h1 className="text-left text-2xl mb-6">Edit Account</h1>
-        <hr className="-mt-5 mb-5" /> 
+        <h1 className="mb-6 text-left text-2xl">Edit Account</h1>
+        <hr className="-mt-5 mb-5" />
         <div className="mb-6">
           <button
-            className="overflow-clip rounded-full block"
+            className="block overflow-clip rounded-full"
             onClick={() => profilePictureInput.current?.click()}
           >
             <Image
@@ -129,7 +129,7 @@ export default function UserDataInterface({
           />
         </div>
 
-        <p className="text-left text-xl mb-6">{profileData.username}</p>
+        <p className="mb-6 text-left text-xl">{profileData.username}</p>
 
         <div className="mb-6 space-y-3">
           <p className="text-left">
@@ -139,22 +139,25 @@ export default function UserDataInterface({
             <strong>Role:</strong> {profileData.role}
           </p>
           <div className="flex items-center space-x-3">
-            <label className="flex items-center space-x-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center space-x-2">
               <input
                 type="checkbox"
                 checked={profileData.email_opt_in || false}
                 onChange={(e) =>
-                  setProfileData({ ...profileData, email_opt_in: e.target.checked })
+                  setProfileData({
+                    ...profileData,
+                    email_opt_in: e.target.checked,
+                  })
                 }
-                className="w-4 h-4 accent-umass-red"
+                className="accent-umass-red h-4 w-4"
               />
               <span className="text-left">Receive email notifications</span>
             </label>
           </div>
           <div className="mb-8">
-            <label className="block text-left font-semibold mb-2">Bio:</label>
+            <label className="mb-2 block text-left font-semibold">Bio:</label>
             <textarea
-              className="w-full bg-white/20 backdrop-blur-sm text-white p-3 rounded-lg border border-white/30 placeholder-gray-300"
+              className="w-full rounded-lg border border-white/30 bg-white/20 p-3 text-white placeholder-gray-300 backdrop-blur-sm"
               placeholder="Tell us about yourself..."
               value={profileData.bio || ""}
               onChange={(e) =>
@@ -165,10 +168,9 @@ export default function UserDataInterface({
           </div>
         </div>
 
-
         <div className="">
           <UmassPhotoButton
-            className={`${edited ? "bg-umass-red" : "bg-gray-400"} text-white m-3`}
+            className={`${edited ? "bg-umass-red" : "bg-gray-400"} m-3 text-white`}
             onClick={() => saveProfile()}
           >
             Save
@@ -177,7 +179,7 @@ export default function UserDataInterface({
           <LogoutButton />
 
           <UmassPhotoButton
-            className="bg-umass-red text-white m-3"
+            className="bg-umass-red m-3 text-white"
             onClick={() => setDeleteMenuOpen(true)}
           >
             Delete Account
