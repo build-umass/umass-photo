@@ -169,21 +169,14 @@ export default function UserDataInterface({
         </div>
 
         <div className="">
-          <UmassPhotoButton
-            className={`${edited ? "bg-umass-red" : "bg-gray-400"} m-3 text-white`}
-            onClick={() => saveProfile()}
-          >
+          <UmassPhotoButtonRed onClick={() => saveProfile()}>
             Save
-          </UmassPhotoButton>
-
+          </UmassPhotoButtonRed>
           <LogoutButton />
 
-          <UmassPhotoButton
-            className="bg-umass-red m-3 text-white"
-            onClick={() => setDeleteMenuOpen(true)}
-          >
+          <UmassPhotoButtonRed onClick={() => setDeleteMenuOpen(true)}>
             Delete Account
-          </UmassPhotoButton>
+          </UmassPhotoButtonRed>
         </div>
 
         {deleteMenuOpen && (

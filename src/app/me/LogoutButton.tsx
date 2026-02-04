@@ -9,12 +9,5 @@ export default function LogoutButton() {
     router.push("/");
     router.refresh();
   }
-  return (
-    <UmassPhotoButton
-      className="mx-auto border bg-none text-white"
-      onClick={logout}
-    >
-      Logout
-    </UmassPhotoButton>
-  );
+  return <UmassPhotoButtonRed onClick={logout}>Log Out</UmassPhotoButtonRed>;
 }
