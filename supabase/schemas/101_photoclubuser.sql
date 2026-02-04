@@ -4,7 +4,8 @@ CREATE TABLE photoclubuser (
     email VARCHAR(128) NOT NULL,
     bio TEXT,
     role VARCHAR(16) REFERENCES photoclubrole(roleid) NOT NULL,
-    profilepicture varchar(128)
+    profilepicture varchar(128),
+    email_opt_in BOOLEAN DEFAULT false -- User consent for email marketing/newsletter
 );
 ALTER TABLE public.photoclubuser enable ROW LEVEL SECURITY;
 CREATE FUNCTION private.has_good_role() RETURNS BOOLEAN SECURITY DEFINER AS $$

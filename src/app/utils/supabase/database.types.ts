@@ -158,6 +158,7 @@ export type Database = {
         Row: {
           bio: string | null
           email: string
+          email_opt_in: boolean | null
           id: string
           profilepicture: string | null
           role: string
@@ -166,6 +167,7 @@ export type Database = {
         Insert: {
           bio?: string | null
           email: string
+          email_opt_in?: boolean | null
           id: string
           profilepicture?: string | null
           role: string
@@ -174,6 +176,7 @@ export type Database = {
         Update: {
           bio?: string | null
           email?: string
+          email_opt_in?: boolean | null
           id?: string
           profilepicture?: string | null
           role?: string

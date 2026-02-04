@@ -10,7 +10,7 @@ export default function UmassPhotoButtonRed({
     return (
       <button
         className={
-          "bg-umass-red-light rounded-default cursor-not-allowed px-5 py-2 text-xl font-bold text-white transition-colors duration-500"
+          "bg-umass-red-light rounded-default mr-1 cursor-not-allowed px-5 py-2 text-xl font-bold text-white transition-colors duration-500"
         }
         {...props}
       >
@@ -21,7 +21,7 @@ export default function UmassPhotoButtonRed({
     return (
       <button
         className={
-          "cursor-camera bg-umass-red hover:bg-umass-red-dark rounded-default px-5 py-2 text-xl font-bold text-white transition-colors duration-500"
+          "cursor-camera bg-umass-red hover:bg-umass-red-dark rounded-default mr-1 px-5 py-2 text-xl font-bold text-white transition-colors duration-500"
         }
         {...props}
       >
