@@ -17,7 +17,11 @@ export const banTab: TabInfo = {
   title: "Bans",
   href: "/admin-page/bans",
 };
-export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab, banTab];
+export const tagTab: TabInfo = {
+  title: "Tags",
+  href: "/admin-page/tags",
+};
+export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab, banTab, tagTab];
 
 export default function AdminPageTabSelector() {
   return (
