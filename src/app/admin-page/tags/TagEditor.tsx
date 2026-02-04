@@ -4,7 +4,7 @@ import { Tables } from "@/app/utils/supabase/database.types";
 import TagManagementRow from "./TagManagementRow";
 import AdminPageTable from "../common/AdminPageTable";
 import { RowEditState } from "../common/rowEquals";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TableEditorHeader from "../common/TableEditorHeader";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
 import { saveTags } from "./saveTags";
@@ -23,6 +23,24 @@ export default function TagEditor({
     }));
   const [editorState, setEditorState] =
     useState<ReadonlyArray<RowEditState<Tables<"tag">>>>(initialEditorState);
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    return editorState.some((row) => row.markedForDeletion);
+  }, [editorState]);
+
+  // Show browser confirmation dialog when navigating away with unsaved changes
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      const handler = (event: BeforeUnloadEvent) => {
+        event.preventDefault();
+      };
+      window.addEventListener("beforeunload", handler);
+      return () => {
+        window.removeEventListener("beforeunload", handler);
+      };
+    }
+  }, [hasUnsavedChanges]);
 
   async function saveData() {
     const toDelete = editorState

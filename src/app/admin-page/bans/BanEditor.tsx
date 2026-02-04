@@ -4,7 +4,7 @@ import { Tables } from "@/app/utils/supabase/database.types";
 import BanManagementRow from "./BanManagementRow";
 import AdminPageTable from "../common/AdminPageTable";
 import { RowEditState, rowEquals } from "../common/rowEquals";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TableEditorHeader from "../common/TableEditorHeader";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
 import UmassPhotoButtonRed from "@/app/components/UmassPhotoButton/UmassPhotoButtonRed";
@@ -27,6 +27,30 @@ export default function BanEditor({
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
 
   const router = useRouter();
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    return editorState.some((row) => {
+      if (row.markedForDeletion) return true;
+      const savedBan = savedBans[row.value.id];
+      if (!savedBan) return true;
+      return !rowEquals(row.value, savedBan);
+    });
+  }, [editorState, savedBans]);
+
+  // Show browser confirmation dialog when navigating away with unsaved changes
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      const handler = (event: BeforeUnloadEvent) => {
+        event.preventDefault();
+      };
+      window.addEventListener("beforeunload", handler);
+      return () => {
+        window.removeEventListener("beforeunload", handler);
+      };
+    }
+  }, [hasUnsavedChanges]);
+
   function reSyncEditorState() {
     router.refresh();
     console.log("Resyncing editor state");

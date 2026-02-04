@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Tables } from "../../utils/supabase/database.types";
 import AdminPageTableHeaderCell from "../common/AdminPageTableHeaderCell";
 import UserManagementRow from "./UserManagementRow";
@@ -27,6 +27,28 @@ export default function UserEditor({
   const [userData, setUserData] = useState(initialEditorState);
 
   const router = useRouter();
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    return Object.entries(userData).some(([id, row]) => {
+      if (row.markedForDeletion) return true;
+      if (!savedUserData[id]) return true;
+      return !rowEquals(row.value, savedUserData[id]);
+    });
+  }, [userData, savedUserData]);
+
+  // Show browser confirmation dialog when navigating away with unsaved changes
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      const handler = (event: BeforeUnloadEvent) => {
+        event.preventDefault();
+      };
+      window.addEventListener("beforeunload", handler);
+      return () => {
+        window.removeEventListener("beforeunload", handler);
+      };
+    }
+  }, [hasUnsavedChanges]);
 
   const saveChanges = async () => {
     const toDelete: string[] = [];
