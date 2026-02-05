@@ -72,7 +72,9 @@ export default async function Footer() {
                 </Link>
                 <Link
                   className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                  href="#"
+                  href={`/photo-gallery?${new URLSearchParams({
+                    uploadingPhoto: "true",
+                  }).toString()}`}
                 >
                   Submit Your photos
                 </Link>
@@ -129,22 +131,11 @@ export default async function Footer() {
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
                   <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Instagram
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Email
-                  </Link>
-                  <Link
                     className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                    href="#"
+                    href={"https://linktr.ee/umassphotoofficial"}
+                    target="_blank"
                   >
-                    Page
+                    Linktree
                   </Link>
                 </div>
               </div>
