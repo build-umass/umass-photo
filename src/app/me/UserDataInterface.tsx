@@ -84,6 +84,7 @@ export default function UserDataInterface({
     const accountUpdate: PhotoClubUserUpdateWithProfilePicture = {
       id: profileData.id,
       bio: profileData.bio,
+      email_opt_in: profileData.email_opt_in,
       profilePictureURL: profileData.profilePictureURL,
     };
 
@@ -106,52 +107,85 @@ export default function UserDataInterface({
   return (
     <>
       <div className="relative z-10 min-w-1/2 bg-black/50 p-10 text-white">
-        <h1 className="text-center text-2xl">Edit Account</h1>
-        <button
-          className="mx-auto block overflow-clip rounded-full"
-          onClick={() => profilePictureInput.current?.click()}
-        >
-          <Image
-            src={profileData.profilePictureURL || "/blank_profile.png"}
-            alt="Profile Picture"
-            width={100}
-            height={100}
+        <h1 className="mb-6 text-left text-2xl">Edit Account</h1>
+        <hr className="-mt-5 mb-5" />
+        <div className="mb-6">
+          <button
+            className="block overflow-clip rounded-full"
+            onClick={() => profilePictureInput.current?.click()}
+          >
+            <Image
+              src={profileData.profilePictureURL || "/blank_profile.png"}
+              alt="Profile Picture"
+              width={100}
+              height={100}
+            />
+          </button>
+          <input
+            type="file"
+            className="aria-hidden hidden"
+            onChange={updateSelectedProfilePicture}
+            ref={profilePictureInput}
           />
-        </button>
-        <input
-          type="file"
-          className="aria-hidden hidden"
-          onChange={updateSelectedProfilePicture}
-          ref={profilePictureInput}
-        />
-        <p className="text-center text-xl">{profileData.username}</p>
-        <textarea
-          className="min-w-full text-white"
-          value={profileData.bio || ""}
-          onChange={(e) =>
-            setProfileData({ ...profileData, bio: e.target.value })
-          }
-        ></textarea>
-        <p>
-          <strong>Email:</strong> {profileData.email}
-        </p>
-        <p>
-          <strong>Role:</strong> {profileData.role}
-        </p>
-        <UmassPhotoButtonRed onClick={() => saveProfile()} disabled={!edited}>
-          Save
-        </UmassPhotoButtonRed>
-        <LogoutButton></LogoutButton>
-        <UmassPhotoButtonRed onClick={() => setDeleteMenuOpen(true)}>
-          Delete Account
-        </UmassPhotoButtonRed>
+        </div>
+
+        <p className="mb-6 text-left text-xl">{profileData.username}</p>
+
+        <div className="mb-6 space-y-3">
+          <p className="text-left">
+            <strong>Email:</strong> {profileData.email}
+          </p>
+          <p className="text-left">
+            <strong>Role:</strong> {profileData.role}
+          </p>
+          <div className="flex items-center space-x-3">
+            <label className="flex cursor-pointer items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={profileData.email_opt_in || false}
+                onChange={(e) =>
+                  setProfileData({
+                    ...profileData,
+                    email_opt_in: e.target.checked,
+                  })
+                }
+                className="accent-umass-red h-4 w-4"
+              />
+              <span className="text-left">Receive email notifications</span>
+            </label>
+          </div>
+          <div className="mb-8">
+            <label className="mb-2 block text-left font-semibold">Bio:</label>
+            <textarea
+              className="w-full rounded-lg border border-white/30 bg-white/20 p-3 text-white placeholder-gray-300 backdrop-blur-sm"
+              placeholder="Tell us about yourself..."
+              value={profileData.bio || ""}
+              onChange={(e) =>
+                setProfileData({ ...profileData, bio: e.target.value })
+              }
+              rows={4}
+            />
+          </div>
+        </div>
+
+        <div className="">
+          <UmassPhotoButtonRed onClick={() => saveProfile()}>
+            Save
+          </UmassPhotoButtonRed>
+          <LogoutButton />
+
+          <UmassPhotoButtonRed onClick={() => setDeleteMenuOpen(true)}>
+            Delete Account
+          </UmassPhotoButtonRed>
+        </div>
+
+        {deleteMenuOpen && (
+          <DeletionModal
+            closeCallback={() => setDeleteMenuOpen(false)}
+            user={profileData}
+          />
+        )}
       </div>
-      {deleteMenuOpen && (
-        <DeletionModal
-          closeCallback={() => setDeleteMenuOpen(false)}
-          user={profileData}
-        />
-      )}
     </>
   );
 }

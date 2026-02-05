@@ -4,7 +4,8 @@ CREATE TABLE photoclubuser (
   email VARCHAR(128) NOT NULL,
   bio TEXT,
   role VARCHAR(16) REFERENCES photoclubrole (roleid) NOT NULL,
-  profilepicture VARCHAR(128)
+  profilepicture VARCHAR(128),
+  email_opt_in BOOLEAN DEFAULT FALSE -- User consent for email marketing/newsletter
 );
 
 
