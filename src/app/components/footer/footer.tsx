@@ -84,15 +84,20 @@ export default async function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="font-Jaldi flex flex-col space-y-2">
-                  {recentEvents.map((event) => (
-                    <Link
-                      key={event.id}
-                      className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                      href="#"
-                    >
-                      {event.name}
-                    </Link>
-                  ))}
+                  {recentEvents.map((event) => {
+                    const params = new URLSearchParams({
+                      selectedTags: event.tag,
+                    });
+                    return (
+                      <Link
+                        key={event.id}
+                        className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
+                        href={`/photo-gallery?${params.toString()}`}
+                      >
+                        {event.name}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
