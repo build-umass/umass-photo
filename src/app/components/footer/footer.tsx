@@ -1,5 +1,6 @@
 "use server";
 
+import { createClient } from "@/app/utils/supabase/server";
 import {
   faFacebook,
   faInstagram,
@@ -10,6 +11,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 export default async function Footer() {
+  const client = await createClient();
+  const { data: recentEvents } = await client
+    .from("event")
+    .select("*")
+    .order("enddate", { ascending: true })
+    .gte("enddate", new Date().toISOString())
+    .limit(3)
+    .throwOnError();
+
   return (
     <footer className="bg-gray-200">
       <div className="mx-auto max-w-7xl px-3 py-15">
@@ -62,7 +72,9 @@ export default async function Footer() {
                 </Link>
                 <Link
                   className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                  href="#"
+                  href={`/photo-gallery?${new URLSearchParams({
+                    uploadingPhoto: "true",
+                  }).toString()}`}
                 >
                   Submit Your photos
                 </Link>
@@ -74,24 +86,20 @@ export default async function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="font-Jaldi flex flex-col space-y-2">
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Spring contest
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Fall Foliage Contest
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Summer Contest
-                  </Link>
+                  {recentEvents.map((event) => {
+                    const params = new URLSearchParams({
+                      selectedTags: event.tag,
+                    });
+                    return (
+                      <Link
+                        key={event.id}
+                        className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
+                        href={`/photo-gallery?${params.toString()}`}
+                      >
+                        {event.name}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -123,22 +131,11 @@ export default async function Footer() {
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-2">
                   <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Instagram
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Email
-                  </Link>
-                  <Link
                     className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                    href="#"
+                    href={"https://linktr.ee/umassphotoofficial"}
+                    target="_blank"
                   >
-                    Page
+                    Linktree
                   </Link>
                 </div>
               </div>

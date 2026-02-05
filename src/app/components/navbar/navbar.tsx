@@ -42,7 +42,12 @@ export default async function Navbar() {
           <NavBarLink href={"/blogs"}>Blogs</NavBarLink>
           <NavBarLink href={"/events"}>Events</NavBarLink>
           <NavBarLink href={"/about"}>About</NavBarLink>
-          <NavBarLink href={"/contact"}>Contact</NavBarLink>
+          <NavBarLink
+            href={"https://linktr.ee/umassphotoofficial"}
+            target="_blank"
+          >
+            Contact
+          </NavBarLink>
           <UserChip></UserChip>
         </div>
       </div>
