@@ -11,12 +11,14 @@ export default async function UserChip() {
   } = await client.auth.getUser();
 
   let profile:
-    | (Tables<"photoclubuser"> & { photoclubrole: Tables<"photoclubrole"> })
+    | (Tables<"photoclubuser"> & {
+        photoclubrole: Tables<"photoclubrole">;
+      })
     | null = null;
   if (user !== null) {
     const { data: profileMatches, error: selectError } = await client
       .from("photoclubuser")
-      .select("*, photoclubrole(*)")
+      .select("*, photoclubrole(roleid, is_admin)")
       .eq("id", user.id)
       .limit(1);
 

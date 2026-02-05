@@ -1,41 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
-import AdminPageContent from "./AdminPageContent";
+"use server";
 
-enum PageState {
-  DEFAULT,
-  UNAUTHENTICATED,
-  AUTHORIZED,
-  UNAUTHORIZED,
-}
+import { redirect } from "next/navigation";
 
-export default function AdminPage() {
-  const [pageState, setPageState] = useState<PageState>(PageState.DEFAULT);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("/api/get-role");
-      if (!response.ok) {
-        setPageState(PageState.UNAUTHENTICATED);
-        return;
-      }
-      const myRoleData = await response.json();
-      if (myRoleData["is_admin"]) {
-        setPageState(PageState.AUTHORIZED);
-        return;
-      } else {
-        setPageState(PageState.UNAUTHORIZED);
-        return;
-      }
-    })();
-  }, []);
-  switch (pageState) {
-    case PageState.DEFAULT:
-      return <>Figuring out who you are...</>;
-    case PageState.UNAUTHENTICATED:
-      return <>I don&apos;t know who you are</>;
-    case PageState.AUTHORIZED:
-      return <AdminPageContent></AdminPageContent>;
-    case PageState.UNAUTHORIZED:
-      return <>You can&apos;t see this</>;
-  }
+export default async function AdminPage() {
+  redirect("/admin-page/users");
 }

@@ -1,9 +1,10 @@
 import { randomBytes } from "crypto";
 import { NextRequest } from "next/server";
-import { createClient } from "@/app/utils/supabase/server";
+import { createClient, getAdminClient } from "@/app/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   const client = await createClient();
+  const adminClient = await getAdminClient();
 
   const userId = (await client.auth.getUser()).data?.user?.id;
   if (!userId) {
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
   const fileName = `${randomBytes(20).toString("base64url")}.${extension}`;
   const imageFile = new File([bytes], fileName, { type: `image/${extension}` });
 
-  const { error: storageUploadError } = await client.storage
+  const { error: storageUploadError } = await adminClient.storage
     .from("photos")
     .upload(fileName, imageFile);
   if (storageUploadError) {

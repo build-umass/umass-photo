@@ -34,6 +34,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      ban: {
+        Row: {
+          email: string | null
+          id: string
+          ip: string | null
+          reason: string
+          username: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          ip?: string | null
+          reason: string
+          username?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          ip?: string | null
+          reason?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
       blog: {
         Row: {
           authorid: string
@@ -234,11 +258,59 @@ export type Database = {
         }
         Relationships: []
       }
+      userip: {
+        Row: {
+          ipaddress: string
+          userid: string
+        }
+        Insert: {
+          ipaddress: string
+          userid: string
+        }
+        Update: {
+          ipaddress?: string
+          userid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "userip_userid_fkey"
+            columns: ["userid"]
+            isOneToOne: false
+            referencedRelation: "photoclubuser"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      ban_affects_user: {
+        Args: {
+          ban: Database["public"]["Tables"]["ban"]["Row"]
+          photoclubuser: Database["public"]["Tables"]["photoclubuser"]["Row"]
+        }
+        Returns: boolean
+      }
+      ban_affects_users: {
+        Args: { ban: Database["public"]["Tables"]["ban"]["Row"] }
+        Returns: {
+          bio: string | null
+          email: string
+          email_opt_in: boolean | null
+          id: string
+          profilepicture: string | null
+          role: string
+          username: string
+        }[]
+        SetofOptions: {
+          from: "ban"
+          to: "photoclubuser"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       filter_photos: {
         Args: {
           filtering_authors: boolean
@@ -263,6 +335,13 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      is_admin: { Args: never; Returns: boolean }
+      is_banned: {
+        Args: {
+          photoclubuser: Database["public"]["Tables"]["photoclubuser"]["Row"]
+        }
+        Returns: boolean
       }
     }
     Enums: {

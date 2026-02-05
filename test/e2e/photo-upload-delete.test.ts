@@ -2,7 +2,7 @@ import { test, expect, Page } from "@playwright/test";
 import path from "path";
 import { login } from "./utils/login";
 import { getAdminClient } from "../utils/adminClient";
-import { insertTestUsers } from "../db/generateTestData";
+import { insertTestUsers } from "../db/insertTestUsers";
 import { randomInt, randomUUID } from "crypto";
 
 // This test covers the full user journey of uploading and deleting a photo

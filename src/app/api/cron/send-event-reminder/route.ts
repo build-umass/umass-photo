@@ -74,6 +74,5 @@ See you there!`;
     }
   }
 
-
-  return Response.json({"Success": true});
+  return Response.json({ Success: true });
 }

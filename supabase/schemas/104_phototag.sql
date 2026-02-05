@@ -1,21 +1,56 @@
 CREATE TABLE phototag (
-    photoid INTEGER REFERENCES photo(id) ON DELETE CASCADE NOT NULL,
-    tag VARCHAR(32) REFERENCES tag(name) ON DELETE CASCADE NOT NULL
+  photoid INTEGER REFERENCES photo (id) ON DELETE CASCADE NOT NULL,
+  tag VARCHAR(32) REFERENCES tag (name) ON DELETE CASCADE NOT NULL
 );
-ALTER TABLE public.phototag enable ROW LEVEL SECURITY;
-CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS PERMISSIVE FOR ALL TO authenticated USING (
+
+
+ALTER TABLE public.phototag enable ROW level security;
+
+
+CREATE POLICY "Allow admins to manage phototags" ON "public"."phototag" AS permissive FOR ALL TO authenticated USING (
+  (
+    SELECT
+      public.is_admin ()
+  )
+)
+WITH
+  CHECK (
     (
-        SELECT private.has_good_role()
+      SELECT
+        public.is_admin ()
     )
-);
-CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS PERMISSIVE FOR
-SELECT USING (true);
-CREATE POLICY "Allow everyone to manage phototags for photos they are authors of" ON "public"."phototag" AS PERMISSIVE FOR ALL WITH CHECK (
+  );
+
+
+CREATE POLICY "Allow everyone to select phototags" ON "public"."phototag" AS permissive FOR
+SELECT
+  USING (TRUE);
+
+
+CREATE POLICY "Allow everyone to manage phototags for photos they are authors of" ON "public"."phototag" AS permissive FOR ALL USING (
+  (
+    SELECT
+      auth.uid ()
+  ) = (
+    SELECT
+      authorid
+    FROM
+      photo
+    WHERE
+      photo.id = photoid
+  )
+)
+WITH
+  CHECK (
     (
-        SELECT auth.uid()
+      SELECT
+        auth.uid ()
     ) = (
-        SELECT authorid
-        FROM photo
-        WHERE photo.id = photoid
+      SELECT
+        authorid
+      FROM
+        photo
+      WHERE
+        photo.id = photoid
     )
-);
+  );

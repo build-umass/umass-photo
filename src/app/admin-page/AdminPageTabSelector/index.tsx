@@ -1,39 +1,34 @@
-import { ReactNode } from "react";
-import EventManagementTab from "../EventManagementTab";
-import UserManagementTab from "../UserManagementTab";
 import AdminPageTabButton from "./AdminPageTabButton";
 
 export type TabInfo = Readonly<{
   title: string;
-  component: () => ReactNode;
+  href: string;
 }>;
 
 export const userTab: TabInfo = {
   title: "Users",
-  component: UserManagementTab,
+  href: "/admin-page/users",
 };
 export const eventTab: TabInfo = {
   title: "Events",
-  component: EventManagementTab,
+  href: "/admin-page/events",
 };
-export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab];
+export const banTab: TabInfo = {
+  title: "Bans",
+  href: "/admin-page/bans",
+};
+export const tagTab: TabInfo = {
+  title: "Tags",
+  href: "/admin-page/tags",
+};
+export const tabs: ReadonlyArray<TabInfo> = [userTab, eventTab, banTab, tagTab];
 
-export default function AdminPageTabSelector({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: TabInfo;
-  setActiveTab: (newActiveTab: TabInfo) => void;
-}) {
+export default function AdminPageTabSelector() {
   return (
-    <div className="bg-umass-red flex w-96 flex-col">
+    <div className="bg-umass-red flex w-96 shrink-0 flex-col">
       {tabs.map((tab) => {
         return (
-          <AdminPageTabButton
-            key={tab.title}
-            onClick={() => setActiveTab(tab)}
-            highlighted={tab == activeTab}
-          >
+          <AdminPageTabButton key={tab.title} href={tab.href}>
             {tab.title}
           </AdminPageTabButton>
         );
