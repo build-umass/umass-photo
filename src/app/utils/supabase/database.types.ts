@@ -298,6 +298,7 @@ export type Database = {
         Returns: {
           bio: string | null
           email: string
+          email_opt_in: boolean | null
           id: string
           profilepicture: string | null
           role: string
