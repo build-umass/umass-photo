@@ -163,6 +163,7 @@ export async function insertTestData(
       { name: "sky" },
       { name: "people" },
       { name: "Summer Contest" },
+      { name: "yay-event" },
     ]);
   if (tagsError) {
     return {
@@ -235,6 +236,15 @@ export async function insertTestData(
       enddate: "2025-11-08 20:00:00",
       tag: "people",
       description: "Portrait lighting and posing session.",
+      herofile: "07.png",
+    },
+    {
+      id: 6,
+      name: "Yay! Another Event",
+      startdate: "2026-11-08 18:00:00",
+      enddate: "2026-11-08 20:00:00",
+      tag: "yay-event",
+      description: "Yay!",
       herofile: "07.png",
     },
   ]);

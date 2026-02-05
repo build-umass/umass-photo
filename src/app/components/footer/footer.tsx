@@ -1,5 +1,6 @@
 "use server";
 
+import { createClient } from "@/app/utils/supabase/server";
 import {
   faFacebook,
   faInstagram,
@@ -10,6 +11,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 export default async function Footer() {
+  const client = await createClient();
+  const { data: recentEvents } = await client
+    .from("event")
+    .select("*")
+    .order("enddate", { ascending: true })
+    .gte("enddate", new Date().toISOString())
+    .limit(3)
+    .throwOnError();
+
   return (
     <footer className="bg-gray-200">
       <div className="mx-auto max-w-7xl px-3 py-15">
@@ -74,24 +84,15 @@ export default async function Footer() {
               </h3>
               <div className="flex flex-col space-y-2">
                 <div className="font-Jaldi flex flex-col space-y-2">
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Spring contest
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Fall Foliage Contest
-                  </Link>
-                  <Link
-                    className="font-Jaldi cursor-camera block text-gray-700 hover:underline"
-                    href="#"
-                  >
-                    Summer Contest
-                  </Link>
+                  {recentEvents.map((event) => (
+                    <Link
+                      key={event.id}
+                      className="font-Jaldi cursor-camera mb-4 block text-gray-700 hover:underline"
+                      href="#"
+                    >
+                      {event.name}
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
